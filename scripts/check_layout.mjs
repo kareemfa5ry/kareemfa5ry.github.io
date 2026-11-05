@@ -10,7 +10,7 @@ import { extname, join, parse, relative } from "node:path";
 
 const ROOTS = ["src", "scripts", ".github"];
 const SILENCE_ROOTS = ["src", "scripts"];
-const SOURCE_EXTENSIONS = new Set([".astro", ".ts", ".js", ".mjs", ".css"]);
+const SOURCE_EXTENSIONS = new Set([".astro", ".ts", ".tsx", ".js", ".mjs", ".css"]);
 const MAX_LINES = 400;
 const MAX_LOOSE = 8;
 const NOT_LOOSE = new Set(["index.ts"]);
