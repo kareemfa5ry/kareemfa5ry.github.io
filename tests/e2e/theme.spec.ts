@@ -16,16 +16,28 @@ test("page follows the system theme when no choice is stored", async ({ page }) 
   expect(await pageBackground(page)).toBe(LIGHT_BG);
 });
 
-test("theme toggle switches the theme and keeps it after a reload", async ({ page }) => {
+test("theme switch changes the theme and keeps it after a reload", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
-  const toggle = page.getByRole("button", { name: "Switch to dark theme" });
-  await toggle.click();
+  const lightSwitch = page.getByRole("switch", { name: "Light theme" });
+  await expect(lightSwitch).toBeChecked();
+  await page.locator(".plane-switch").click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   expect(await pageBackground(page)).toBe(DARK_BG);
 
   await page.reload();
   expect(await pageBackground(page)).toBe(DARK_BG);
-  await page.getByRole("button", { name: "Switch to light theme" }).click();
+  await expect(lightSwitch).not.toBeChecked();
+  await page.locator(".plane-switch").click();
+  expect(await pageBackground(page)).toBe(LIGHT_BG);
+});
+
+test("theme switch works from the keyboard", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+  const lightSwitch = page.getByRole("switch", { name: "Light theme" });
+  await lightSwitch.focus();
+  await page.keyboard.press("Space");
+  await expect(lightSwitch).toBeChecked();
   expect(await pageBackground(page)).toBe(LIGHT_BG);
 });

@@ -14,7 +14,7 @@ src/components/             one component per concern: Nav, Hero, Stats, Experie
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags
 src/components/theme/       light/dark theme: ThemeInit (inline head script, applies the stored choice before
-                            paint) and ThemeToggle (nav button that switches and remembers the choice)
+                            paint) and ThemeToggle (nav airplane switch that changes and remembers the choice)
 src/islands/                React islands (ProjectFilter: filter chips; ChatPanel + useChatStream: the Ask chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL and Turnstile site key for the chat panel (empty = no chat section)
