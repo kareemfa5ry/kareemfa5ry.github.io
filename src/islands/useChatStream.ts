@@ -11,6 +11,7 @@ interface TurnstileApi {
   render: (el: HTMLElement, opts: Record<string, unknown>) => string;
   execute: (id: string) => void;
   reset: (id: string) => void;
+  remove: (id: string) => void;
 }
 declare global {
   interface Window {
@@ -29,12 +30,15 @@ function loadTurnstile() {
     script.onload = () => resolve(window.turnstile as TurnstileApi);
     script.onerror = () => {
       scriptPromise = undefined;
-      reject(new Error("turnstile"));
+      console.error("Turnstile", "script");
+      reject(new Error("turnstile:script"));
     };
     document.head.append(script);
   });
   return scriptPromise;
 }
+
+const isTurnstileError = (error: unknown) => error instanceof Error && error.message.startsWith("turnstile:");
 
 const postChat = (workerUrl: string, messages: Turn[], turnstileToken: string) =>
   fetch(`${workerUrl}/chat`, {
@@ -71,7 +75,7 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
   const past = useRef<Turn[]>([]);
   const nextId = useRef(0);
   const widget = useRef<Promise<string>>(undefined);
-  const waiting = useRef<{ ok: (token: string) => void; fail: () => void }>(undefined);
+  const waiting = useRef<{ ok: (token: string) => void; fail: (error: Error) => void }>(undefined);
 
   /** Loads Turnstile and renders the hidden widget once; safe to call on every focus. */
   const prepare = () => {
@@ -81,20 +85,36 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
         execution: "execute",
         appearance: "interaction-only",
         callback: (token: string) => waiting.current?.ok(token),
-        "error-callback": () => waiting.current?.fail(),
+        "error-callback": (code: string) => {
+          console.error("Turnstile", code);
+          waiting.current?.fail(new Error(`turnstile:${code}`));
+        },
       }),
     );
     widget.current.catch(() => (widget.current = undefined));
   };
 
-  const token = async () => {
+  const attempt = async () => {
     prepare();
     const id = await (widget.current as Promise<string>);
     const api = window.turnstile as TurnstileApi;
     return new Promise<string>((ok, fail) => {
-      waiting.current = { ok, fail: () => fail(new Error("turnstile")) };
+      waiting.current = { ok, fail };
       api.execute(id);
     });
+  };
+
+  /** One token; a failed widget is removed and rendered afresh, then the token is asked for once more. */
+  const token = async () => {
+    try {
+      return await attempt();
+    } catch (error) {
+      if (!isTurnstileError(error)) throw error;
+      const stale = widget.current;
+      widget.current = undefined;
+      await stale?.then((id) => window.turnstile?.remove(id)).catch(() => {});
+      return attempt();
+    }
   };
 
   const add = (role: Line["role"], text: string) => {
@@ -124,8 +144,10 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
         text += chunk;
         patch(answer, (t) => t + chunk);
       });
-    } catch {
-      failure = "Could not reach the server. Check your connection and try again.";
+    } catch (error) {
+      failure = isTurnstileError(error)
+        ? "The human check did not complete. Reload the page and try again."
+        : "Could not reach the server. Check your connection and try again.";
     } finally {
       widget.current?.then((id) => window.turnstile?.reset(id)).catch(() => {});
     }
