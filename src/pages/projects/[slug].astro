@@ -1,0 +1,44 @@
+---
+// One page per project: summary, metrics, bullets, stack, screenshots and the skill groups it proves.
+import { getCollection, getEntries, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Stats from "../../components/Stats.astro";
+import StackTags from "../../components/projects/StackTags.astro";
+import ScreenshotGallery from "../../components/projects/ScreenshotGallery.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { title, org, period, summary, stack, metrics, screenshots } = project.data;
+const { Content } = await render(project);
+const skills = await getEntries(project.data.skills);
+const meta = period ? `${org}, ${period}` : org;
+---
+
+<Base title={`${title} — Kareem Fakhry`} description={summary} ogDescription={summary}>
+  <p>
+    <a href="/#projects">← All projects</a>
+  </p>
+  <h1>{title}</h1>
+  <p class="meta">{meta}</p>
+  <p>{summary}</p>
+  {metrics.length > 0 && <Stats stats={metrics} />}
+  <Content />
+  <StackTags stack={stack} />
+  <ScreenshotGallery screenshots={screenshots} />
+  {skills.length > 0 && (
+    <section>
+      <h2>Proves</h2>
+      <ul>
+        {skills.map((skill) => (
+          <li>
+            <a href="/#skills">{skill.data.label}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>

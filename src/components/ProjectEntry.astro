@@ -1,44 +1,25 @@
 ---
-// One project: title, context, bullet list and technology tags.
+// One project from the projects collection: linked title, context, bullet list and technology tags.
+import StackTags from "./projects/StackTags.astro";
+import { render, type CollectionEntry } from "astro:content";
+
 interface Props {
-  title: string;
-  meta: string;
-  bullets: string[];
-  tags: string[];
+  entry: CollectionEntry<"projects">;
 }
 
-const { title, meta, bullets, tags } = Astro.props;
+const { entry } = Astro.props;
+const { title, org, period, stack } = entry.data;
+const { Content } = await render(entry);
+const meta = period ? `${org}, ${period}` : org;
 ---
 
 <div class="item">
   <div class="item-head">
-    <h3>{title}</h3>
+    <h3>
+      <a href={`/projects/${entry.id}/`}>{title}</a>
+    </h3>
     <span class="meta">{meta}</span>
   </div>
-  <ul>
-    {bullets.map((bullet) => (
-      <li>{bullet}</li>
-    ))}
-  </ul>
-  <div class="tags">
-    {tags.map((tag) => (
-      <span class="tag">{tag}</span>
-    ))}
-  </div>
+  <Content />
+  <StackTags stack={stack} />
 </div>
-
-<style>
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .tag {
-    font-size: 13px;
-    padding: 2px 10px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: var(--accent);
-  }
-</style>

@@ -1,0 +1,40 @@
+---
+// Screenshots of a project, each with alt text and an optional caption. Renders nothing when there are none.
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  screenshots: CollectionEntry<"projects">["data"]["screenshots"];
+}
+
+const { screenshots } = Astro.props;
+---
+
+{screenshots.length > 0 && (
+  <section class="gallery">
+    <h2>Screenshots</h2>
+    {screenshots.map(({ src, alt, caption }) => (
+      <figure>
+        <Image src={src} alt={alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" />
+        {caption && <figcaption>{caption}</figcaption>}
+      </figure>
+    ))}
+  </section>
+)}
+
+<style>
+  figure {
+    margin: 16px 0;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+  figcaption {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+</style>

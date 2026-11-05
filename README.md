@@ -6,11 +6,17 @@ GitHub Actions.
 ## Layout
 
 ```
-src/pages/index.astro       the CV page: composes the sections, holds experience and project content
+src/pages/index.astro       the CV page: composes the sections from the content collections and profile.ts
+src/pages/projects/[slug].astro  one detail page per project: metrics, bullets, stack, screenshots, skills proved
 src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global stylesheet, nav, footer
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
+src/components/projects/    project-page parts: ScreenshotGallery, StackTags
 src/site/contact.ts         name, email, LinkedIn and location used by several components
+src/site/profile.ts         tagline, profile paragraph and the four stat tiles
+src/content.config.ts       content collection schemas (projects, experience, skills); strict, every field described
+src/content/                one Markdown file per project, job and skill group (fields: src/content/README.md)
+src/assets/projects/        project screenshots, one folder per project (see its README.md)
 src/styles/global.css       tokens, dark mode, base elements, shared classes, print rules
 public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
 src/latex/                  LaTeX sources for each CV version
@@ -51,7 +57,7 @@ Run `npx prettier --write .` to fix formatting reported by `npm run check`.
 
 1. Edit the `.tex` file in `src/latex/`.
 2. Run `./build.ps1` (needs MiKTeX or TeX Live with `pdflatex`).
-3. If the change affects the website text, update `src/pages/index.astro` or the component that holds it.
+3. If the change affects the website text, update the matching Markdown file in `src/content/`.
 4. Commit (the pre-commit hook runs `npm run check`) and push; the deploy workflow publishes `main`.
 
 ## Publishing on GitHub Pages
