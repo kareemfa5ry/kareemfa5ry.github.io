@@ -1,5 +1,6 @@
 ---
 // One job from the experience collection: heading, place and dates, optional context note, bullet list.
+import BeforeAfterChart from "./charts/BeforeAfterChart.astro";
 import { render, type CollectionEntry } from "astro:content";
 
 interface Props {
@@ -14,7 +15,7 @@ function monthLabel(yearMonth: string): string {
 }
 
 const { entry } = Astro.props;
-const { title, org, location, start, end, note } = entry.data;
+const { title, org, location, start, end, note, results } = entry.data;
 const { Content } = await render(entry);
 const heading = title ? `${title} · ${org}` : org;
 const meta = `${location} · ${monthLabel(start)} – ${end ? monthLabel(end) : "Present"}`;
@@ -27,4 +28,5 @@ const meta = `${location} · ${monthLabel(start)} – ${end ? monthLabel(end) : 
   </div>
   {note && <p class="note">{note}</p>}
   <Content />
+  <BeforeAfterChart headingLevel="h4" results={results} id={`exp-${entry.id}`} />
 </div>
