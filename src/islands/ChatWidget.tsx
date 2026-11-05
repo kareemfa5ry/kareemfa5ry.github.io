@@ -1,6 +1,7 @@
 // Floating "Ask about Kareem" widget: launcher bubble, expandable card, dock-to-side toggle. Owns only widget
 // state (open, docked); the conversation is ChatPanel, rendered unchanged inside the card.
 import { useEffect, useRef, useState } from "react";
+import { EMAIL, MAILTO } from "../site/contact";
 import ChatPanel from "./ChatPanel";
 import styles from "./ChatWidget.module.css";
 
@@ -93,6 +94,9 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
             </button>
           </header>
           <div className={styles.body}>
+            <p className={styles.note}>
+              Answers come from the content of this site; for anything else, email <a href={MAILTO}>{EMAIL}</a>.
+            </p>
             <ChatPanel workerUrl={workerUrl} siteKey={siteKey} />
           </div>
         </div>

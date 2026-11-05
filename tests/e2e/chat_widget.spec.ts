@@ -34,6 +34,7 @@ test("click opens the dialog with the question box focused", async ({ page }) =>
   await openChat(page);
   await expect(page.getByRole("dialog", { name: "Ask about Kareem" })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Your question" })).toBeFocused();
+  await expect(page.getByRole("dialog").locator('a[href^="mailto:"]')).toBeVisible();
 });
 
 test("dock makes the card full height and undock restores it", async ({ page }) => {
