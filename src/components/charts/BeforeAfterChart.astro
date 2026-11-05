@@ -1,0 +1,115 @@
+---
+// Before -> after dumbbell chart, server-rendered SVG with no script. One row per result, each on its own axis.
+import { AXIS, changeText, xFor, type Result } from "./scale";
+
+interface Props {
+  results: readonly Result[];
+  id: string;
+}
+
+const { results, id } = Astro.props;
+const { width, height } = AXIS;
+const mid = height / 2;
+---
+
+{results.length > 0 && (
+  <section class="results">
+    <h2>Results</h2>
+    <p class="key">
+      <span class="dot before"></span> before <span class="dot after"></span> after
+    </p>
+    {results.map((result, index) => {
+      const summary = `${result.label}: ${changeText(result)}`;
+      const x1 = xFor(result.before, result);
+      const x2 = xFor(result.after, result);
+      return (
+        <div class="row">
+          <div class="row-text">
+            <span>{result.label}</span>
+            <b>{changeText(result)}</b>
+          </div>
+          <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby={`${id}-${index}-t ${id}-${index}-d`}>
+            <title id={`${id}-${index}-t`}>{result.label}</title>
+            <desc id={`${id}-${index}-d`}>{summary}</desc>
+            <line class="track" x1={AXIS.pad} x2={width - AXIS.pad} y1={mid} y2={mid} />
+            <line class="link" x1={x1} x2={x2} y1={mid} y2={mid} />
+            <circle class="before" cx={x1} cy={mid} r="5" />
+            <circle class="after" cx={x2} cy={mid} r="5" />
+          </svg>
+        </div>
+      );
+    })}
+  </section>
+)}
+
+<style>
+  .results {
+    margin: 16px 0;
+  }
+  .row {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .row-text {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .row-text b {
+    color: var(--accent);
+    font-size: 18px;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    margin-top: 6px;
+  }
+  .track {
+    stroke: var(--rule);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .link {
+    stroke: var(--muted);
+    stroke-width: 2;
+  }
+  circle.before {
+    fill: var(--surface);
+    stroke: var(--muted);
+    stroke-width: 2;
+  }
+  circle.after {
+    fill: var(--accent);
+    stroke: var(--surface);
+    stroke-width: 2;
+  }
+  .key {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 4px 0 8px;
+  }
+  .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 2px 0 8px;
+  }
+  .dot:first-child {
+    margin-left: 0;
+  }
+  .dot.before {
+    border: 2px solid var(--muted);
+    background: var(--surface);
+  }
+  .dot.after {
+    background: var(--accent);
+  }
+</style>

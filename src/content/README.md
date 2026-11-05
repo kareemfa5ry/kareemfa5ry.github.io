@@ -30,6 +30,7 @@ numbers. Use lower-case file names with hyphens (`competitor-price-tracker.md`).
 | `skills`      | list of skill ids              | yes      | Skill groups this project proves, e.g. `[sql-and-databases]`.          |
 | `metrics`     | list of `{value, label}`       | yes      | Headline numbers; `[]` when there are none.                            |
 | `screenshots` | list of `{src, alt, caption?}` | yes      | Images; `[]` when there are none. See `src/assets/projects/README.md`. |
+| `results`     | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`. See below.     |
 | body          | Markdown bullet list           | yes      | The project bullets.                                                   |
 
 A screenshot entry: `src` is the path from the project file to the image
@@ -47,7 +48,20 @@ A screenshot entry: `src` is the path from the project file to the image
 | `note`     | text                           | no       | Context line shown above the bullets.                           |
 | `order`    | whole number from 1            | yes      | Position in the Experience section, 1 first.                    |
 | `projects` | list of project ids            | no       | Projects done in this role, e.g. `[daily-revenue-pipeline]`.    |
+| `results`  | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`.         |
 | body       | Markdown bullet list           | yes      | The job bullets.                                                |
+
+### results (projects and experience)
+
+Only numbers the bullets already state with both a start and an end value. Each entry has its own axis.
+
+| Field    | Type   | Required | Meaning                                                    |
+| -------- | ------ | -------- | ---------------------------------------------------------- |
+| `label`  | text   | yes      | What changed, e.g. `Seat utilisation`.                     |
+| `before` | number | yes      | Value before the work.                                     |
+| `after`  | number | yes      | Value after the work.                                      |
+| `unit`   | text   | no       | Shown after the numbers: `"%"` (axis 0 to 100) or `USD M`. |
+| `note`   | text   | no       | Source wording when a number is rounded, e.g. `under 1%`.  |
 
 ## skills
 

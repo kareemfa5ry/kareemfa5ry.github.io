@@ -11,6 +11,7 @@ src/pages/projects/[slug].astro  one detail page per project: metrics, bullets, 
 src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global stylesheet, nav, footer
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
+src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags
 src/islands/                React islands (ProjectFilter: filter-by-skill chips on the projects list); rule:
                             server-render the content, islands only toggle state; never render content only in React
