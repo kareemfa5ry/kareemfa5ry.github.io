@@ -22,10 +22,10 @@ export default defineConfig(
   {
     plugins: { "import-x": importX },
     settings: {
-      "import-x/resolver-next": [createNodeResolver({ extensions: [".ts", ".js", ".mjs", ".astro"] })],
-      "import-x/extensions": [".ts", ".js", ".mjs", ".astro"],
+      "import-x/resolver-next": [createNodeResolver({ extensions: [".ts", ".tsx", ".js", ".mjs", ".astro"] })],
+      "import-x/extensions": [".ts", ".tsx", ".js", ".mjs", ".astro"],
       // .astro is left to each file's own parser: astro-eslint-parser is ESM-only and import-x require()s by name.
-      "import-x/parsers": { "@typescript-eslint/parser": [".ts"] },
+      "import-x/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] },
     },
     rules: { "import-x/no-cycle": "error", ...FABLE_CODE_RULES },
   },

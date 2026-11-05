@@ -12,6 +12,8 @@ src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global 
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags
+src/islands/                React islands (ProjectFilter: filter-by-skill chips on the projects list); rule:
+                            server-render the content, islands only toggle state; never render content only in React
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/content.config.ts       content collection schemas (projects, experience, skills); strict, every field described

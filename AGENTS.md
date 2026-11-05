@@ -4,6 +4,8 @@
   skill in `.claude/skills/fable-code/SKILL.md`: its 10 rules while writing, its before-commit checks, its
   handoff block. A stricter rule here wins.
 - Layout, develop commands and how to rebuild the CVs: `README.md`.
+- **Islands** (`src/islands/`, React): server-render the content, islands only toggle state; never render content
+  only in React. Hydrate with `client:idle` unless a reason is written next to the directive.
 
 ## fable-code checks in this repo (JS equivalents)
 
