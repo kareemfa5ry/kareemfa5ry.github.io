@@ -1,21 +1,38 @@
 ---
-// Skill groups from the skills collection, two columns from 640px up.
+// Skill groups from the skills collection, two columns from 640px up, each with the projects that prove it.
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
   groups: CollectionEntry<"skills">[];
+  /** Projects in display order; a project proves the groups listed in its `skills`. */
+  projects: CollectionEntry<"projects">[];
 }
 
-const { groups } = Astro.props;
+const { groups, projects } = Astro.props;
+const provenBy = (groupId: string) => projects.filter((p) => p.data.skills.some((s) => s.id === groupId));
 ---
 
 <div class="skills">
-  {groups.map(({ id, data }) => (
-    <div id={id}>
-      <b>{data.label}</b>
-      <p>{data.items.join(", ")}</p>
-    </div>
-  ))}
+  {groups.map(({ id, data }) => {
+    const proofs = provenBy(id);
+    return (
+      <div id={id}>
+        <b>{data.label}</b>
+        <p>{data.items.join(", ")}</p>
+        {proofs.length > 0 && (
+          <p class="proven">
+            Proven by:{" "}
+            {proofs.map((project, i) => (
+              <>
+                {i > 0 && ", "}
+                <a href={`/projects/${project.id}/`}>{project.data.title}</a>
+              </>
+            ))}
+          </p>
+        )}
+      </div>
+    );
+  })}
 </div>
 
 <style>
@@ -37,5 +54,8 @@ const { groups } = Astro.props;
     margin: 2px 0 0;
     color: var(--muted);
     font-size: 15px;
+  }
+  .skills div p.proven {
+    font-size: 14px;
   }
 </style>

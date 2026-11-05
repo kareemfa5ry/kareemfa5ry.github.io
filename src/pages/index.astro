@@ -7,6 +7,7 @@ import ExperienceEntry from "../components/ExperienceEntry.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
 import Downloads from "../components/Downloads.astro";
+import ProjectFilter from "../islands/ProjectFilter.tsx";
 import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
 import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
@@ -25,6 +26,12 @@ const byOrder = <T extends { data: { order: number } }>(entries: T[]) =>
 const experience = byOrder(await getCollection("experience"));
 const projects = byOrder(await getCollection("projects"));
 const skills = byOrder(await getCollection("skills"));
+const filterGroups = skills.map(({ id, data }) => ({ id, label: data.label }));
+const filterProjects = projects.map(({ id, data }) => ({
+  slug: id,
+  title: data.title,
+  skills: data.skills.map((skill) => skill.id),
+}));
 
 const EDUCATION = [
   "BSc Accounting, Alexandria University, Faculty of Commerce (English section), 2010",
@@ -52,6 +59,7 @@ const EDUCATION = [
 
   <section id="projects">
     <h2>Projects</h2>
+    <ProjectFilter client:idle groups={filterGroups} projects={filterProjects} />
     {projects.map((entry) => (
       <ProjectEntry entry={entry} />
     ))}
@@ -59,7 +67,7 @@ const EDUCATION = [
 
   <section id="skills">
     <h2>Skills</h2>
-    <SkillsGrid groups={skills} />
+    <SkillsGrid groups={skills} projects={projects} />
   </section>
 
   <section id="education">

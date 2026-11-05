@@ -1,5 +1,6 @@
 ---
 // One project from the projects collection: linked title, context, bullet list and technology tags.
+// data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
 import StackTags from "./projects/StackTags.astro";
 import { render, type CollectionEntry } from "astro:content";
 
@@ -13,7 +14,7 @@ const { Content } = await render(entry);
 const meta = period ? `${org}, ${period}` : org;
 ---
 
-<div class="item">
+<div class="item" data-project={entry.id}>
   <div class="item-head">
     <h3>
       <a href={`/projects/${entry.id}/`}>{title}</a>
