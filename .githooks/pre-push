@@ -1,0 +1,3 @@
+#!/bin/sh
+# Before-push gate: the site must build. Activated by `npm install` (prepare).
+exec npm run build

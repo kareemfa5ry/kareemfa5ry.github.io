@@ -1,0 +1,58 @@
+---
+// Sticky top bar: brand link plus in-page section links.
+import { FULL_NAME } from "../site/contact";
+
+const LINKS = [
+  { href: "#experience", label: "Experience" },
+  { href: "#projects", label: "Projects" },
+  { href: "#skills", label: "Skills" },
+  { href: "#download", label: "Download CV" },
+];
+---
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">
+      {FULL_NAME}
+    </a>
+    {LINKS.map((link) => (
+      <a href={link.href}>{link.label}</a>
+    ))}
+  </div>
+</nav>
+
+<style>
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  nav .wrap {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    height: 52px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  nav .brand {
+    font-weight: 700;
+    color: var(--ink);
+    margin-right: auto;
+  }
+  nav a:not(.brand) {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  nav a:not(.brand):hover {
+    color: var(--ink);
+  }
+  @media print {
+    nav {
+      display: none;
+    }
+  }
+</style>

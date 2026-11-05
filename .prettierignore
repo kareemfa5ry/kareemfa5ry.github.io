@@ -1,0 +1,7 @@
+# Not ours to reformat: the vendored agent skill, CV sources and the lockfile.
+.claude/skills/
+src/latex/
+src/docx/
+package-lock.json
+dist/
+.astro/

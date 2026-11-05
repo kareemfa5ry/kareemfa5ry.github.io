@@ -1,0 +1,43 @@
+---
+// Headline numbers shown under the profile paragraph.
+const STATS = [
+  { value: "3×", label: "revenue growth in one year, USD 1.6M → 5.0M" },
+  { value: "USD 1.5M", label: "refund backlog cleared, ~60% without cash" },
+  { value: "68M", label: "operational log records parsed and linked" },
+  { value: "95%", label: "of audit breach cases accepted by Finance" },
+];
+---
+
+<div class="stats">
+  {STATS.map((stat) => (
+    <div class="stat">
+      <b>{stat.value}</b>
+      <span>{stat.label}</span>
+    </div>
+  ))}
+</div>
+
+<style>
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    margin: 8px 0 8px;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .stat b {
+    display: block;
+    font-size: 26px;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+  .stat span {
+    font-size: 14px;
+    color: var(--muted);
+  }
+</style>

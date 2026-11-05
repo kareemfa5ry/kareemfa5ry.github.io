@@ -1,0 +1,65 @@
+---
+// Page header: name, tagline, contact line and the two call-to-action buttons.
+import { EMAIL, FULL_NAME, LINKEDIN_LABEL, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
+
+interface Props {
+  tagline: string;
+}
+
+const { tagline } = Astro.props;
+---
+
+<header>
+  <h1>{FULL_NAME}</h1>
+  <p class="tagline">{tagline}</p>
+  <div class="contact">
+    <span>{LOCATION}</span>
+    <a href={MAILTO}>{EMAIL}</a>
+    <a href={LINKEDIN_URL} target="_blank" rel="noopener">
+      {LINKEDIN_LABEL}
+    </a>
+  </div>
+  <div class="cta">
+    <a class="btn primary" href="#download">
+      Download CV
+    </a>
+    <a class="btn secondary" href={MAILTO}>
+      Get in touch
+    </a>
+  </div>
+</header>
+
+<style>
+  header {
+    padding: 64px 0 40px;
+  }
+  h1 {
+    font-size: clamp(30px, 6vw, 44px);
+    line-height: 1.15;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    font-size: 18px;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  @media print {
+    .cta {
+      display: none;
+    }
+  }
+</style>
