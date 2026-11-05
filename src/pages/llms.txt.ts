@@ -2,13 +2,9 @@
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
+import { CV_FILES } from "../site/cv_files";
 import { plainBullets } from "../site/plain_bullets";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
-
-const CVS = [
-  ["Senior Data Analyst", "/assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf"],
-  ["Revenue and Pricing Manager", "/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf"],
-] as const;
 
 export async function GET({ site }: APIContext) {
   const url = (path: string) => new URL(path, site).href;
@@ -39,7 +35,7 @@ export async function GET({ site }: APIContext) {
     ...skills.map(({ data }) => `- ${data.label}: ${data.items.join(", ")}`),
     "",
     "## CV",
-    ...CVS.map(([title, path]) => `- [${title}](${url(path)}): PDF`),
+    ...CV_FILES.map((cv) => `- [${cv.title}](${url(cv.href)}): ${cv.blurb}`),
     "",
     "## Contact",
     `- Email: ${EMAIL}`,

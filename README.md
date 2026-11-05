@@ -17,6 +17,7 @@ src/islands/                React islands (ProjectFilter: filter-by-skill chips 
                             server-render the content, islands only toggle state; never render content only in React
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
+src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)
 src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page head
 src/site/plain_bullets.ts   plain-text bullets from an entry's Markdown body, for llms.txt and resume.json
 src/pages/llms.txt.ts       /llms.txt endpoint: the CV as Markdown for AI assistants, generated from the content

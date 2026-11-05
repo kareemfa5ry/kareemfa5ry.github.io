@@ -1,26 +1,15 @@
 ---
 // "Download CV" section: one card per published PDF in public/assets/cv/.
-const CVS = [
-  {
-    title: "Senior Data Analyst",
-    summary: "Data pipelines, BI, forecasting and statistical analysis.",
-    href: "/assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf",
-  },
-  {
-    title: "Revenue and Pricing Manager",
-    summary: "Pricing, capacity, distribution and revenue assurance.",
-    href: "/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf",
-  },
-];
+import { CV_FILES } from "../site/cv_files";
 ---
 
 <section id="download">
   <h2>Download CV</h2>
   <div class="downloads">
-    {CVS.map((cv) => (
+    {CV_FILES.map((cv) => (
       <div class="dl">
         <h3>{cv.title}</h3>
-        <p>{cv.summary}</p>
+        <p>{cv.blurb}</p>
         <a class="btn primary" href={cv.href} download>
           Download PDF
         </a>
