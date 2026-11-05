@@ -5,11 +5,13 @@ const PDFS = [
   "/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf",
 ];
 
-test("/llms.txt is plain text starting with the name", async ({ request }) => {
+test("/llms.txt is plain text starting with the name, with project bullets and results", async ({ request }) => {
   const response = await request.get("/llms.txt");
   expect(response.status()).toBe(200);
   expect(response.headers()["content-type"]).toContain("text/plain");
-  expect(await response.text()).toMatch(/^# Kareem Fakhry/);
+  const text = await response.text();
+  expect(text).toMatch(/^# Kareem Fakhry/);
+  expect(text).toContain("- Result: Unmatched baggage records: cut from 66% to under 1%");
 });
 
 test("/resume.json parses and lists 4 work entries", async ({ request }) => {
