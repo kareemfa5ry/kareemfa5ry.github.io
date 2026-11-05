@@ -1,0 +1,138 @@
+/* Site-wide tokens, dark mode, base elements and shared classes (.wrap, .btn, .item*).
+   Styles owned by one component live in that component's scoped <style> block. */
+:root {
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --ink: #1d1f22;
+  --muted: #5d636b;
+  --rule: #e3e4e6;
+  --accent: #1f4e79;
+  --accent-soft: #e8eef5;
+  --maxw: 860px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #131518;
+    --surface: #1b1e22;
+    --ink: #e8e9eb;
+    --muted: #9aa1aa;
+    --rule: #2d3137;
+    --accent: #7fb0e0;
+    --accent-soft: #1e2a37;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font:
+    16px/1.6 system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Buttons: used by Hero and Downloads. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid var(--accent);
+}
+.btn.primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn.secondary {
+  color: var(--accent);
+}
+.btn:hover {
+  text-decoration: none;
+  filter: brightness(1.08);
+}
+
+section {
+  padding: 36px 0;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: 52px;
+}
+h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Entries: used by ExperienceEntry and ProjectEntry. */
+.item {
+  margin-bottom: 28px;
+}
+.item:last-child {
+  margin-bottom: 0;
+}
+.item-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  align-items: baseline;
+}
+.meta {
+  font-size: 14px;
+  color: var(--muted);
+}
+.note {
+  font-style: italic;
+  color: var(--muted);
+  font-size: 15px;
+  margin: 4px 0 0;
+}
+ul {
+  margin: 8px 0 0;
+  padding-left: 1.2em;
+}
+li {
+  margin: 4px 0;
+}
+
+/* Print: nav, CTA and downloads hide themselves in their own components. */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 12px;
+  }
+  section {
+    padding: 14px 0;
+  }
+}

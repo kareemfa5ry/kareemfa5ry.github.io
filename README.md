@@ -1,38 +1,60 @@
 # Kareem Fakhry — CV website
 
-Personal CV site, served with GitHub Pages from the repository root.
+Personal CV site built with [Astro](https://astro.build) (static output) and deployed to GitHub Pages by
+GitHub Actions.
 
 ## Layout
 
 ```
-index.html              the website (single page, no build step)
-assets/cv/              published PDF CVs linked from the site
-src/latex/              LaTeX sources for each CV version
-src/docx/               Word versions of each CV
-build.ps1               recompiles the LaTeX CVs and refreshes assets/cv/
-.nojekyll               tells GitHub Pages to serve files as-is
-AGENTS.md, CLAUDE.md    rules for AI coding agents (Copilot, Claude Code, Codex)
-.claude/skills/         agent skills (fable-code), read by Claude Code and Copilot CLI
+src/pages/index.astro       the CV page: composes the sections, holds experience and project content
+src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global stylesheet, nav, footer
+src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
+                            SkillsGrid, Downloads, Footer (each owns its scoped <style>)
+src/site/contact.ts         name, email, LinkedIn and location used by several components
+src/styles/global.css       tokens, dark mode, base elements, shared classes, print rules
+public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
+src/latex/                  LaTeX sources for each CV version
+src/docx/                   Word versions of each CV
+build.ps1                   recompiles the LaTeX CVs and refreshes public/assets/cv/
+scripts/                    Node checks and the Claude Code git guard (see scripts/README.md)
+.githooks/                  pre-commit (npm run check) and pre-push (npm run build)
+.github/workflows/          ci.yml (checks on PRs and branches), deploy.yml (Pages deploy from main)
+eslint.config.js            lint rules, including the fable-code size and complexity caps
+.prettierrc.mjs             formatting (printWidth 120, Astro plugin)
+AGENTS.md, CLAUDE.md        rules for AI coding agents (Copilot, Claude Code, Codex)
+.claude/                    agent skills (fable-code) and the Claude Code hook settings
 ```
+
+## Develop
+
+Needs Node 22.23.4 or newer (Astro 7's minimum) and npm, on Windows or macOS.
+
+```
+npm install        # installs tools and activates the git hooks in .githooks/
+npm run dev        # local server at http://localhost:4321
+npm run check      # lint, format check, astro check, layout check: the before-commit gate
+npm run build      # static site in dist/
+npm run preview    # serve dist/ locally
+```
+
+Run `npx prettier --write .` to fix formatting reported by `npm run check`.
 
 ## CV versions
 
-| Version | Source | PDF |
-|---|---|---|
-| Senior Data Analyst | `src/latex/Kareem_Fakhry_CV_Senior_Data_Analyst.tex` | `assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf` |
-| Revenue and Pricing Manager | `src/latex/Kareem_Fakhry_CV_Revenue_Pricing_Manager.tex` | `assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf` |
+| Version                     | Source                                                   | PDF                                                             |
+| --------------------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
+| Senior Data Analyst         | `src/latex/Kareem_Fakhry_CV_Senior_Data_Analyst.tex`     | `public/assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf`     |
+| Revenue and Pricing Manager | `src/latex/Kareem_Fakhry_CV_Revenue_Pricing_Manager.tex` | `public/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf` |
 
 ## Updating a CV
 
 1. Edit the `.tex` file in `src/latex/`.
-2. Run `./build.ps1` (needs MiKTeX or TeX Live with `latexmk`).
-3. If the change affects the website text, update `index.html` too.
-4. Commit and push; GitHub Pages redeploys automatically.
-
-## Preview locally
-
-Open `index.html` in a browser, or run `python -m http.server` and visit http://localhost:8000.
+2. Run `./build.ps1` (needs MiKTeX or TeX Live with `pdflatex`).
+3. If the change affects the website text, update `src/pages/index.astro` or the component that holds it.
+4. Commit (the pre-commit hook runs `npm run check`) and push; the deploy workflow publishes `main`.
 
 ## Publishing on GitHub Pages
 
-Repository **Settings → Pages → Build and deployment**: Source *Deploy from a branch*, branch `main`, folder `/ (root)`.
+`.github/workflows/deploy.yml` builds with `withastro/action` and publishes with `actions/deploy-pages` on every
+push to `main`. **One-time human step:** in repository **Settings → Pages → Build and deployment**, switch
+Source from _Deploy from a branch_ to _GitHub Actions_. Until then the old branch deploy keeps serving.

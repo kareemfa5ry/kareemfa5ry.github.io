@@ -10,7 +10,7 @@
 *.bbl
 *.blg
 
-# PDFs compiled next to the sources (published copies live in assets/cv/)
+# PDFs compiled next to the sources (published copies live in public/assets/cv/)
 src/latex/*.pdf
 
 # Word lock files
@@ -22,3 +22,8 @@ Thumbs.db
 desktop.ini
 .vscode/
 .idea/
+
+# Node / Astro
+node_modules/
+dist/
+.astro/

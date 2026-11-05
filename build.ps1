@@ -1,9 +1,9 @@
-# Compiles every CV in src/latex and copies the PDFs to assets/cv/ for the website.
+# Compiles every CV in src/latex and copies the PDFs to public/assets/cv/ for the website.
 # Usage:  ./build.ps1   (needs pdflatex from MiKTeX or TeX Live)
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 $src  = Join-Path $root 'src/latex'
-$out  = Join-Path $root 'assets/cv'
+$out  = Join-Path $root 'public/assets/cv'
 
 Push-Location $src
 try {
@@ -19,4 +19,4 @@ try {
 }
 finally { Pop-Location }
 
-Write-Host "Done. PDFs updated in assets/cv/"
+Write-Host "Done. PDFs updated in public/assets/cv/"

@@ -1,0 +1,44 @@
+---
+// One project: title, context, bullet list and technology tags.
+interface Props {
+  title: string;
+  meta: string;
+  bullets: string[];
+  tags: string[];
+}
+
+const { title, meta, bullets, tags } = Astro.props;
+---
+
+<div class="item">
+  <div class="item-head">
+    <h3>{title}</h3>
+    <span class="meta">{meta}</span>
+  </div>
+  <ul>
+    {bullets.map((bullet) => (
+      <li>{bullet}</li>
+    ))}
+  </ul>
+  <div class="tags">
+    {tags.map((tag) => (
+      <span class="tag">{tag}</span>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .tag {
+    font-size: 13px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+</style>

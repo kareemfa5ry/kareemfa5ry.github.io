@@ -1,0 +1,24 @@
+---
+// One job: title, place and dates, optional context note, bullet list.
+interface Props {
+  title: string;
+  meta: string;
+  note?: string;
+  bullets: string[];
+}
+
+const { title, meta, note, bullets } = Astro.props;
+---
+
+<div class="item">
+  <div class="item-head">
+    <h3>{title}</h3>
+    <span class="meta">{meta}</span>
+  </div>
+  {note && <p class="note">{note}</p>}
+  <ul>
+    {bullets.map((bullet) => (
+      <li>{bullet}</li>
+    ))}
+  </ul>
+</div>
