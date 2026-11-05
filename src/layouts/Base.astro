@@ -14,6 +14,9 @@ interface Props {
 
 const { title, description, ogDescription, jsonLd } = Astro.props;
 
+const OG_IMAGE = new URL("/og.png", Astro.site).href;
+const OG_IMAGE_ALT = "Kareem Fakhry, senior data analyst and revenue manager: headline figures from his CV";
+
 const FAVICON =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f4e79'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3EKF%3C/text%3E%3C/svg%3E";
 ---
@@ -28,6 +31,11 @@ const FAVICON =
     <meta property="og:title" content={title} />
     <meta property="og:description" content={ogDescription} />
     <meta property="og:type" content="profile" />
+    <meta property="og:image" content={OG_IMAGE} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={OG_IMAGE_ALT} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href={FAVICON} />
     <link rel="alternate" type="application/json" href="/resume.json" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
