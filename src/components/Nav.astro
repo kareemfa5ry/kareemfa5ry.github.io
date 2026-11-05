@@ -1,13 +1,11 @@
 ---
 // Sticky top bar: brand link, in-page section links and the light/dark theme toggle.
-import { CHAT_ENABLED } from "../site/chat";
 import { FULL_NAME } from "../site/contact";
 import ThemeToggle from "./theme/ThemeToggle.astro";
 
 const LINKS = [
   { href: "#experience", label: "Experience" },
   { href: "#projects", label: "Projects" },
-  ...(CHAT_ENABLED ? [{ href: "#ask", label: "Ask" }] : []),
   { href: "#skills", label: "Skills" },
   { href: "#download", label: "Download CV" },
 ];

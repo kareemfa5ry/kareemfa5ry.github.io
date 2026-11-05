@@ -3,6 +3,8 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import ChatWidget from "../islands/ChatWidget.tsx";
+import { CHAT, CHAT_ENABLED } from "../site/chat";
 import ThemeInit from "../components/theme/ThemeInit.astro";
 
 interface Props {
@@ -48,5 +50,6 @@ const FAVICON =
       <slot />
     </main>
     <Footer />
+    {CHAT_ENABLED && <ChatWidget client:idle workerUrl={CHAT.workerUrl} siteKey={CHAT.turnstileSiteKey} />}
   </body>
 </html>
