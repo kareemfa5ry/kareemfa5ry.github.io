@@ -26,6 +26,7 @@ src/content.config.ts       content collection schemas (projects, experience, sk
 src/content/                one Markdown file per project, job and skill group (fields: src/content/README.md)
 src/assets/projects/        project screenshots, one folder per project (see its README.md)
 src/styles/global.css       tokens, dark mode, base elements, shared classes, print rules
+public/og.png               social preview image (1200x630), linked from the head in Base.astro
 public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
 scripts/                    Node checks and the Claude Code git guard (see scripts/README.md)
 .githooks/                  pre-commit (npm run check) and pre-push (npm run build)
@@ -50,6 +51,11 @@ npm run preview    # serve dist/ locally
 ```
 
 Run `npx prettier --write .` to fix formatting reported by `npm run check`.
+
+## Regenerating the preview image
+
+`public/og.png` is a screenshot of a 1200x630 HTML mock of the hero and stats (light theme tokens, system-ui).
+Regenerate it when the tagline or the stats in `src/site/profile.ts` change.
 
 ## CV PDFs
 
