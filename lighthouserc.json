@@ -2,9 +2,10 @@
   "ci": {
     "collect": {
       "url": ["http://localhost:4321/", "http://localhost:4321/projects/daily-revenue-pipeline/"],
-      "numberOfRuns": 1
+      "numberOfRuns": 3
     },
     "assert": {
+      "aggregationMethod": "median",
       "assertions": {
         "categories:performance": ["error", { "minScore": 0.9 }],
         "categories:accessibility": ["error", { "minScore": 0.95 }],
