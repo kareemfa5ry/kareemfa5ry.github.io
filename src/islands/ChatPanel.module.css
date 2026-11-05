@@ -75,3 +75,7 @@
   opacity: 0.5;
   cursor: default;
 }
+/* Turnstile mounts here; an interactive check needs it visible, so no fixed height and no clipping. */
+.challenge {
+  min-height: 0;
+}

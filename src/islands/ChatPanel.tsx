@@ -59,7 +59,7 @@ export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; s
           </button>
         </div>
       </form>
-      <div ref={box} />
+      <div ref={box} className={styles.challenge} />
     </div>
   );
 }

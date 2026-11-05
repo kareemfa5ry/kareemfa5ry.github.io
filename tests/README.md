@@ -12,5 +12,6 @@ First run on a machine: `npx playwright install chromium`.
 | `e2e/filter_island.spec.ts`    | a skill chip hides projects, a second click restores them, Enter toggles                                                                                          |
 | `e2e/theme.spec.ts`            | page follows the system theme; the nav switch changes theme, keeps it, works from the keyboard (Space, Enter); switch role, "Dark mode" name and responsive label |
 | `e2e/chat_widget.spec.ts`      | floating chat launcher stays in view, opens, docks/undocks, minimizes (button, Escape), phone fill                                                                |
+| `e2e/chat_turnstile.spec.ts`   | a failed human check is retried once (widget removed); a persistent one shows the human-check text                                                                |
 | `unit/chat_history.test.mjs`   | `trimHistory` (src/islands/chat_history.ts): limits, pair dropping, ends with the user turn                                                                       |
 | `unit/check_pr_name.test.mjs`  | scripts/check_pr_name.mjs exit codes: number, title and branch agree; branch-only mode                                                                            |
