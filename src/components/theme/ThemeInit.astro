@@ -1,0 +1,14 @@
+---
+// Applies the stored light or dark choice to <html> before first paint, so the page never flashes the wrong theme.
+// Inline on purpose: a bundled script would run after paint. Goes in <head>.
+import { THEME_ATTRIBUTE, THEME_STORAGE_KEY, THEMES } from "../../site/theme";
+---
+
+<script is:inline define:vars={{ key: THEME_STORAGE_KEY, attribute: THEME_ATTRIBUTE, themes: THEMES }}>
+  try {
+    const stored = localStorage.getItem(key);
+    if (themes.includes(stored)) document.documentElement.setAttribute(attribute, stored);
+  } catch {
+    // Storage blocked (private mode, site data off): the page follows the system setting.
+  }
+</script>

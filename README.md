@@ -13,6 +13,8 @@ src/components/             one component per concern: Nav, Hero, Stats, Experie
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags
+src/components/theme/       light/dark theme: ThemeInit (inline head script, applies the stored choice before
+                            paint) and ThemeToggle (nav airplane switch that changes and remembers the choice)
 src/islands/                React islands (ProjectFilter: filter chips; ChatPanel + useChatStream: the Ask chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL and Turnstile site key for the chat panel (empty = no chat section)
@@ -21,6 +23,7 @@ src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)
 src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page head
 src/site/plain_bullets.ts   plain-text bullets from an entry's Markdown body, for llms.txt and resume.json
+src/site/theme.ts           theme names, the localStorage key and the <html> attribute the theme switch uses
 src/pages/llms.txt.ts       /llms.txt endpoint: the CV as Markdown for AI assistants, generated from the content
 src/pages/resume.json.ts    /resume.json endpoint: JSON Resume v1, generated from the content
 src/content.config.ts       content collection schemas (projects, experience, skills); strict, every field described
