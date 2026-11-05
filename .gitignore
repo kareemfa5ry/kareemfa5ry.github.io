@@ -13,3 +13,7 @@ dist/
 # Cloudflare Worker (worker/): local secrets and wrangler state, never committed
 .dev.vars
 .wrangler/
+
+# Playwright output
+playwright-report/
+test-results/
