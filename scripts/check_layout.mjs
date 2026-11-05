@@ -2,14 +2,14 @@
 //   - a source file over 400 lines
 //   - a folder with more than 8 loose source files (index.ts does not count)
 //   - a grab-bag basename (utils, helpers, misc, common), any extension
-//   - a lint-silencing comment in src/ or scripts/
+//   - a lint-silencing comment in src/, scripts/ or worker/
 // Prints one `path: reason` line per violation and exits 1, or prints `layout ok`.
 // Usage: node scripts/check_layout.mjs   (run from the repo root; `npm run check:layout`)
 import { readdirSync, readFileSync } from "node:fs";
 import { extname, join, parse, relative } from "node:path";
 
 const ROOTS = ["src", "scripts", ".github", "worker"];
-const SILENCE_ROOTS = ["src", "scripts"];
+const SILENCE_ROOTS = ["src", "scripts", "worker"];
 const SOURCE_EXTENSIONS = new Set([".astro", ".ts", ".tsx", ".js", ".mjs", ".css"]);
 const MAX_LINES = 400;
 const MAX_LOOSE = 8;

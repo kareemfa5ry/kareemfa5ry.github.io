@@ -13,8 +13,9 @@
 
 ## fable-code checks in this repo (JS equivalents)
 
-- **Before-commit gate:** `npm run check` (eslint, prettier --check, astro check, scripts/check_layout.mjs). It
-  must pass clean; `npm run build` must pass before a push.
+- **Before-commit gate:** `npm run check` (eslint, prettier --check, astro check, scripts/check_layout.mjs, and the
+  worker unit tests via `npm run worker:test`). It must pass clean; `npm run build` must pass before a push.
+  `worker/` secrets live only in Worker secrets and a local, git-ignored `worker/.dev.vars`.
 - **Hooks:** `npm install` activates `.githooks/` (pre-commit runs `npm run check`, pre-push runs
   `npm run build`). Never commit with `--no-verify` / `-n` and never `git push --force`; the Claude Code hook in
   `.claude/settings.json` (`scripts/guard_git.mjs`) blocks both.
