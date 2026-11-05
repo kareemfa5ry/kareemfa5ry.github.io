@@ -11,6 +11,10 @@ src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global 
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
+src/site/profile.ts         tagline, profile paragraph and the four stat tiles
+src/content.config.ts       content collection schemas (projects, experience, skills); strict, every field described
+src/content/                one Markdown file per project, job and skill group (fields: src/content/README.md)
+src/assets/projects/        project screenshots, one folder per project (see its README.md)
 src/styles/global.css       tokens, dark mode, base elements, shared classes, print rules
 public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
 src/latex/                  LaTeX sources for each CV version
