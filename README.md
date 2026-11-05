@@ -15,9 +15,9 @@ src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags
 src/components/theme/       light/dark theme: ThemeInit (inline head script, applies the stored choice before
                             paint) and ThemeToggle (nav airplane switch that changes and remembers the choice)
-src/islands/                React islands (ProjectFilter: filter chips; ChatPanel + useChatStream: the Ask chat); rule:
+src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + useChatStream: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
-src/site/chat.ts            Worker URL and Turnstile site key for the chat panel (empty = no chat section)
+src/site/chat.ts            Worker URL and Turnstile site key for the chat panel (empty = no chat widget)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)

@@ -8,10 +8,8 @@ import ProjectEntry from "../components/ProjectEntry.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
 import Downloads from "../components/Downloads.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
-import ChatPanel from "../islands/ChatPanel.tsx";
 import { getCollection } from "astro:content";
-import { CHAT, CHAT_ENABLED } from "../site/chat";
-import { EMAIL, FULL_NAME, MAILTO } from "../site/contact";
+import { FULL_NAME } from "../site/contact";
 import { personJsonLd } from "../site/person_jsonld";
 import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
 
@@ -72,19 +70,6 @@ const EDUCATION = [
       <ProjectEntry entry={entry} />
     ))}
   </section>
-
-  {CHAT_ENABLED && (
-    <section id="ask">
-      <h2>Ask about Kareem</h2>
-      <p>
-        Answers come from the content of this site; for anything else, email <a href={MAILTO}>{EMAIL}</a>.
-      </p>
-      <noscript>
-        <p>The chat needs JavaScript.</p>
-      </noscript>
-      <ChatPanel client:idle workerUrl={CHAT.workerUrl} siteKey={CHAT.turnstileSiteKey} />
-    </section>
-  )}
 
   <section id="skills">
     <h2>Skills</h2>
