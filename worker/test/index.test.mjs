@@ -116,3 +116,7 @@ test("router: llms.txt that is not text/plain, or 64 KB or more, is 503", async 
   assert.equal((await worker.fetch(post(), makeEnv())).status, 503);
   assert.equal(calledClaude(), false);
 });
+
+test("the entry module exports only the handler (workerd rejects other exports)", async () => {
+  assert.deepEqual(Object.keys(await import("../src/index.ts")), ["default"]);
+});
