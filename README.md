@@ -109,5 +109,6 @@ owner on GitHub Pro) before the first deploy.
 
 Every change reaches `main` through a pull request that passes the `check` job in `ci.yml`. The owner imports
 the ruleset once: **Settings → Rules → Rulesets → New ruleset → Import a ruleset**, choose
-`.github/rulesets/protect-main.json`. It requires a pull request (squash merge), the `check` status, and blocks
+`.github/rulesets/protect-main.json`. It requires a pull request (squash merge), the `check` and `e2e` statuses (`lighthouse` stays advisory), and blocks
 force pushes and deletion of `main`.
+After a change to the ruleset file, the owner must re-import it for the new check (`e2e`) to become required.
