@@ -5,16 +5,17 @@ import { AXIS, changeText, xFor, type Result } from "./scale";
 interface Props {
   results: readonly Result[];
   id: string;
+  headingLevel?: "h2" | "h3" | "h4";
 }
 
-const { results, id } = Astro.props;
+const { results, id, headingLevel: Heading = "h2" } = Astro.props;
 const { width, height } = AXIS;
 const mid = height / 2;
 ---
 
 {results.length > 0 && (
   <section class="results">
-    <h2>Results</h2>
+    <Heading>Results</Heading>
     <p class="key">
       <span class="dot before"></span> before <span class="dot after"></span> after
     </p>
@@ -45,6 +46,11 @@ const mid = height / 2;
 <style>
   .results {
     margin: 16px 0;
+  }
+  h4 {
+    font-size: 15px;
+    text-transform: none;
+    letter-spacing: normal;
   }
   .row {
     background: var(--surface);

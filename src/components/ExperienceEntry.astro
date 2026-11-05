@@ -28,5 +28,5 @@ const meta = `${location} · ${monthLabel(start)} – ${end ? monthLabel(end) : 
   </div>
   {note && <p class="note">{note}</p>}
   <Content />
-  <BeforeAfterChart results={results} id={`exp-${entry.id}`} />
+  <BeforeAfterChart headingLevel="h4" results={results} id={`exp-${entry.id}`} />
 </div>
