@@ -74,10 +74,11 @@ page, failing under performance 0.9, accessibility 0.95, best-practices 0.9 or S
 `worker/` is the "ask about Kareem" chat endpoint: a Cloudflare Worker that answers from `/llms.txt` with Claude and
 streams the reply. Contract, secrets, local run and deploy: `worker/README.md`.
 
-### Turning the chat on
+### Turning the chat on or off
 
-After deploying the Worker, set `workerUrl` and `turnstileSiteKey` in `src/site/chat.ts` (both are public values).
-While either is empty the home page has no chat section and no nav link.
+The chat is on: `src/site/chat.ts` holds the deployed Worker URL and the Turnstile site key (both public values).
+To take the chat off the site, empty either value; the home page then has no chat section and no nav link.
+After redeploying the Worker under a new name or account, update `workerUrl` there.
 
 ## Regenerating the preview image
 
