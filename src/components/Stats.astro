@@ -1,15 +1,16 @@
 ---
-// Headline numbers shown under the profile paragraph.
-const STATS = [
-  { value: "3×", label: "revenue growth in one year, USD 1.6M → 5.0M" },
-  { value: "USD 1.5M", label: "refund backlog cleared, ~60% without cash" },
-  { value: "68M", label: "operational log records parsed and linked" },
-  { value: "95%", label: "of audit breach cases accepted by Finance" },
-];
+// Tiles of headline numbers: the profile stats on the home page, a project's metrics on its page.
+import type { Stat } from "../site/profile";
+
+interface Props {
+  stats: readonly Stat[];
+}
+
+const { stats } = Astro.props;
 ---
 
 <div class="stats">
-  {STATS.map((stat) => (
+  {stats.map((stat) => (
     <div class="stat">
       <b>{stat.value}</b>
       <span>{stat.label}</span>

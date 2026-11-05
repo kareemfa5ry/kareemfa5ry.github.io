@@ -1,5 +1,5 @@
 ---
-// The CV page: composes the sections; experience and project content stays inline until phase 2.
+// The CV page: composes the sections from the content collections and src/site/profile.ts.
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
 import Stats from "../components/Stats.astro";
@@ -7,7 +7,9 @@ import ExperienceEntry from "../components/ExperienceEntry.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
 import Downloads from "../components/Downloads.astro";
+import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
+import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
 
 const PAGE = {
   title: `${FULL_NAME} — Revenue & Data Analytics`,
@@ -16,107 +18,13 @@ const PAGE = {
     "data analyst and revenue manager with 15 years in airline revenue, pricing and operations. SQL, Python, Power BI.",
   ogDescription:
     "15 years in airline revenue, pricing and operations. SQL, Python, Power BI, forecasting and revenue assurance.",
-  tagline: "Senior Data Analyst and Revenue Manager · 15 years in airline revenue, pricing and operations",
 };
 
-const EXPERIENCE = [
-  {
-    title: "Data and AI Consultant (freelance) · Nesma Airlines",
-    meta: "Cairo · Feb 2026 – Present",
-    bullets: [
-      "Kept on as a consultant after the employee role ended. Built a log-processing pipeline, a daily forecasting pipeline and an audit application (see Projects).",
-      "Since August 2026, running a paid AI programme for the commercial department: a 5-day, 15-hour bilingual Arabic and English foundation course, then advanced sessions on AI agents and automated workflows. Each participant builds and presents a working workflow from their own daily tasks.",
-    ],
-  },
-  {
-    title: "Revenue Manager · Nesma Airlines",
-    meta: "Cairo · Oct 2022 – Jan 2026",
-    note: "Joined after new owners bought the airline, with reporting systems switched off. Built the revenue and data team from one person to five.",
-    bullets: [
-      "Restarted commercial operations in two to three months, rebuilding reporting by hand with six sales agents while systems were offline.",
-      "Cleared a USD 1.5 million customer refund backlog before sales reopened. Settled about 60% without cash, through future incentives and discounted peak-season seat blocks given to selected top agents.",
-      "Turned one manual sheet into an automated daily report: capacity, passengers, utilisation, average fare and revenue, actual against plan, by route, sales channel, currency and booking window.",
-      "Built a 136-field transaction table, one row per ticket action, combining four sales sources, with every money item kept in both original and reporting currency.",
-      "Evaluated a commercial revenue management system (PROS), found it did not fit the Egyptian market, and built an in-house forecast instead.",
-      "January 2023 to January 2024: seats doubled while revenue tripled from USD 1.6 million to USD 5.0 million, with average fare up 37% and seat utilisation up from 71% to 81%.",
-    ],
-  },
-  {
-    title: "Head of Revenue and Network Planning · Nile Air",
-    meta: "Cairo · Jan 2017 – Jun 2021",
-    note: "Started as acting Revenue Manager and was confirmed after three months. Led four route controllers and yield executives.",
-    bullets: [
-      "Set pricing strategy and repriced the full route network after the Egyptian currency devaluation.",
-      "Brought fare filing in-house by securing a two-week ATPCO training programme, removing a paid outside dependency.",
-      "Delivered interline agreements with flydubai, Pegasus and Hahn Air, and codeshare agreements with Air Cairo and EgyptAir, from contract to pricing setup and go-live.",
-      "Took the Amadeus revenue accounting system through go-live with Finance and the vendor, fixing live data errors until reported figures could be trusted.",
-      "Wrote the audit rules and procedures for a three-year outsourced revenue audit (Sutherland) covering sales, reissues, refunds and agent booking behaviour.",
-      "Built the network and revenue data warehouse in SQL and Excel, and the five-year business plan prepared for the planned stock market listing.",
-      "Decided with Planning which flights to cancel and which to operate through the COVID-19 closures and reopening.",
-    ],
-  },
-  {
-    title: "Air Arabia",
-    meta: "Egypt and UAE · Dec 2010 – Jan 2016",
-    note: "Yield Management Executive (UAE, 2014–2016) · Revenue Management Support Executive (UAE, 2014) · Sales Support Executive (Egypt, 2012–2014) · Call Centre Representative (Egypt, 2010–2012)",
-    bullets: [
-      "Priced routes, controlled seat inventory and overbooking, and analysed no-shows and group demand. Handled the Egypt base across fares, sales and promotions.",
-      "Supported the market study for the Jordan base launch, and handled all contracted Umrah group bookings across three airports for a full season.",
-    ],
-  },
-];
-
-const PROJECTS = [
-  {
-    title: "Daily revenue data pipeline and forecasting dashboard",
-    meta: "Nesma Airlines, 2026",
-    bullets: [
-      "Loads daily ticket and flight exports into PostgreSQL and applies only the rows that changed, found by comparing checksums. Runs in 17 stages that restart from the point of failure; a normal daily run takes about 9 minutes.",
-      "Forecasts every flight departing in the next 14 days by comparing its bookings so far with similar past flights, then scores each flight and flags the ones that need a pricing or inventory action.",
-      "Moved the heavy processing from Python into the database after the first version needed 35 GB of memory and stalled.",
-    ],
-    tags: ["PostgreSQL", "Materialized views", "Python", "React", "GraphQL", "Redis"],
-  },
-  {
-    title: "Operational log parser and revenue checks",
-    meta: "Nesma Airlines, 2026",
-    bullets: [
-      "Parsed 68 million raw airline operational log records covering 17 months, and linked 11 million ticket events across separate systems.",
-      "Matched 99% of 939,000 checked bags to the ticket that owned them, cutting unmatched records from 66% to under 1%. Found 40,981 paid extra-baggage records with no matching ticket, for revenue recovery.",
-      "Confirmed 2,708 no-shows out of 3,779 cases checked, and set aside cases with conflicting boarding evidence so no passenger was wrongly charged.",
-      "Made a key query about 660 times faster by adding a missing index. Protected results with locked tables, SHA-256 row fingerprints and 193 automated tests.",
-    ],
-    tags: ["PostgreSQL", "Triggers", "Python", "SHA-256", "Automated tests"],
-  },
-  {
-    title: "Revenue audit engine",
-    meta: "Nesma Airlines",
-    bullets: [
-      "Checked every ticket against filed fare rules and contracted fees. Flagged refunds without the required penalty, refunds on non-refundable fares, late cancellations and churning (an agent booking and cancelling the same seats again and again).",
-      "Defined 38 standard breach categories and ran a manual check in parallel before relying on the automation.",
-      "One quarter: 1,305 breaches across 170 sales partners, worth about USD 106,000. Finance accepted about 95% of the cases submitted.",
-    ],
-    tags: ["Excel & VBA", "Power Query", "pandas", "Amadeus billing files"],
-  },
-  {
-    title: "Customer and route analytics in Power BI",
-    meta: "Nesma Airlines",
-    bullets: [
-      "Built dashboards for demand forecasting, customer segmentation, personalised offers and customer churn.",
-      "Used averages, medians and spread measures, box plots to find outliers, and significance tests on sampled routes to check whether differences between routes were real before acting on them.",
-    ],
-    tags: ["Power BI", "Power Query", "Star schema", "SQL", "Excel"],
-  },
-  {
-    title: "Competitor price tracker",
-    meta: "Nesma Airlines, 2023–2024",
-    bullets: [
-      "Started as a script that captured fare calendar screenshots for the daily report. Grew into a scheduled scraper collecting one-way and 14-day return prices 90 days ahead for up to eight competing airlines per route.",
-      "Cleaned data was emailed automatically every day to the commercial team, the revenue team and the chairman, and fed the pricing dashboards.",
-    ],
-    tags: ["Python", "Web scraping", "Scheduled tasks", "Power Query"],
-  },
-];
+const byOrder = <T extends { data: { order: number } }>(entries: T[]) =>
+  [...entries].sort((a, b) => a.data.order - b.data.order);
+const experience = byOrder(await getCollection("experience"));
+const projects = byOrder(await getCollection("projects"));
+const skills = byOrder(await getCollection("skills"));
 
 const EDUCATION = [
   "BSc Accounting, Alexandria University, Faculty of Commerce (English section), 2010",
@@ -127,36 +35,31 @@ const EDUCATION = [
 ---
 
 <Base title={PAGE.title} description={PAGE.description} ogDescription={PAGE.ogDescription}>
-  <Hero tagline={PAGE.tagline} />
+  <Hero tagline={TAGLINE} />
 
   <section id="profile">
     <h2>Profile</h2>
-    <p>
-      Data analyst with 15 years in airline revenue, pricing and operations. I build the full path from raw system files
-      to a business decision: SQL and Python data pipelines, Power BI dashboards, forecasts, customer segmentation and
-      statistical tests. I find money that is being lost, such as uncollected penalties, unbilled extra baggage and
-      partners breaking contract rules, and I train commercial teams to use AI in their daily work.
-    </p>
-    <Stats />
+    <p>{PROFILE_SUMMARY}</p>
+    <Stats stats={STATS} />
   </section>
 
   <section id="experience">
     <h2>Experience</h2>
-    {EXPERIENCE.map((job) => (
-      <ExperienceEntry {...job} />
+    {experience.map((entry) => (
+      <ExperienceEntry entry={entry} />
     ))}
   </section>
 
   <section id="projects">
     <h2>Projects</h2>
-    {PROJECTS.map((project) => (
-      <ProjectEntry {...project} />
+    {projects.map((entry) => (
+      <ProjectEntry entry={entry} />
     ))}
   </section>
 
   <section id="skills">
     <h2>Skills</h2>
-    <SkillsGrid />
+    <SkillsGrid groups={skills} />
   </section>
 
   <section id="education">

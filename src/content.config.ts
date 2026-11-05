@@ -30,7 +30,13 @@ const projects = defineCollection({
     z.strictObject({
       title: z.string().min(1).describe("Project name, shown as the heading."),
       org: z.string().min(1).describe("Organisation the work was done for, e.g. 'Nesma Airlines'."),
-      period: z.string().min(1).describe("When, shown as typed: '2026' or '2023–2024'. Quote it in front matter."),
+      period: z
+        .string()
+        .min(1)
+        .optional()
+        .describe(
+          "When, shown as typed: '2026' or '2023–2024'. Quote it in front matter. Omit when the page shows no year.",
+        ),
       order: displayOrder,
       summary: z.string().min(1).describe("One sentence on what it does and why it mattered; used on cards and chat."),
       stack: z.array(z.string().min(1)).describe("Technology tag labels, shown as chips in this order."),
@@ -53,7 +59,11 @@ const projects = defineCollection({
 const experience = defineCollection({
   loader: markdownIn("experience"),
   schema: z.strictObject({
-    title: z.string().min(1).describe("Job title, e.g. 'Revenue Manager'."),
+    title: z
+      .string()
+      .min(1)
+      .optional()
+      .describe("Job title, e.g. 'Revenue Manager'. Omit when the roles are listed in the note, as for Air Arabia."),
     org: z.string().min(1).describe("Employer or client, e.g. 'Nesma Airlines'."),
     location: z.string().min(1).describe("City or region, e.g. 'Cairo' or 'Egypt and UAE'."),
     start: yearMonth.describe("First month in the role, YYYY-MM, quoted."),

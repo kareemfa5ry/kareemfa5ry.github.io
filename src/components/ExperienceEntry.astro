@@ -1,24 +1,30 @@
 ---
-// One job: title, place and dates, optional context note, bullet list.
+// One job from the experience collection: heading, place and dates, optional context note, bullet list.
+import { render, type CollectionEntry } from "astro:content";
+
 interface Props {
-  title: string;
-  meta: string;
-  note?: string;
-  bullets: string[];
+  entry: CollectionEntry<"experience">;
 }
 
-const { title, meta, note, bullets } = Astro.props;
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function monthLabel(yearMonth: string): string {
+  const [year, month] = yearMonth.split("-");
+  return `${MONTHS[Number(month) - 1]} ${year}`;
+}
+
+const { entry } = Astro.props;
+const { title, org, location, start, end, note } = entry.data;
+const { Content } = await render(entry);
+const heading = title ? `${title} · ${org}` : org;
+const meta = `${location} · ${monthLabel(start)} – ${end ? monthLabel(end) : "Present"}`;
 ---
 
 <div class="item">
   <div class="item-head">
-    <h3>{title}</h3>
+    <h3>{heading}</h3>
     <span class="meta">{meta}</span>
   </div>
   {note && <p class="note">{note}</p>}
-  <ul>
-    {bullets.map((bullet) => (
-      <li>{bullet}</li>
-    ))}
-  </ul>
+  <Content />
 </div>

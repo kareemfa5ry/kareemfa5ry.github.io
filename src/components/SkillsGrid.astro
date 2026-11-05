@@ -1,50 +1,19 @@
 ---
-// Skill areas, two columns from 640px up.
-const SKILLS = [
-  {
-    area: "SQL and databases",
-    detail:
-      "PostgreSQL, MySQL, DBeaver, joins and window functions, materialized views, indexing and query tuning, triggers",
-  },
-  {
-    area: "BI and reporting",
-    detail: "Power BI, Power Query, Excel Data Model, star schema models, Excel and VBA, automated daily reports",
-  },
-  {
-    area: "Revenue management",
-    detail:
-      "Pricing strategy, capacity and inventory control, overbooking, demand forecasting, group and contract pricing",
-  },
-  {
-    area: "Revenue assurance",
-    detail: "Partner audits, penalty and fee checks, refund control, settlement with partners, audit procedures",
-  },
-  {
-    area: "Statistics and analysis",
-    detail:
-      "Descriptive statistics, box plots and outlier checks, significance tests, customer segmentation, churn analysis",
-  },
-  {
-    area: "Programming",
-    detail: "Python (pandas, psycopg), web scraping, scheduled jobs, web dashboards (React, GraphQL, Redis)",
-  },
-  {
-    area: "AI",
-    detail:
-      "AI-assisted development (Cursor, VS Code, Windsurf), AI agents and automated workflows, AI training for business teams",
-  },
-  {
-    area: "Source systems",
-    detail: "Amadeus (inventory, revenue accounting, billing files), Hitit, ATPCO, Accelya, SAP, Oracle",
-  },
-];
+// Skill groups from the skills collection, two columns from 640px up.
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  groups: CollectionEntry<"skills">[];
+}
+
+const { groups } = Astro.props;
 ---
 
 <div class="skills">
-  {SKILLS.map((skill) => (
-    <div>
-      <b>{skill.area}</b>
-      <p>{skill.detail}</p>
+  {groups.map(({ id, data }) => (
+    <div id={id}>
+      <b>{data.label}</b>
+      <p>{data.items.join(", ")}</p>
     </div>
   ))}
 </div>

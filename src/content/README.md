@@ -23,7 +23,7 @@ numbers. Use lower-case file names with hyphens (`competitor-price-tracker.md`).
 | ------------- | ------------------------------ | -------- | ---------------------------------------------------------------------- |
 | `title`       | text                           | yes      | Project name, shown as the heading.                                    |
 | `org`         | text                           | yes      | Organisation the work was done for.                                    |
-| `period`      | text, quoted                   | yes      | When, shown as typed: `"2026"` or `"2023–2024"`.                       |
+| `period`      | text, quoted                   | no       | When, shown as typed: `"2026"` or `"2023–2024"`; omit if no year.      |
 | `order`       | whole number from 1            | yes      | Position in the Projects section, 1 first.                             |
 | `summary`     | text, one sentence             | yes      | What it does and why it mattered; used on cards and as chat context.   |
 | `stack`       | list of text                   | yes      | Technology tags, shown as chips in this order.                         |
@@ -39,7 +39,7 @@ A screenshot entry: `src` is the path from the project file to the image
 
 | Field      | Type                           | Required | Meaning                                                         |
 | ---------- | ------------------------------ | -------- | --------------------------------------------------------------- |
-| `title`    | text                           | yes      | Job title.                                                      |
+| `title`    | text                           | no       | Job title; omit when the roles are in the note (Air Arabia).    |
 | `org`      | text                           | yes      | Employer or client.                                             |
 | `location` | text                           | yes      | City or region.                                                 |
 | `start`    | `"YYYY-MM"`, quoted            | yes      | First month in the role.                                        |
