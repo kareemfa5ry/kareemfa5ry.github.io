@@ -1,0 +1,83 @@
+/* Launcher bubble, chat card and side-dock layout for ChatWidget.tsx; tokens only. */
+.launcher {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 20;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--accent);
+  color: var(--bg);
+  cursor: pointer;
+}
+.launcher[hidden] {
+  display: none;
+}
+.card {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  width: min(380px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.card.docked {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100vw);
+  max-height: none;
+  height: 100vh;
+  border-radius: 0;
+  border-width: 0 0 0 1px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+.header h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+}
+.header button {
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+}
+.body {
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+}
+@media (max-width: 640px) {
+  .card,
+  .card.docked {
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: none;
+    border-radius: 0;
+    border-width: 0;
+  }
+}
