@@ -6,6 +6,15 @@ start: "2022-10"
 end: "2026-01"
 note: "Joined after new owners bought the airline, with reporting systems switched off. Built the revenue and data team from one person to five."
 order: 2
+results:
+  - label: Annual revenue
+    before: 1.6
+    after: 5.0
+    unit: USD M
+  - label: Seat utilisation
+    before: 71
+    after: 81
+    unit: "%"
 ---
 
 - Restarted commercial operations in two to three months, rebuilding reporting by hand with six sales agents while systems were offline.

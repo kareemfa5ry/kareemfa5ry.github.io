@@ -15,6 +15,12 @@ metrics:
   - value: "~660×"
     label: faster key query after adding an index
 screenshots: []
+results:
+  - label: Unmatched baggage records
+    before: 66
+    after: 1
+    unit: "%"
+    note: cut from 66% to under 1%
 ---
 
 - Parsed 68 million raw airline operational log records covering 17 months, and linked 11 million ticket events across separate systems.

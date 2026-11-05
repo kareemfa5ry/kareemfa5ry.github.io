@@ -24,6 +24,19 @@ const metric = z.strictObject({
   label: z.string().min(1).describe("What the number counts, e.g. 'operational log records parsed'."),
 });
 
+const result = z.strictObject({
+  label: z.string().min(1).describe("What changed, e.g. 'Unmatched baggage records'."),
+  before: z.number().describe("The value before the work, as a number."),
+  after: z.number().describe("The value after the work, as a number."),
+  unit: z.string().min(1).optional().describe("Unit shown after the numbers, e.g. '%' or 'USD M'."),
+  note: z.string().min(1).optional().describe("Source wording when a number is rounded, e.g. 'under 1%'."),
+});
+
+const results = z
+  .array(result)
+  .default([])
+  .describe("Before -> after numbers drawn as a chart under the bullets; only values the bullets state.");
+
 const projects = defineCollection({
   loader: markdownIn("projects"),
   schema: ({ image }) =>
@@ -53,6 +66,7 @@ const projects = defineCollection({
           }),
         )
         .describe("Images in display order; [] when there are none."),
+      results,
     }),
 });
 
@@ -74,6 +88,7 @@ const experience = defineCollection({
       .array(reference("projects"))
       .optional()
       .describe("Project ids done in this role: file names in src/content/projects/ without .md."),
+    results,
   }),
 });
 
