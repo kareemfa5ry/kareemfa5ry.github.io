@@ -28,6 +28,9 @@ async function stub(page: Page, failAlways: boolean) {
 }
 
 async function ask(page: Page, question: string) {
+  const dialog = page.getByRole("dialog", { name: "Ask about Kareem" });
+  if (!(await dialog.isVisible())) await page.getByRole("button", { name: "Ask about Kareem" }).click();
+  await expect(dialog).toBeVisible();
   await page.getByLabel("Your question").fill(question);
   await page.getByRole("button", { name: "Send" }).click();
 }
