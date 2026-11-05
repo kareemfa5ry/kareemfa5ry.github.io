@@ -2,12 +2,25 @@
 // Nav switch between light and dark that remembers the choice for the next visit. Airplane switch design from
 // Uiverse.io by Nawsome: plane in the sky (blue, clouds) = light theme, plane on the runway (lights) = dark theme.
 // The look follows html[data-theme] or the system setting, so it is right before any script runs; the checkbox
-// is kept in step for screen readers and keyboard users (checked = light theme).
+// is kept in step for screen readers and keyboard users (WAI-ARIA switch: on = dark theme). The name "Dark mode"
+// is the label text, shown from 640px up and visually hidden below that.
 ---
 
 <label class="plane-switch">
-  <input class="visually-hidden" type="checkbox" role="switch" aria-label="Light theme" />
+  <input class="visually-hidden" type="checkbox" role="switch" title="Switch between light and dark mode" />
   <div class="track">
+    <svg class="glyph moon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21 14.5A9 9 0 0 1 9.5 3 9 9 0 1 0 21 14.5Z" fill="currentColor"></path>
+    </svg>
+    <svg class="glyph sun" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="5" fill="currentColor"></circle>
+      <path
+        d="M12 1v3M12 20v3M1 12h3M20 12h3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      ></path>
+    </svg>
     <div class="plane">
       <svg viewBox="0 0 13 13" aria-hidden="true">
         <path
@@ -20,6 +33,7 @@
     <span class="cloud"></span>
     <span class="cloud two"></span>
   </div>
+  <span class="label-text">Dark mode</span>
 </label>
 
 <script>
@@ -44,8 +58,14 @@
   }
 
   if (input) {
-    input.checked = currentTheme() === "light";
-    input.addEventListener("change", () => apply(input.checked ? "light" : "dark"));
+    input.checked = currentTheme() === "dark";
+    input.addEventListener("change", () => apply(input.checked ? "dark" : "light"));
+    // A checkbox toggles on Space only; a switch also toggles on Enter.
+    input.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      input.click();
+    });
   }
 </script>
 
@@ -63,6 +83,9 @@
     --sky-2: #001d3d;
     --light-1: rgba(255, 195, 0, 1);
     --light-2: rgba(255, 195, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
     position: sticky;
     right: 0;
     flex: none;
@@ -71,6 +94,35 @@
     box-shadow: 16px 0 0 var(--bg);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+  }
+  .label-text {
+    color: var(--ink);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  .glyph {
+    position: absolute;
+    top: 7px;
+    width: 11px;
+    height: 11px;
+  }
+  .moon {
+    left: 7px;
+    color: var(--street-line-mid);
+  }
+  .sun {
+    right: 7px;
+    color: var(--dot);
+  }
+  @media (max-width: 639px) {
+    .label-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
   }
   .visually-hidden {
     position: absolute;
