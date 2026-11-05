@@ -1,0 +1,19 @@
+// Chat endpoint Worker. Secrets (never in this file): ANTHROPIC_API_KEY, TURNSTILE_SECRET_KEY via `wrangler secret put`.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "kareem-chat",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "vars": {
+    "ALLOWED_ORIGIN": "https://kareemfa5ry.github.io",
+    "SITE_URL": "https://kareemfa5ry.github.io",
+  },
+  "ratelimits": [
+    {
+      "name": "CHAT_RATE_LIMIT",
+      // Any integer unique to the Cloudflare account; counters are per Cloudflare location.
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 },
+    },
+  ],
+}

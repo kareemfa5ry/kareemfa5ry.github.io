@@ -6,6 +6,8 @@
 - Pull requests: one feature each, branch `feature/NN-short-name` (or `chore/NN-...`), title `NN: <the feature it adds>`,
   numbered in sequence; next number = last merged + 1.
 - Layout, develop commands and how to rebuild the CVs: `README.md`.
+- The chat Worker's secrets (`ANTHROPIC_API_KEY`, `TURNSTILE_SECRET_KEY`) are never committed: they live only as
+  Worker secrets (`wrangler secret put`) and in a local, git-ignored `worker/.dev.vars`.
 - **Islands** (`src/islands/`, React): server-render the content, islands only toggle state; never render content
   only in React. Hydrate with `client:idle` unless a reason is written next to the directive.
 

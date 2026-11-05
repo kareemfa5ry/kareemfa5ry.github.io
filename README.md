@@ -29,6 +29,8 @@ src/styles/global.css       tokens, dark mode, base elements, shared classes, pr
 public/og.png               social preview image (1200x630), linked from the head in Base.astro
 public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
 scripts/                    Node checks and the Claude Code git guard (see scripts/README.md)
+worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Worker: src/, test/, wrangler.jsonc
+                            (see worker/README.md); the layout check and eslint cover it too
 .githooks/                  pre-commit (npm run check) and pre-push (npm run build)
 .github/workflows/          ci.yml (checks on PRs and branches), deploy.yml (Pages deploy from main)
 .github/rulesets/           protect-main.json: branch ruleset to import once (see Publishing)
@@ -45,12 +47,17 @@ Needs Node 22.23.4 or newer (Astro 7's minimum) and npm, on Windows or macOS.
 ```
 npm install        # installs tools and activates the git hooks in .githooks/
 npm run dev        # local server at http://localhost:4321
-npm run check      # lint, format check, astro check, layout check: the before-commit gate
+npm run check      # lint, format check, astro check, layout check, worker tests: the before-commit gate
 npm run build      # static site in dist/
 npm run preview    # serve dist/ locally
 ```
 
 Run `npx prettier --write .` to fix formatting reported by `npm run check`.
+
+## Chat endpoint
+
+`worker/` is the "ask about Kareem" chat endpoint: a Cloudflare Worker that answers from `/llms.txt` with Claude and
+streams the reply. Contract, secrets, local run and deploy: `worker/README.md`.
 
 ## Regenerating the preview image
 

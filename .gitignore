@@ -9,3 +9,7 @@ desktop.ini
 node_modules/
 dist/
 .astro/
+
+# Cloudflare Worker (worker/): local secrets and wrangler state, never committed
+.dev.vars
+.wrangler/
