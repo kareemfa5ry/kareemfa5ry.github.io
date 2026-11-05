@@ -1,14 +1,11 @@
 // Conversation state for ChatPanel: the transcript, the history sent to the Worker, Turnstile and the SSE read.
 import { useRef, useState } from "react";
+import { trimHistory, type Turn } from "./chat_history";
 
 export interface Line {
   id: number;
   role: "user" | "assistant" | "system";
   text: string;
-}
-interface Turn {
-  role: "user" | "assistant";
-  content: string;
 }
 interface TurnstileApi {
   render: (el: HTMLElement, opts: Record<string, unknown>) => string;
@@ -21,8 +18,6 @@ declare global {
   }
 }
 
-const MAX_MESSAGES = 8;
-const MAX_CHARS = 4000;
 const SCRIPT = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 let scriptPromise: Promise<TurnstileApi> | undefined;
@@ -39,16 +34,6 @@ function loadTurnstile() {
     document.head.append(script);
   });
   return scriptPromise;
-}
-
-/** Oldest completed pairs go first until the request fits the Worker's limits. */
-function fit(past: Turn[], next: Turn): Turn[] {
-  const size = (turns: Turn[]) => turns.reduce((n, t) => n + t.content.length, 0);
-  let turns = past;
-  while (turns.length > 0 && (turns.length + 1 > MAX_MESSAGES || size(turns) + next.content.length > MAX_CHARS)) {
-    turns = turns.slice(2);
-  }
-  return [...turns, next];
 }
 
 const postChat = (workerUrl: string, messages: Turn[], turnstileToken: string) =>
@@ -127,7 +112,7 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
     );
 
   const send = async (question: string) => {
-    const messages = fit(past.current, { role: "user", content: question });
+    const messages = trimHistory([...past.current, { role: "user", content: question }]);
     setBusy(true);
     add("user", question);
     const answer = add("assistant", "");

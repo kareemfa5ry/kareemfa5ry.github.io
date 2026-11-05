@@ -13,11 +13,12 @@
     "format:check": "prettier --check .",
     "typecheck": "astro check",
     "check:layout": "node scripts/check_layout.mjs",
+    "test:unit": "node --test \"tests/unit/*.test.mjs\"",
     "test:e2e": "playwright test",
     "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
     "worker:deploy": "wrangler deploy --config worker/wrangler.jsonc",
     "worker:test": "tsc -p worker/tsconfig.json && node --test \"worker/test/*.test.mjs\"",
-    "check": "npm run lint && npm run format:check && npm run typecheck && npm run check:layout && npm run worker:test",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm run check:layout && npm run test:unit && npm run worker:test",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {

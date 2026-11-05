@@ -1,6 +1,6 @@
 # tests
 
-End-to-end smoke tests of the built site, run by Playwright (Chromium) against `npm run preview`. Build first:
+Unit tests of pure modules (`tests/unit/`, Node's built-in runner, part of `npm run check`) and end-to-end smoke tests of the built site, run by Playwright (Chromium) against `npm run preview`. Build first:
 `npm run build && npm run test:e2e`. CI runs them on every pull request; they are not in the pre-commit hook.
 First run on a machine: `npx playwright install chromium`.
 
@@ -10,3 +10,4 @@ First run on a machine: `npx playwright install chromium`.
 | `e2e/project_page.spec.ts`     | a project page renders its h1 and the back link; the Results chart SVG is drawn               |
 | `e2e/machine_readable.spec.ts` | `/llms.txt`, `/resume.json` (4 work entries), both CV PDFs, `/og.png` is 1200x630             |
 | `e2e/filter_island.spec.ts`    | a skill chip hides projects, a second click restores them, Enter toggles                      |
+| `unit/chat_history.test.mjs`   | `trimHistory` (src/islands/chat_history.ts): limits, pair dropping, ends with the user turn   |
