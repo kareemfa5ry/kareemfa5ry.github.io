@@ -22,7 +22,7 @@ export interface Env {
 
 const CHAT_PATH = "/chat";
 const GLOBAL_LIMIT_KEY = "global";
-export const TOO_MANY_MESSAGE = "Too many questions. Try again in a minute.";
+const TOO_MANY_MESSAGE = "Too many questions. Try again in a minute.";
 
 async function isUnderRateLimits(env: Env, ip: string): Promise<boolean> {
   if (!(await env.CHAT_RATE_LIMIT.limit({ key: rateLimitKey(ip) })).success) return false;
