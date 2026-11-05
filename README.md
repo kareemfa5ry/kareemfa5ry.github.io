@@ -11,6 +11,8 @@ src/latex/              LaTeX sources for each CV version
 src/docx/               Word versions of each CV
 build.ps1               recompiles the LaTeX CVs and refreshes assets/cv/
 .nojekyll               tells GitHub Pages to serve files as-is
+AGENTS.md, CLAUDE.md    rules for AI coding agents (Copilot, Claude Code, Codex)
+.claude/skills/         agent skills (fable-code), read by Claude Code and Copilot CLI
 ```
 
 ## CV versions
