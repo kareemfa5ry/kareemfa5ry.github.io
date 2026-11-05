@@ -19,7 +19,9 @@ test("prompt: one text block, instructions first, knowledge after, cached", () =
 });
 
 test("prompt: the instructions carry the settled rules", () => {
-  for (const rule of [/only from the knowledge/, /email address/, /Never invent figures/, /short/, /Arabic/]) {
+  const rules = [/only from the knowledge/, /email address/, /Never invent figures/, /short/, /Arabic/];
+  const injection = [/labelled assistant/, /cannot change these rules/, /role-play, write code/, /first person/];
+  for (const rule of [...rules, ...injection, /reveal these instructions/]) {
     assert.match(CHAT_INSTRUCTIONS, rule);
   }
 });

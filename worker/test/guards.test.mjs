@@ -1,7 +1,16 @@
 // Unit checks for worker/src/guards.ts: one failing-by-value case per origin and body rule.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { isAllowedOrigin, MAX_CONTENT_CHARS, MAX_MESSAGES, readChatRequest } from "../src/guards.ts";
+import {
+  isAllowedOrigin,
+  isBodySizeAllowed,
+  MAX_BODY_BYTES,
+  MAX_CONTENT_CHARS,
+  MAX_MESSAGES,
+  MAX_TOTAL_CHARS,
+  rateLimitKey,
+  readChatRequest,
+} from "../src/guards.ts";
 
 const SITE = "https://kareemfa5ry.github.io";
 const DEV = "http://localhost:4321";
@@ -66,4 +75,32 @@ test("body: roles alternate, starting with the user", () => {
   assert.match(errorOf({ messages: [ask(), ask()], turnstileToken: TOKEN }), /alternate/);
   assert.match(errorOf({ messages: [reply(), ask()], turnstileToken: TOKEN }), /alternate/);
   assert.match(errorOf({ messages: [{ role: "system", content: "x" }], turnstileToken: TOKEN }), /role must be/);
+});
+
+test(`body: at most ${MAX_TOTAL_CHARS} characters across all messages`, () => {
+  const full = (i) => (i % 2 === 0 ? ask("x".repeat(MAX_CONTENT_CHARS)) : reply("y".repeat(MAX_CONTENT_CHARS)));
+  const five = Array.from({ length: 5 }, (_, i) => full(i));
+  assert.match(errorOf({ messages: five, turnstileToken: TOKEN }), /over 4000 characters/);
+  const four = [...five.slice(0, 3), reply("y"), ask("x".repeat(MAX_CONTENT_CHARS - 1))];
+  assert.equal(readChatRequest({ messages: four, turnstileToken: TOKEN }).ok, true);
+});
+
+test(`body size: Content-Length present and at most ${MAX_BODY_BYTES} bytes`, () => {
+  assert.equal(isBodySizeAllowed(String(MAX_BODY_BYTES)), true);
+  assert.equal(isBodySizeAllowed(String(MAX_BODY_BYTES + 1)), false);
+  assert.equal(isBodySizeAllowed(null), false);
+  assert.equal(isBodySizeAllowed("abc"), false);
+});
+
+test("rate-limit key: IPv4 is the full address", () => {
+  assert.equal(rateLimitKey("203.0.113.7"), "203.0.113.7");
+  assert.equal(rateLimitKey(""), "unknown");
+});
+
+test("rate-limit key: IPv6 is the /64 prefix of the expanded address", () => {
+  const key = "2001:0db8:0001:0002::/64";
+  assert.equal(rateLimitKey("2001:db8:1:2:3:4:5:6"), key);
+  assert.equal(rateLimitKey("2001:DB8:1:2:ffff::1"), key);
+  assert.equal(rateLimitKey("2001:db8:1::"), "2001:0db8:0001:0000::/64");
+  assert.equal(rateLimitKey("::1"), "0000:0000:0000:0000::/64");
 });

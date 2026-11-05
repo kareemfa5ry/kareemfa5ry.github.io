@@ -1,8 +1,10 @@
-// Request guards for POST /chat: the origin check and the body shape. Pure: data in, verdict out.
+// Request guards for POST /chat: origin, body size, body shape and the rate-limit key. Pure: data in, verdict out.
 // Read by index.ts (the router) and worker/test/guards.test.mjs.
 
+export const MAX_BODY_BYTES = 32768;
 export const MAX_MESSAGES = 8;
 export const MAX_CONTENT_CHARS = 1000;
+export const MAX_TOTAL_CHARS = 4000;
 // Turnstile tokens are at most 2048 characters (Cloudflare siteverify docs).
 export const MAX_TOKEN_CHARS = 2048;
 
@@ -26,6 +28,23 @@ export function isAllowedOrigin(origin: string | null, allowedOrigin: string, de
   return origin === allowedOrigin || (Boolean(devOrigin) && origin === devOrigin);
 }
 
+// The Content-Length header must be present and at most MAX_BODY_BYTES, checked before the body is read.
+export function isBodySizeAllowed(contentLength: string | null): boolean {
+  return /^\d+$/.test(contentLength ?? "") && Number(contentLength) <= MAX_BODY_BYTES;
+}
+
+// Per-visitor rate-limit key: an IPv4 address as is, an IPv6 address by its /64 prefix (one home network).
+export function rateLimitKey(ip: string): string {
+  if (!ip) return "unknown";
+  if (!ip.includes(":")) return ip;
+  const [head, tail] = ip.toLowerCase().split("::");
+  const left = head ? head.split(":") : [];
+  const right = tail ? tail.split(":") : [];
+  const zeros = tail === undefined ? [] : Array<string>(Math.max(0, 8 - left.length - right.length)).fill("0");
+  const prefix = [...left, ...zeros, ...right].slice(0, 4).map((group) => group.padStart(4, "0"));
+  return `${prefix.join(":")}::/64`;
+}
+
 // Validates the parsed JSON body and copies only the fields the endpoint uses.
 export function readChatRequest(body: unknown): ChatRequestVerdict {
   if (!isRecord(body)) return { ok: false, error: "The body must be a JSON object." };
@@ -47,6 +66,8 @@ function findMessagesProblem(messages: unknown): string | null {
     if (problem) return problem;
   }
   if ((messages.at(-1) as ChatMessage).role !== "user") return "The last message must be from the user.";
+  const total = (messages as ChatMessage[]).reduce((sum, message) => sum + message.content.length, 0);
+  if (total > MAX_TOTAL_CHARS) return `The conversation is over ${MAX_TOTAL_CHARS} characters; start a new one.`;
   return null;
 }
 

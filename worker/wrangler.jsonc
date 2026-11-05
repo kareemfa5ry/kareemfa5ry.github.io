@@ -15,5 +15,11 @@
       "namespace_id": "1001",
       "simple": { "limit": 10, "period": 60 },
     },
+    {
+      // Spend ceiling across all visitors: checked with the key "global" after the per-IP limit.
+      "name": "GLOBAL_LIMIT",
+      "namespace_id": "1002",
+      "simple": { "limit": 60, "period": 60 },
+    },
   ],
 }

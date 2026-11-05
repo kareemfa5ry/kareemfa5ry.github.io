@@ -1,5 +1,5 @@
 // One chat turn against Claude: streams the answer from the Anthropic API as chat SSE frames (see sse.ts).
-// Read by index.ts; errorMessageFor is also read by worker/test/claude_errors.test.mjs.
+// Read by index.ts; closingEvent and errorMessageFor are also read by worker/test/claude_errors.test.mjs.
 import Anthropic from "@anthropic-ai/sdk";
 import type { ChatMessage } from "./guards.ts";
 import { encodeEvent, type ChatEvent } from "./sse.ts";
@@ -12,6 +12,7 @@ const SERVER_SIDE_FALLBACK_BETA = "server-side-fallback-2026-07-01";
 export const BUSY_MESSAGE = "The assistant is busy, try again in a minute.";
 export const UNAVAILABLE_MESSAGE = "The assistant is unavailable right now. Please use the email on this page.";
 export const REFUSAL_MESSAGE = "Sorry, I can't help with that. Ask me about Kareem's work, skills or experience.";
+export const CUT_SHORT_MESSAGE = "The answer was cut short. Ask a narrower question.";
 
 export interface ChatTurn {
   apiKey: string;
@@ -53,17 +54,25 @@ async function relayAnswer(turn: ChatTurn, send: (event: ChatEvent) => void, sig
       { signal },
     );
     stream.on("text", (text) => send({ text }));
-    const message = await stream.finalMessage();
-    const closing: ChatEvent = message.stop_reason === "refusal" ? { error: REFUSAL_MESSAGE } : { done: true };
-    return closing;
+    return closingEvent((await stream.finalMessage()).stop_reason);
   } catch (error) {
     return { error: errorMessageFor(error) };
   }
 }
 
-// Rate limit and overload are temporary; everything else (auth, config, bad request) is logged, not shown.
+// The last frame for a finished answer: a refusal or a cut-off answer is an error, anything else is done.
+export function closingEvent(stopReason: string | null): ChatEvent {
+  if (stopReason === "refusal") return { error: REFUSAL_MESSAGE };
+  if (stopReason === "max_tokens") return { error: CUT_SHORT_MESSAGE };
+  return { done: true };
+}
+
+// Rate limit and overload are temporary; a client abort is not a failure (nobody reads the frame);
+// everything else (auth, config, bad request) is logged, not shown.
 export function errorMessageFor(error: unknown): string {
   if (error instanceof Anthropic.RateLimitError || error instanceof Anthropic.OverloadedError) return BUSY_MESSAGE;
-  console.error("claude request failed:", error);
+  const aborted =
+    error instanceof Anthropic.APIUserAbortError || (error instanceof Error && error.name === "AbortError");
+  if (!aborted) console.error("claude request failed:", error);
   return UNAVAILABLE_MESSAGE;
 }
