@@ -13,8 +13,9 @@ src/components/             one component per concern: Nav, Hero, Stats, Experie
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags
-src/islands/                React islands (ProjectFilter: filter-by-skill chips on the projects list); rule:
+src/islands/                React islands (ProjectFilter: filter chips; ChatPanel + useChatStream: the Ask chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
+src/site/chat.ts            Worker URL and Turnstile site key for the chat panel (empty = no chat section)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)
@@ -37,7 +38,7 @@ worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Wor
 eslint.config.js            lint rules, including the fable-code size and complexity caps
 .prettierrc.mjs             formatting (printWidth 120, Astro plugin)
 AGENTS.md, CLAUDE.md        rules for AI coding agents (Copilot, Claude Code, Codex)
-.claude/                    agent skills (fable-code) and the Claude Code hook settings
+.claude/                    agent skills (fable-code) and the Claude Code hook settings; .claude/worktrees/ is harness output, git- and prettier-ignored
 ```
 
 ## Develop
@@ -58,6 +59,11 @@ Run `npx prettier --write .` to fix formatting reported by `npm run check`.
 
 `worker/` is the "ask about Kareem" chat endpoint: a Cloudflare Worker that answers from `/llms.txt` with Claude and
 streams the reply. Contract, secrets, local run and deploy: `worker/README.md`.
+
+### Turning the chat on
+
+After deploying the Worker, set `workerUrl` and `turnstileSiteKey` in `src/site/chat.ts` (both are public values).
+While either is empty the home page has no chat section and no nav link.
 
 ## Regenerating the preview image
 

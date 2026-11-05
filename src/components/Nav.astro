@@ -1,10 +1,12 @@
 ---
 // Sticky top bar: brand link plus in-page section links.
+import { CHAT_ENABLED } from "../site/chat";
 import { FULL_NAME } from "../site/contact";
 
 const LINKS = [
   { href: "#experience", label: "Experience" },
   { href: "#projects", label: "Projects" },
+  ...(CHAT_ENABLED ? [{ href: "#ask", label: "Ask" }] : []),
   { href: "#skills", label: "Skills" },
   { href: "#download", label: "Download CV" },
 ];
