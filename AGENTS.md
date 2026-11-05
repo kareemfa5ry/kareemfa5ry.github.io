@@ -16,6 +16,9 @@
 - **Before-commit gate:** `npm run check` (eslint, prettier --check, astro check, scripts/check_layout.mjs, and the
   worker unit tests via `npm run worker:test`). It must pass clean; `npm run build` must pass before a push.
   `worker/` secrets live only in Worker secrets and a local, git-ignored `worker/.dev.vars`.
+- **CI-only gates:** `npm run test:e2e` (Playwright smoke of the built site) and the Lighthouse budget run in CI
+  on every pull request, not in the pre-commit hook (too slow). Run `npm run build && npm run test:e2e` before
+  a push that changes pages.
 - **Hooks:** `npm install` activates `.githooks/` (pre-commit runs `npm run check`, pre-push runs
   `npm run build`). Never commit with `--no-verify` / `-n` and never `git push --force`; the Claude Code hook in
   `.claude/settings.json` (`scripts/guard_git.mjs`) blocks both.

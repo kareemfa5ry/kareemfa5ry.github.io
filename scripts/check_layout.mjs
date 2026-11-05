@@ -8,7 +8,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { extname, join, parse, relative } from "node:path";
 
-const ROOTS = ["src", "scripts", ".github", "worker"];
+const ROOTS = ["src", "scripts", ".github", "worker", "tests"];
 const SILENCE_ROOTS = ["src", "scripts", "worker"];
 const SOURCE_EXTENSIONS = new Set([".astro", ".ts", ".tsx", ".js", ".mjs", ".css"]);
 const MAX_LINES = 400;
