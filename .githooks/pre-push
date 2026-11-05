@@ -1,3 +1,5 @@
 #!/bin/sh
-# Before-push gate: the site must build. Activated by `npm install` (prepare).
+# Before-push gate: the branch is named feature/NN-short-name or chore/NN-short-name (AGENTS.md), and the site must
+# build. Activated by `npm install` (prepare).
+PR_BRANCH="$(git symbolic-ref --short -q HEAD)" node scripts/check_pr_name.mjs || exit 1
 exec npm run build

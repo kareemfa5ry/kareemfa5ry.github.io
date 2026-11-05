@@ -3,8 +3,13 @@
 - Every code change (Astro, CSS, scripts, workflows, LaTeX build, a one-line fix too) follows the `fable-code`
   skill in `.claude/skills/fable-code/SKILL.md`: its 10 rules while writing, its before-commit checks, its
   handoff block. A stricter rule here wins.
-- Pull requests: one feature each, branch `feature/NN-short-name` (or `chore/NN-...`), title `NN: <the feature it adds>`,
-  numbered in sequence; next number = last merged + 1.
+- Pull requests: one feature each. NN is the number GitHub gives the PR: branch `feature/NN-short-name` (or
+  `chore/NN-...`, lowercase), title `NN: <the feature it adds>`. Before cutting the branch, `git fetch origin main`
+  and predict NN (the next issue or PR number, as other people merge too):
+  `gh api 'repos/kareemfa5ry/kareemfa5ry.github.io/issues?state=all&per_page=1' --jq '.[0].number + 1'`.
+  GitHub gave a different number: rename the branch and the title to it. Enforced by `scripts/check_pr_name.mjs`:
+  the pre-push hook checks the branch format, the required CI job `check` fails a PR whose number, title and branch
+  disagree. Squash merge keeps the PR title as the commit on main, so never edit it in the merge dialog.
 - Layout, develop commands and how to rebuild the CVs: `README.md`.
 - The chat Worker's secrets (`ANTHROPIC_API_KEY`, `TURNSTILE_SECRET_KEY`) are never committed: they live only as
   Worker secrets (`wrangler secret put`) and in a local, git-ignored `worker/.dev.vars`.

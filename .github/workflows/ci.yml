@@ -1,9 +1,11 @@
 # Checks every pull request and every push to a branch other than main: the pre-commit gate (check), the Playwright
-# smoke tests of the built site (e2e) and the Lighthouse budget in lighthouserc.json (lighthouse).
+# smoke tests of the built site (e2e) and the Lighthouse budget in lighthouserc.json (lighthouse). A pull request
+# also runs on `edited` so a renamed title re-runs the PR naming check.
 name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
   push:
     branches-ignore: [main]
 
@@ -19,6 +21,13 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: PR number, title and branch agree (AGENTS.md)
+        if: github.event_name == 'pull_request'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: node scripts/check_pr_name.mjs
       - run: npm ci
       - run: npm run check
       - run: npm run build

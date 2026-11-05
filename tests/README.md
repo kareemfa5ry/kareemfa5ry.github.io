@@ -12,3 +12,4 @@ First run on a machine: `npx playwright install chromium`.
 | `e2e/filter_island.spec.ts`    | a skill chip hides projects, a second click restores them, Enter toggles                       |
 | `e2e/theme.spec.ts`            | page follows the system theme; the nav switch changes theme, keeps it, works from the keyboard |
 | `unit/chat_history.test.mjs`   | `trimHistory` (src/islands/chat_history.ts): limits, pair dropping, ends with the user turn    |
+| `unit/check_pr_name.test.mjs`  | scripts/check_pr_name.mjs exit codes: number, title and branch agree; branch-only mode         |
