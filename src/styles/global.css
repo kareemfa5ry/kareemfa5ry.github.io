@@ -1,25 +1,26 @@
-/* Site-wide tokens, dark mode, base elements and shared classes (.wrap, .btn, .item*).
+/* Site-wide tokens, light and dark themes, base elements and shared classes (.wrap, .btn, .item*).
    Styles owned by one component live in that component's scoped <style> block. */
+
+/* Theme palette: #000814 #001d3d #003566 (navy), #ffc300 #ffd60a (gold); the other values are tints added for
+   text and borders. Each token is light-dark(light value, dark value). The page follows the system setting
+   until the visitor picks a theme: ThemeToggle sets html[data-theme], which pins color-scheme below.
+   Every text pair passes WCAG AA (4.5:1); the lowest is muted on bg in light, 6.7:1. */
 :root {
-  --bg: #fbfbfa;
-  --surface: #ffffff;
-  --ink: #1d1f22;
-  --muted: #5d636b;
-  --rule: #e3e4e6;
-  --accent: #1f4e79;
-  --accent-soft: #e8eef5;
+  color-scheme: light dark;
+  --bg: light-dark(#f7f9fc, #000814);
+  --surface: light-dark(#ffffff, #001d3d);
+  --ink: light-dark(#000814, #e8eef7);
+  --muted: light-dark(#4a5a70, #9fb1c9);
+  --rule: light-dark(#d5deea, #14365f);
+  --accent: light-dark(#003566, #ffc300);
+  --accent-soft: light-dark(#fff3c2, #003566);
   --maxw: 860px;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #131518;
-    --surface: #1b1e22;
-    --ink: #e8e9eb;
-    --muted: #9aa1aa;
-    --rule: #2d3137;
-    --accent: #7fb0e0;
-    --accent-soft: #1e2a37;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 * {
   box-sizing: border-box;
@@ -137,6 +138,10 @@ li {
 
 /* Print: nav, CTA and downloads hide themselves in their own components. */
 @media print {
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+  }
   body {
     background: #fff;
     color: #000;

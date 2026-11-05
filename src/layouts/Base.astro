@@ -3,6 +3,7 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import ThemeInit from "../components/theme/ThemeInit.astro";
 
 interface Props {
   title: string;
@@ -18,7 +19,7 @@ const OG_IMAGE = new URL("/og.png", Astro.site).href;
 const OG_IMAGE_ALT = "Kareem Fakhry, senior data analyst and revenue manager: headline figures from his CV";
 
 const FAVICON =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f4e79'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='white' text-anchor='middle'%3EKF%3C/text%3E%3C/svg%3E";
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23003566'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='15' fill='%23ffc300' text-anchor='middle'%3EKF%3C/text%3E%3C/svg%3E";
 ---
 
 <!doctype html>
@@ -26,6 +27,7 @@ const FAVICON =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ThemeInit />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
