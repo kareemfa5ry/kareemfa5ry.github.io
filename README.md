@@ -19,6 +19,7 @@ build.ps1                   recompiles the LaTeX CVs and refreshes public/assets
 scripts/                    Node checks and the Claude Code git guard (see scripts/README.md)
 .githooks/                  pre-commit (npm run check) and pre-push (npm run build)
 .github/workflows/          ci.yml (checks on PRs and branches), deploy.yml (Pages deploy from main)
+.github/rulesets/           protect-main.json: branch ruleset to import once (see Publishing)
 eslint.config.js            lint rules, including the fable-code size and complexity caps
 .prettierrc.mjs             formatting (printWidth 120, Astro plugin)
 AGENTS.md, CLAUDE.md        rules for AI coding agents (Copilot, Claude Code, Codex)
@@ -58,3 +59,13 @@ Run `npx prettier --write .` to fix formatting reported by `npm run check`.
 `.github/workflows/deploy.yml` builds with `withastro/action` and publishes with `actions/deploy-pages` on every
 push to `main`. **One-time human step:** in repository **Settings → Pages → Build and deployment**, switch
 Source from _Deploy from a branch_ to _GitHub Actions_. Until then the old branch deploy keeps serving.
+
+GitHub Pages on the free plan only serves **public** repositories, so the repository must be public (or the
+owner on GitHub Pro) before the first deploy.
+
+## Protecting `main`
+
+Every change reaches `main` through a pull request that passes the `check` job in `ci.yml`. The owner imports
+the ruleset once: **Settings → Rules → Rulesets → New ruleset → Import a ruleset**, choose
+`.github/rulesets/protect-main.json`. It requires a pull request (squash merge), the `check` status, and blocks
+force pushes and deletion of `main`.
