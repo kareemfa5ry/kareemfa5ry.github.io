@@ -22,9 +22,6 @@ src/content/                one Markdown file per project, job and skill group (
 src/assets/projects/        project screenshots, one folder per project (see its README.md)
 src/styles/global.css       tokens, dark mode, base elements, shared classes, print rules
 public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
-src/latex/                  LaTeX sources for each CV version
-src/docx/                   Word versions of each CV
-build.ps1                   recompiles the LaTeX CVs and refreshes public/assets/cv/
 scripts/                    Node checks and the Claude Code git guard (see scripts/README.md)
 .githooks/                  pre-commit (npm run check) and pre-push (npm run build)
 .github/workflows/          ci.yml (checks on PRs and branches), deploy.yml (Pages deploy from main)
@@ -49,19 +46,26 @@ npm run preview    # serve dist/ locally
 
 Run `npx prettier --write .` to fix formatting reported by `npm run check`.
 
-## CV versions
+## CV PDFs
 
-| Version                     | Source                                                   | PDF                                                             |
-| --------------------------- | -------------------------------------------------------- | --------------------------------------------------------------- |
-| Senior Data Analyst         | `src/latex/Kareem_Fakhry_CV_Senior_Data_Analyst.tex`     | `public/assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf`     |
-| Revenue and Pricing Manager | `src/latex/Kareem_Fakhry_CV_Revenue_Pricing_Manager.tex` | `public/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf` |
+| Version                     | PDF                                                             |
+| --------------------------- | --------------------------------------------------------------- |
+| Senior Data Analyst         | `public/assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf`     |
+| Revenue and Pricing Manager | `public/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf` |
+
+The LaTeX and Word sources and the build script live in the private `knowledge-base` repository, cloned next to
+this one. Its `build.ps1` writes the PDFs into `public/assets/cv/` here.
 
 ## Updating a CV
 
-1. Edit the `.tex` file in `src/latex/`.
-2. Run `./build.ps1` (needs MiKTeX or TeX Live with `pdflatex`).
-3. If the change affects the website text, update the matching Markdown file in `src/content/`.
-4. Commit (the pre-commit hook runs `npm run check`) and push; the deploy workflow publishes `main`.
+1. Edit and build the CV in the private repository; the PDFs land in `public/assets/cv/`.
+2. If the change affects the website text, update the matching Markdown file in `src/content/`.
+3. Commit on a branch (the pre-commit hook runs `npm run check`) and open a pull request; merging publishes `main`.
+
+## What never goes in this repository
+
+It is public. No secrets or API keys, no CV sources, no screenshots with real company figures or names, no raw
+company data. Private material belongs in the `knowledge-base` repository.
 
 ## Publishing on GitHub Pages
 
