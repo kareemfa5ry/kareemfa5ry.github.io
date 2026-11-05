@@ -10,6 +10,7 @@ import Downloads from "../components/Downloads.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
 import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
+import { personJsonLd } from "../site/person_jsonld";
 import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
 
 const PAGE = {
@@ -41,7 +42,12 @@ const EDUCATION = [
 ];
 ---
 
-<Base title={PAGE.title} description={PAGE.description} ogDescription={PAGE.ogDescription}>
+<Base
+  title={PAGE.title}
+  description={PAGE.description}
+  ogDescription={PAGE.ogDescription}
+  jsonLd={personJsonLd(skills.map(({ data }) => data.label))}
+>
   <Hero tagline={TAGLINE} />
 
   <section id="profile">

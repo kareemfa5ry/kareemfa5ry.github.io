@@ -3,6 +3,8 @@
 - Every code change (Astro, CSS, scripts, workflows, LaTeX build, a one-line fix too) follows the `fable-code`
   skill in `.claude/skills/fable-code/SKILL.md`: its 10 rules while writing, its before-commit checks, its
   handoff block. A stricter rule here wins.
+- Pull requests: one feature each, branch `feature/NN-short-name` (or `chore/NN-...`), title `NN: <the feature it adds>`,
+  numbered in sequence; next number = last merged + 1.
 - Layout, develop commands and how to rebuild the CVs: `README.md`.
 - **Islands** (`src/islands/`, React): server-render the content, islands only toggle state; never render content
   only in React. Hydrate with `client:idle` unless a reason is written next to the directive.
