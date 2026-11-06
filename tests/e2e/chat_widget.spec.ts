@@ -1,3 +1,4 @@
+// Floating chat launcher stays in view, opens, docks/undocks, minimizes (button, Escape), fills a phone viewport.
 import { expect, test, type Page } from "@playwright/test";
 
 const PROJECT = "/projects/daily-revenue-pipeline/";

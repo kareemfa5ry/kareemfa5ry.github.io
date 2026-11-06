@@ -1,3 +1,4 @@
+// Theme: follows the system, the nav switch changes and keeps it, keyboard use, switch role and name, responsive label.
 import { expect, test, type Page } from "@playwright/test";
 
 // Page background per theme (global.css --bg), as getComputedStyle reports it.

@@ -1,3 +1,4 @@
+// Skill chips hide and restore projects; Enter toggles a chip.
 import { expect, test } from "@playwright/test";
 
 const chipsOf = (page: import("@playwright/test").Page) =>

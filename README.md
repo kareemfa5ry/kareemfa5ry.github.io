@@ -122,3 +122,12 @@ the ruleset once: **Settings → Rules → Rulesets → New ruleset → Import a
 `.github/rulesets/protect-main.json`. It requires a pull request (squash merge), the `check` and `e2e` statuses (`lighthouse` stays advisory), and blocks
 force pushes and deletion of `main`.
 After a change to the ruleset file, the owner must re-import it for the new check (`e2e`) to become required.
+
+### Stuck GitHub Pages deployment
+
+Symptom: every deploy run fails with "in progress deployment, cancel `<sha>` first". GitHub's side can take up to 30 minutes to clear.
+
+1. Cancel it: `gh api -X POST repos/kareemfa5ry/kareemfa5ry.github.io/pages/deployments/<sha>/cancel`.
+2. List deployments: `gh api repos/kareemfa5ry/kareemfa5ry.github.io/deployments?environment=github-pages`.
+3. Mark the stuck one inactive (POST a status with state `inactive` to its `statuses_url`) and DELETE it.
+4. Wait a few minutes, then re-run the failed deploy: `gh run rerun <id>`.

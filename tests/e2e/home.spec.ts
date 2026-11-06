@@ -1,3 +1,4 @@
+// Home page: title, nav links and sections, the four stat tiles, the five project links, no console errors.
 import { expect, test } from "@playwright/test";
 
 const PROJECTS = [

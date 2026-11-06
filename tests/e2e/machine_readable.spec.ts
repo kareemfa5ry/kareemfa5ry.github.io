@@ -1,3 +1,4 @@
+// /llms.txt, /resume.json, both CV PDFs and the 1200x630 /og.png.
 import { expect, test } from "@playwright/test";
 
 const PDFS = [
