@@ -1,4 +1,4 @@
-# Checks every pull request and every push to a branch other than main: the pre-commit gate (check), the Playwright
+# Checks every pull request, once per push (the pre-push hook still builds a branch without a PR): the pre-commit gate (check), the Playwright
 # smoke tests of the built site (e2e) and the Lighthouse budget in lighthouserc.json (lighthouse). A pull request
 # also runs on `edited` so a renamed title re-runs the PR naming check.
 name: CI
@@ -6,8 +6,10 @@ name: CI
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited]
-  push:
-    branches-ignore: [main]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

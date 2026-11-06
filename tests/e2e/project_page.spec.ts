@@ -1,3 +1,4 @@
+// A project page renders its h1 and back link, and draws the Results chart SVG.
 import { expect, test } from "@playwright/test";
 
 test("a project page renders its heading and links back to the list", async ({ page }) => {
