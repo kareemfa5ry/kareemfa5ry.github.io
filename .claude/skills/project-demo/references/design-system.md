@@ -20,8 +20,8 @@ Copied from `src/styles/global.css` (lines 10-17); each is `light-dark(light, da
 | `--accent-soft` | `#fff3c2` | `#003566` | fills behind an accent (active stage, chart area)   |
 
 Text pairs pass WCAG AA on `--bg` and `--surface` (see global.css). Accent is never the only carrier of meaning:
-pair it with a label or position. If the site's palette changes, change it here and in `player.html` in the same
-commit.
+pair it with a label or position. The palette lives in `public/theme.css`, which the site and `player.html` both link; change it there only and
+update the table above.
 
 ## Type
 

@@ -58,3 +58,29 @@ test("switch label is visible on wide screens and only in the accessible name on
   expect(box?.width).toBeLessThanOrEqual(1);
   await expect(page.getByRole("switch", { name: "Dark mode" })).toBeAttached();
 });
+
+test("the site links the shared theme files", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator('head link[rel="stylesheet"][href="/theme.css"]')).toHaveCount(1);
+  await expect(page.locator('head script[src="/theme.js"]')).toHaveCount(1);
+});
+
+test("toggling stores the choice and a same-origin iframe follows it live", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        const frame = document.createElement("iframe");
+        frame.src = "/";
+        frame.onload = () => resolve();
+        document.body.append(frame);
+      }),
+  );
+  await page.locator(".plane-switch").click();
+  expect(await page.evaluate(() => localStorage.getItem("theme"))).toBe("dark");
+  const scheme = (index: number) =>
+    page.frames()[index].evaluate(() => getComputedStyle(document.documentElement).colorScheme);
+  expect(await scheme(0)).toBe("dark");
+  await expect.poll(() => scheme(1)).toBe("dark");
+});

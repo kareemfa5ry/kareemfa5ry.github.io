@@ -5,7 +5,6 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import ChatWidget from "../islands/ChatWidget.tsx";
 import { CHAT, CHAT_ENABLED } from "../site/chat";
-import ThemeInit from "../components/theme/ThemeInit.astro";
 
 interface Props {
   title: string;
@@ -29,7 +28,8 @@ const FAVICON =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <ThemeInit />
+    <link rel="stylesheet" href="/theme.css" />
+    <script is:inline src="/theme.js"></script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />

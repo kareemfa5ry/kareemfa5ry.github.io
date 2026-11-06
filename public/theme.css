@@ -1,0 +1,21 @@
+/* The one home of the palette, shared by the site and the iframe demos (public/theme.js sets html[data-theme]).
+   Theme palette: #000814 #001d3d #003566 (navy), #ffc300 #ffd60a (gold); the other values are tints added for
+   text and borders. Each token is light-dark(light value, dark value). The page follows the system setting
+   until the visitor picks a theme: theme.js sets html[data-theme], which pins color-scheme below.
+   Every text pair passes WCAG AA (4.5:1); the lowest is muted on bg in light, 6.7:1. */
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#f7f9fc, #000814);
+  --surface: light-dark(#ffffff, #001d3d);
+  --ink: light-dark(#000814, #e8eef7);
+  --muted: light-dark(#4a5a70, #9fb1c9);
+  --rule: light-dark(#d5deea, #14365f);
+  --accent: light-dark(#003566, #ffc300);
+  --accent-soft: light-dark(#fff3c2, #003566);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
