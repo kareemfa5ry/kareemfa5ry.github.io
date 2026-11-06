@@ -36,7 +36,7 @@ public/assets/cv/           published PDF CVs, served at /assets/cv/<name>.pdf
 tests/e2e/                  Playwright smoke specs of the built site (see tests/README.md)
 playwright.config.ts        Playwright config: Chromium, serves dist/ with `npm run preview` on port 4321
 lighthouserc.json           Lighthouse CI budget: category minimums for / and a project page
-scripts/                    Node checks and the Claude Code git guard (see scripts/README.md)
+scripts/                    Node checks and the Claude Code hooks (see scripts/README.md)
 worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Worker: src/, test/, wrangler.jsonc
                             (see worker/README.md); the layout check and eslint cover it too
 .githooks/                  pre-commit (npm run check) and pre-push (npm run build)
@@ -61,7 +61,8 @@ npm run preview    # serve dist/ locally
 npm run test:e2e   # Playwright smoke tests of dist/ (build first; `npx playwright install chromium` once)
 ```
 
-Run `npx prettier --write .` to fix formatting reported by `npm run check`.
+Run `npx prettier --write .` to fix formatting reported by `npm run check`. The Claude Code `PostToolUse` hook
+`scripts/check_file.mjs` runs the same checks on each file an agent edits and feeds problems back at once.
 
 ## Quality gates
 

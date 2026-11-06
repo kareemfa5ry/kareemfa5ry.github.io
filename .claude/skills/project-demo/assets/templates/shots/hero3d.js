@@ -30,7 +30,7 @@ DEMO_SHOTS.hero3d = {
     var renderer = null;
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-    } catch (e) {
+    } catch {
       console.warn("project-demo: hero3d needs WebGL, scene skipped");
       return;
     }
@@ -41,7 +41,12 @@ DEMO_SHOTS.hero3d = {
     view.appendChild(renderer.domElement);
     if (p.shape === "knot") {
       var knot = new THREE.TorusKnotGeometry(1.2, 0.35, 160, 20);
-      scene.add(new THREE.LineSegments(new THREE.WireframeGeometry(knot), new THREE.LineBasicMaterial({ color: colour("--accent") })));
+      scene.add(
+        new THREE.LineSegments(
+          new THREE.WireframeGeometry(knot),
+          new THREE.LineBasicMaterial({ color: colour("--accent") }),
+        ),
+      );
     } else {
       var count = 600;
       var xyz = new Float32Array(count * 3);
