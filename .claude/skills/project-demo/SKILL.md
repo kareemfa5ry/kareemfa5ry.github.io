@@ -67,13 +67,13 @@ window.demo = { duration, ready, seek(tMs), play(), pause() };
 
 ## URL parameters and modes
 
-| Input                            | Effect                                                                     |
-| -------------------------------- | -------------------------------------------------------------------------- |
-| `?theme=light` / `?theme=dark`   | pins `html[data-theme]` before first paint, same tokens as the site        |
-| no `theme`                       | follows `prefers-color-scheme` (`color-scheme: light dark`)                |
-| `?render=1`                      | no autoplay, no controls, no CSS transitions; only `demo.seek` moves time  |
-| `prefers-reduced-motion: reduce` | (live only) opens on the final frame, no autoplay; Replay plays on request |
-| `spec.aspect: "9:16"`            | vertical stage (`html[data-aspect]`), letterboxed in any viewport          |
+| Input                            | Effect                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------- |
+| `?theme=light` / `?theme=dark`   | pins `html[data-theme]` before first paint, same tokens as the site                       |
+| no `theme`                       | follows `prefers-color-scheme` (`color-scheme: light dark`)                               |
+| `?render=1`                      | no autoplay, no controls or progress bar, no CSS transitions; only `demo.seek` moves time |
+| `prefers-reduced-motion: reduce` | (live only) opens on the final frame, no autoplay; Replay plays on request                |
+| `spec.aspect: "9:16"`            | vertical stage (`html[data-aspect]`), letterboxed in any viewport                         |
 
 Live mode: autoplays once when at least half the stage is on screen (IntersectionObserver; inside the site's
 iframe it tracks the page viewport), pauses when scrolled away, one button cycles Play / Pause / Replay (44 px
