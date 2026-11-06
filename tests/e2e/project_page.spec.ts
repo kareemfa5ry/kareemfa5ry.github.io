@@ -14,3 +14,15 @@ test("a project with results draws the chart SVG", async ({ page }) => {
   await page.goto("/projects/operational-log-parser/");
   await expect(page.locator("section.results svg").first()).toBeVisible();
 });
+
+test("a project with a demo embeds it in a reserved 16:9 box", async ({ page }) => {
+  await page.goto("/projects/operational-log-parser/");
+  const frame = page.locator("#demo iframe");
+  await expect(frame).toHaveAttribute("title", "Animated walkthrough: Operational log parser and revenue checks");
+  await expect(page.locator("#demo .frame")).toHaveCSS("aspect-ratio", "16 / 9");
+});
+
+test("a project without a demo has no iframe", async ({ page }) => {
+  await page.goto("/projects/daily-revenue-pipeline/");
+  await expect(page.locator("iframe")).toHaveCount(0);
+});

@@ -1,0 +1,59 @@
+{
+  "$schema": "../../../.claude/skills/project-demo/references/spec.schema.json",
+  "title": "Operational log parser and revenue checks",
+  "tagline": "A PostgreSQL parser that turns 68 million raw operational log records into linked ticket events.",
+  "stack": ["PostgreSQL", "Triggers", "Python", "SHA-256", "Automated tests"],
+  "links": { "live": "https://kareemfa5ry.github.io/projects/operational-log-parser/" },
+  "aspect": "16:9",
+  "seed": 29,
+  "poster_ms": 16500,
+  "shots": [
+    {
+      "type": "title",
+      "duration_ms": 3500,
+      "caption": "A parser for Nesma Airlines operational logs, used for revenue checks."
+    },
+    {
+      "type": "pipeline",
+      "duration_ms": 5000,
+      "caption": "Raw log records become linked ticket events, then revenue checks.",
+      "params": {
+        "stages": [
+          { "label": "Raw operational logs", "detail": "68 million records" },
+          { "label": "Parser", "detail": "PostgreSQL" },
+          { "label": "Matched bags", "detail": "linked to their ticket" },
+          { "label": "Revenue checks", "detail": "unmatched baggage revenue" }
+        ]
+      }
+    },
+    {
+      "type": "chart",
+      "duration_ms": 5000,
+      "caption": "Unmatched baggage records fell from 66% to under 1%.",
+      "params": {
+        "kind": "bar",
+        "unit": "%",
+        "x_labels": ["Before", "After"],
+        "series": [{ "label": "Unmatched baggage records", "values": [66, 1] }]
+      }
+    },
+    {
+      "type": "metrics",
+      "duration_ms": 4500,
+      "caption": "99% of 939,000 checked bags were matched to their ticket.",
+      "params": {
+        "items": [
+          { "value": 68, "label": "raw operational log records parsed", "suffix": "M" },
+          { "value": 99, "label": "of 939,000 checked bags matched to their ticket", "suffix": "%" },
+          { "value": 660, "label": "faster key query after adding an index", "prefix": "~", "suffix": "×" }
+        ]
+      }
+    },
+    {
+      "type": "outro",
+      "duration_ms": 3000,
+      "caption": "Read the full project on the site.",
+      "params": { "heading": "See the full project" }
+    }
+  ]
+}

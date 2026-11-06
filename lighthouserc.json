@@ -1,7 +1,11 @@
 {
   "ci": {
     "collect": {
-      "url": ["http://localhost:4321/", "http://localhost:4321/projects/daily-revenue-pipeline/"],
+      "url": [
+        "http://localhost:4321/",
+        "http://localhost:4321/projects/daily-revenue-pipeline/",
+        "http://localhost:4321/projects/operational-log-parser/"
+      ],
       "numberOfRuns": 3
     },
     "assert": {

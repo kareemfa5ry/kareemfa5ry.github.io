@@ -6,6 +6,8 @@ import Stats from "../../components/Stats.astro";
 import BeforeAfterChart from "../../components/charts/BeforeAfterChart.astro";
 import StackTags from "../../components/projects/StackTags.astro";
 import ScreenshotGallery from "../../components/projects/ScreenshotGallery.astro";
+import Demo from "../../components/projects/Demo.astro";
+import { hasDemo } from "../../components/projects/demos";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -28,6 +30,7 @@ const meta = period ? `${org}, ${period}` : org;
   <p>{summary}</p>
   {metrics.length > 0 && <Stats stats={metrics} />}
   <BeforeAfterChart results={results} id="results" />
+  {hasDemo(project.id) && <Demo slug={project.id} title={title} />}
   <Content />
   <StackTags stack={stack} />
   <ScreenshotGallery screenshots={screenshots} />
