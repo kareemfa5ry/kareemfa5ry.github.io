@@ -1,0 +1,43 @@
+name: Render demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Demo folder under public/demos/ (it must already contain index.html)
+        required: true
+        type: string
+      format:
+        description: Video format
+        type: choice
+        options: [webm, mp4]
+        default: webm
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: sudo apt-get install -y ffmpeg
+      - run: npx playwright install --with-deps chromium
+      - name: Render
+        run: node .claude/skills/project-demo/scripts/render.mjs "$SLUG" --format "$FORMAT" --contact-sheet
+        env:
+          SLUG: ${{ inputs.slug }}
+          FORMAT: ${{ inputs.format }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-${{ inputs.slug }}
+          path: |
+            public/demos/${{ inputs.slug }}/demo.*
+            public/demos/${{ inputs.slug }}/poster.jpg
+            public/demos/${{ inputs.slug }}/contact.png
+          retention-days: 14
