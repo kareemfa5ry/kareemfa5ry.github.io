@@ -29,7 +29,7 @@ function checkObject(value, schema, at) {
   const props = schema.properties || {};
   const errors = (schema.required || []).filter((key) => !(key in value)).map((key) => `${at}.${key}: is required`);
   for (const [key, child] of Object.entries(value)) {
-    if (props[key]) errors.push(...checkSchema(child, props[key], `${at}.${key}`));
+    if (Object.hasOwn(props, key)) errors.push(...checkSchema(child, props[key], `${at}.${key}`));
     else if (schema.additionalProperties === false) errors.push(`${at}.${key}: is not allowed`);
   }
   return errors;

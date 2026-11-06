@@ -3,7 +3,7 @@
 // and writes public/demos/<slug>/index.html: the player shell with the spec, the shot templates the spec uses and the
 // player inlined. Fails (exit 1, nothing written) on an invalid spec or a page over the byte budget.
 // Plain Node (no shell tricks), so it runs the same on macOS, Linux and Windows.
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
@@ -35,7 +35,7 @@ function availableTypes() {
 }
 
 // Runs the template file in a sandbox that only has DEMO_SHOTS, to read its params schema and min_ms.
-function loadTemplate(type) {
+export function loadTemplate(type) {
   const path = join(SHOTS_DIR, `${type}.js`);
   if (!existsSync(path)) throw new SpecError(`no template '${type}'; available: ${availableTypes().join(", ")}`);
   const source = readFileSync(path, "utf8");
@@ -46,9 +46,10 @@ function loadTemplate(type) {
   return { source, def };
 }
 
-function checkShot(shot, i, def) {
+export function checkShot(shot, i, def) {
   const at = `spec.shots[${i}]`;
   const errors = checkSchema(shot.params, def.params, `${at}.params`);
+  if (!errors.length && def.validate) errors.push(...def.validate(applyDefaults(shot.params, def.params), `${at}.params`));
   if (shot.duration_ms < (def.min_ms || 0)) errors.push(`${at}.duration_ms: '${shot.type}' needs >= ${def.min_ms}`);
   return errors;
 }
@@ -78,17 +79,18 @@ function inlineScript(source) {
   return `<script>\n${source}</script>`;
 }
 
-function renderPage(spec, templates) {
+export function renderPage(spec, templates) {
   const shell = readFileSync(join(TEMPLATES_DIR, "player.html"), "utf8");
   const specJson = JSON.stringify(spec).replace(/</g, "\\u003c");
   const slots = {
-    "{{TITLE}}": escapeHtml(spec.title),
-    "{{ASPECT}}": spec.aspect,
-    "<!-- @spec -->": `<script type="application/json" id="demo-spec">${specJson}</script>`,
-    "<!-- @shots -->": [...templates.values()].map(({ source }) => inlineScript(source)).join("\n"),
-    "<!-- @player -->": inlineScript(readFileSync(join(TEMPLATES_DIR, "player.js"), "utf8")),
+    TITLE: escapeHtml(spec.title),
+    ASPECT: spec.aspect,
+    spec: `<script type="application/json" id="demo-spec">${specJson}</script>`,
+    shots: [...templates.values()].map(({ source }) => inlineScript(source)).join("\n"),
+    player: inlineScript(readFileSync(join(TEMPLATES_DIR, "player.js"), "utf8")),
   };
-  return Object.entries(slots).reduce((page, [slot, value]) => page.split(slot).join(value), shell);
+  // One pass over the shell, so text inserted by one slot is never scanned for the others.
+  return shell.replace(/\{\{(TITLE|ASPECT)\}\}|<!-- @(spec|shots|player) -->/g, (_, a, b) => slots[a ?? b]);
 }
 
 function main(slug) {
@@ -104,7 +106,7 @@ function main(slug) {
 }
 
 // Other scripts import the helpers above; only run the scaffold when this file is the entry point.
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   try {
     main(process.argv[2]);
   } catch (error) {

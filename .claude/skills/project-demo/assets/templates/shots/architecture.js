@@ -48,6 +48,28 @@ DEMO_SHOTS.architecture = {
       },
     },
   },
+  // Cross-references the schema cannot express; returns "path: problem" strings, run by new_demo.mjs.
+  validate: function (p, at) {
+    var ids = p.nodes.map(function (n) {
+      return n.id;
+    });
+    var errors = [];
+    var known = function (id) {
+      return ids.indexOf(id) >= 0;
+    };
+    ids.forEach(function (id, i) {
+      if (ids.indexOf(id) !== i) errors.push(at + ".nodes[" + i + "].id: '" + id + "' is used twice");
+    });
+    p.edges.forEach(function (e, i) {
+      ["from", "to"].forEach(function (end) {
+        if (!known(e[end])) errors.push(at + ".edges[" + i + "]." + end + ": no node '" + e[end] + "'");
+      });
+    });
+    (p.order || []).forEach(function (id, i) {
+      if (!known(id)) errors.push(at + ".order[" + i + "]: no node '" + id + "'");
+    });
+    return errors;
+  },
   css:
     ".shot-architecture svg{flex:1;min-height:0;width:100%}" +
     ".shot-architecture text{font-family:inherit;fill:var(--ink);text-anchor:middle;dominant-baseline:central}" +

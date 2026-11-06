@@ -35,3 +35,9 @@ test("defaults fill nested array items without touching given values", () => {
 function schemaWithDefault() {
   return { type: "object", properties: { n: { type: "integer", default: 0 } } };
 }
+
+test("inherited names are not treated as declared properties", () => {
+  const closed = { type: "object", additionalProperties: false, properties: { a: { type: "string" } } };
+  const value = JSON.parse('{"constructor": 1}');
+  assert.deepEqual(checkSchema(value, closed), ["spec.constructor: is not allowed"]);
+});

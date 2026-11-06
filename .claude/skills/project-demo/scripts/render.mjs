@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import { createReadStream, existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
-import { extname, join, normalize } from "node:path";
+import { extname, join, normalize, sep } from "node:path";
 import { parseArgs } from "node:util";
 import { chromium } from "@playwright/test";
 import { REPO_ROOT, SLUG_PATTERN, SpecError, readJson } from "./new_demo.mjs";
@@ -21,9 +21,16 @@ const SHEET_COLUMNS = 5;
 
 function serve() {
   const server = createServer((req, res) => {
-    const file = normalize(join(PUBLIC_DIR, decodeURIComponent(new URL(req.url, "http://x").pathname)));
+    let path;
+    try {
+      path = decodeURIComponent(new URL(req.url, "http://x").pathname);
+    } catch {
+      return res.writeHead(400).end();
+    }
+    const file = normalize(join(PUBLIC_DIR, path));
+    if (file !== PUBLIC_DIR && !file.startsWith(PUBLIC_DIR + sep)) return res.writeHead(404).end();
     const target = existsSync(file) && statSync(file).isDirectory() ? join(file, "index.html") : file;
-    if (!file.startsWith(PUBLIC_DIR) || !existsSync(target)) return res.writeHead(404).end();
+    if (!existsSync(target)) return res.writeHead(404).end();
     res.writeHead(200, { "content-type": TYPES[extname(target)] || "application/octet-stream" });
     createReadStream(target).pipe(res);
   });
