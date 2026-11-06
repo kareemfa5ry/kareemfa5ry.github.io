@@ -9,7 +9,7 @@
   `gh api 'repos/kareemfa5ry/kareemfa5ry.github.io/issues?state=all&per_page=1' --jq '.[0].number + 1'`.
   GitHub gave a different number: rename the branch and the title to it. Enforced by `scripts/check_pr_name.mjs`:
   the pre-push hook checks the branch format, the required CI job `check` fails a PR whose number, title and branch
-  disagree. Squash merge keeps the PR title as the commit on main, so never edit it in the merge dialog.
+  disagree. PRs merge with a merge commit so every commit stays visible on main; the merge subject is the PR title.
 - Layout, develop commands and how to rebuild the CVs: `README.md`.
 - The chat Worker's secrets (`ANTHROPIC_API_KEY`, `TURNSTILE_SECRET_KEY`) are never committed: they live only as
   Worker secrets (`wrangler secret put`) and in a local, git-ignored `worker/.dev.vars`.
