@@ -6,6 +6,7 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import { changeText, type Result } from "../components/charts/scale";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
+import { EDUCATION } from "../site/education";
 import { plainBullets } from "../site/plain_bullets";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
@@ -59,6 +60,9 @@ export async function GET({ site }: APIContext) {
     ...experience.flatMap(jobLines),
     "## Skills",
     ...skills.map(({ data }) => `- ${data.label}: ${data.items.join(", ")}`),
+    "",
+    "## Education, training and languages",
+    ...EDUCATION.map((line) => `- ${line}`),
     "",
     "## CV",
     ...CV_FILES.map((cv) => `- [${cv.title}](${url(cv.href)}): ${cv.blurb}`),
