@@ -38,7 +38,8 @@ player pair stays apart from them; `new_demo.mjs` finds a type by its file name 
    `"$schema": "../../../.claude/skills/project-demo/references/spec.schema.json"` for editor hints). Shots in
    order; each has `type`, `duration_ms`, `caption` (real text, one sentence) and `params` (see shot-types.md).
 3. Scaffold: `.claude/skills/project-demo/scripts/new-demo.sh <slug>`
-   (Windows: `node .claude/skills/project-demo/scripts/new_demo.mjs <slug>`). It exits 1 and writes nothing if
+   (Windows: `node .claude/skills/project-demo/scripts/new_demo.mjs <slug>`). The output is prettier-formatted
+   (commit it as generated, never hand-edit it). It exits 1 and writes nothing if
    the spec is invalid (every problem is listed by path) or the page is over 300 KB.
 4. Look at it: open `public/demos/<slug>/index.html` in a browser (file:// works), also with `?theme=dark`,
    `?theme=light` and `?render=1`, then run the QA checklist below.
