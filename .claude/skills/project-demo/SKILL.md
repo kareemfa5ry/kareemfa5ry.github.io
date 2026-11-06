@@ -12,20 +12,20 @@ to video, because every frame is a pure function of one number: the time `t` in 
 
 ## Files
 
-| Path                               | Owns                                                                               |
-| ---------------------------------- | ---------------------------------------------------------------------------------- |
-| `SKILL.md`                         | this workflow, the contract, the QA checklist                                      |
-| `references/design-system.md`      | tokens, type scale, layout units, motion rules, aspect ratios                      |
-| `references/shot-types.md`         | every shot type and its params; how to write a new template                        |
-| `references/spec.schema.json`      | the spec format (JSON Schema 2020-12, the subset `check_schema.mjs` enforces)      |
-| `assets/templates/player.html`     | page shell: tokens, base classes, stage, captions, button, progress, GSAP tag      |
-| `assets/templates/player.js`       | runtime: master timeline, `window.demo`, autoplay, controls, PRNG, lib loader      |
-| `assets/templates/shots/<type>.js` | one shot template each (all seven: title, metrics, pipeline, architecture, chart, hero3d, outro)                           |
-| `scripts/new-demo.sh`              | thin wrapper: `exec node new_demo.mjs "$@"`                                        |
-| `scripts/new_demo.mjs`             | the scaffold: validate, fill defaults, inline, check the byte budget, write        |
-| `scripts/render.mjs`               | the renderer: frames via Playwright, ffmpeg to video, poster, contact sheet        |
-| `scripts/check_schema.mjs`         | the hand-written JSON Schema checker and default filler (no ajv)                   |
-| `scripts/check_schema.test.mjs`    | its tests: `node --test .claude/skills/project-demo/scripts/check_schema.test.mjs` |
+| Path                               | Owns                                                                                             |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `SKILL.md`                         | this workflow, the contract, the QA checklist                                                    |
+| `references/design-system.md`      | tokens, type scale, layout units, motion rules, aspect ratios                                    |
+| `references/shot-types.md`         | every shot type and its params; how to write a new template                                      |
+| `references/spec.schema.json`      | the spec format (JSON Schema 2020-12, the subset `check_schema.mjs` enforces)                    |
+| `assets/templates/player.html`     | page shell: tokens, base classes, stage, captions, button, progress, GSAP tag                    |
+| `assets/templates/player.js`       | runtime: master timeline, `window.demo`, autoplay, controls, PRNG, lib loader                    |
+| `assets/templates/shots/<type>.js` | one shot template each (all seven: title, metrics, pipeline, architecture, chart, hero3d, outro) |
+| `scripts/new-demo.sh`              | thin wrapper: `exec node new_demo.mjs "$@"`                                                      |
+| `scripts/new_demo.mjs`             | the scaffold: validate, fill defaults, inline, check the byte budget, write                      |
+| `scripts/render.mjs`               | the renderer: frames via Playwright, ffmpeg to video, poster, contact sheet                      |
+| `scripts/check_schema.mjs`         | the hand-written JSON Schema checker and default filler (no ajv)                                 |
+| `scripts/check_schema.test.mjs`    | its tests: `node --test .claude/skills/project-demo/scripts/check_schema.test.mjs`               |
 
 Shot templates live in `assets/templates/shots/` (8 loose files at most: the seven planned types fit), so the
 player pair stays apart from them; `new_demo.mjs` finds a type by its file name there.

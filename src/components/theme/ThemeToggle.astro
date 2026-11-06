@@ -37,29 +37,13 @@
 </label>
 
 <script>
-  import { isTheme, THEME_ATTRIBUTE, THEME_STORAGE_KEY, type Theme } from "../../site/theme";
-
-  const root = document.documentElement;
+  // readTheme and toggleTheme come from public/theme.js, loaded in <head> by Base.astro.
+  const theme = window as unknown as { readTheme(): string; toggleTheme(): string };
   const input = document.querySelector<HTMLInputElement>(".plane-switch input");
 
-  function currentTheme(): Theme {
-    const chosen = root.getAttribute(THEME_ATTRIBUTE);
-    if (isTheme(chosen)) return chosen;
-    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  }
-
-  function apply(theme: Theme): void {
-    root.setAttribute(THEME_ATTRIBUTE, theme);
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, theme);
-    } catch {
-      // Storage blocked: the choice lasts for this page view only.
-    }
-  }
-
   if (input) {
-    input.checked = currentTheme() === "dark";
-    input.addEventListener("change", () => apply(input.checked ? "dark" : "light"));
+    input.checked = theme.readTheme() === "dark";
+    input.addEventListener("change", () => theme.toggleTheme());
     // A checkbox toggles on Space only; a switch also toggles on Enter.
     input.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;

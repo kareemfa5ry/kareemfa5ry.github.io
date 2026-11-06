@@ -49,7 +49,9 @@ export function loadTemplate(type) {
 export function checkShot(shot, i, def) {
   const at = `spec.shots[${i}]`;
   const errors = checkSchema(shot.params, def.params, `${at}.params`);
-  if (!errors.length && def.validate) errors.push(...def.validate(applyDefaults(shot.params, def.params), `${at}.params`));
+  if (!errors.length && def.validate) {
+    errors.push(...def.validate(applyDefaults(shot.params, def.params), `${at}.params`));
+  }
   if (shot.duration_ms < (def.min_ms || 0)) errors.push(`${at}.duration_ms: '${shot.type}' needs >= ${def.min_ms}`);
   return errors;
 }

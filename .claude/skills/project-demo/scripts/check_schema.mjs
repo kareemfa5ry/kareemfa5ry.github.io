@@ -14,12 +14,18 @@ function typeMatches(value, type) {
   return actual === type || (type === "number" && actual === "integer");
 }
 
+function checkRange(value, schema, at) {
+  const errors = [];
+  if (schema.minimum !== undefined && value < schema.minimum) errors.push(`${at}: must be >= ${schema.minimum}`);
+  if (schema.maximum !== undefined && value > schema.maximum) errors.push(`${at}: must be <= ${schema.maximum}`);
+  return errors;
+}
+
 function checkScalar(value, schema, at) {
   const errors = [];
   if (schema.type && !typeMatches(value, schema.type)) return [`${at}: expected ${schema.type}, got ${typeOf(value)}`];
   if (schema.enum && !schema.enum.includes(value)) errors.push(`${at}: must be one of ${schema.enum.join(", ")}`);
-  if (schema.minimum !== undefined && value < schema.minimum) errors.push(`${at}: must be >= ${schema.minimum}`);
-  if (schema.maximum !== undefined && value > schema.maximum) errors.push(`${at}: must be <= ${schema.maximum}`);
+  errors.push(...checkRange(value, schema, at));
   if (schema.minLength !== undefined && value.length < schema.minLength) errors.push(`${at}: is too short`);
   if (schema.pattern && !new RegExp(schema.pattern).test(value)) errors.push(`${at}: must match ${schema.pattern}`);
   return errors;
