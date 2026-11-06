@@ -3,6 +3,9 @@
 - Every code change (Astro, CSS, scripts, workflows, LaTeX build, a one-line fix too) follows the `fable-code`
   skill in `.claude/skills/fable-code/SKILL.md`: its 10 rules while writing, its before-commit checks, its
   handoff block. A stricter rule here wins.
+- Pair it with the `ponytail` skill in `.claude/skills/ponytail/SKILL.md` (MIT, vendored): the laziest solution
+  that works, reuse before stdlib before platform before dependency before new code. fable-code governs shape and
+  wins on any conflict; ponytail governs size. Mark deliberate shortcuts with a `ponytail:` comment.
 - Pull requests: one feature each. NN is the number GitHub gives the PR: branch `feature/NN-short-name` (or
   `chore/NN-...`, lowercase), title `NN: <the feature it adds>`. Before cutting the branch, `git fetch origin main`
   and predict NN (the next issue or PR number, as other people merge too):
