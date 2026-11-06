@@ -23,6 +23,7 @@ to video, because every frame is a pure function of one number: the time `t` in 
 | `assets/templates/shots/<type>.js` | one shot template each (all seven: title, metrics, pipeline, architecture, chart, hero3d, outro)                           |
 | `scripts/new-demo.sh`              | thin wrapper: `exec node new_demo.mjs "$@"`                                        |
 | `scripts/new_demo.mjs`             | the scaffold: validate, fill defaults, inline, check the byte budget, write        |
+| `scripts/render.mjs`               | the renderer: frames via Playwright, ffmpeg to video, poster, contact sheet        |
 | `scripts/check_schema.mjs`         | the hand-written JSON Schema checker and default filler (no ajv)                   |
 | `scripts/check_schema.test.mjs`    | its tests: `node --test .claude/skills/project-demo/scripts/check_schema.test.mjs` |
 
@@ -84,12 +85,20 @@ minimum target, focus ring). A visitor's Pause sticks: scrolling back does not r
 by the project page when `public/demos/<slug>/spec.json` exists. The site stores the visitor's theme in
 `localStorage["theme"]` and on `html[data-theme]` (`src/site/theme.ts`); pass that value as `?theme=`.
 
-## Video (later phase, settled)
+## Video
 
-`scripts/render.mjs <slug> [--fps 30] [--format webm|mp4] [--contact-sheet]` opens `index.html?render=1` in
-Playwright Chromium, awaits `demo.ready`, steps `t = i * 1000 / fps` with `demo.seek(t)`, screenshots each frame,
-and stitches with ffmpeg (a host tool; the script names it if missing). Viewport: 1280x720, or 720x1280 for 9:16.
-Poster: `spec.poster_ms`, else the metrics shot's start + 1000 ms, else 1000 ms.
+`node .claude/skills/project-demo/scripts/render.mjs <slug> [--fps 30] [--format webm|mp4] [--contact-sheet]`
+opens `index.html?render=1` (served from `public/` on a free local port) in Playwright Chromium, awaits
+`demo.ready`, steps `t = i * 1000 / fps` with `demo.seek(t)`, screenshots each frame to the OS temp folder and
+stitches with ffmpeg (a host tool; the script exits 1 and says so if it is missing, or if the slug has no
+`index.html`). Viewport: 1280x720, or 720x1280 for 9:16.
+
+- `demo.webm` (VP9) or `demo.mp4` (H.264, yuv420p, faststart), `contact.png` (one frame per second, 5 per row,
+  with `--contact-sheet`) and `poster.jpg` (quality 85) land in `public/demos/<slug>/`; it prints each path and size.
+- Poster frame: `spec.poster_ms`, else the metrics shot's start + 1000 ms, else 1000 ms. Commit `poster.jpg`;
+  the video and contact sheet are git-ignored.
+- In CI: Actions > "Render demo" > Run workflow (inputs `slug`, `format`). It renders with `--contact-sheet` and
+  uploads the files as the artifact `demo-<slug>` (14 days). It commits nothing.
 
 ## QA checklist (before committing a demo)
 
@@ -101,6 +110,8 @@ Poster: `spec.poster_ms`, else the metrics shot's start + 1000 ms, else 1000 ms.
 - [ ] Live: autoplays when scrolled in, Pause / Play / Replay work by mouse and keyboard.
 - [ ] Reduced motion (DevTools > Rendering > emulate) shows the final frame, nothing moves until Replay.
 - [ ] Each shot finishes its entrance well before its `duration_ms` (the console warns if a template overruns).
+- [ ] `render.mjs <slug> --contact-sheet` succeeds; look at `contact.png` (nothing clipped, text readable, no blank
+      frames) and at `poster.jpg`.
 - [ ] 9:16 specs: nothing clipped at a 360 px wide viewport.
 
 ## Changing the system

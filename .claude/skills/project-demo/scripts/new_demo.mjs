@@ -10,17 +10,17 @@ import vm from "node:vm";
 import { applyDefaults, checkSchema } from "./check_schema.mjs";
 
 const SKILL_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
-const REPO_ROOT = join(SKILL_DIR, "..", "..", "..");
+export const REPO_ROOT = join(SKILL_DIR, "..", "..", "..");
 const TEMPLATES_DIR = join(SKILL_DIR, "assets", "templates");
 const SHOTS_DIR = join(TEMPLATES_DIR, "shots");
 const SCHEMA_PATH = join(SKILL_DIR, "references", "spec.schema.json");
-const SLUG_PATTERN = /^[a-z0-9_][a-z0-9_-]*$/;
+export const SLUG_PATTERN = /^[a-z0-9_][a-z0-9_-]*$/;
 // Per-demo page budget, CDN libraries excluded (they are not in the file).
 const BUDGET_BYTES = 300 * 1024;
 
-class SpecError extends Error {}
+export class SpecError extends Error {}
 
-function readJson(path) {
+export function readJson(path) {
   try {
     return JSON.parse(readFileSync(path, "utf8"));
   } catch (error) {
@@ -103,10 +103,13 @@ function main(slug) {
   console.log(`wrote ${relative(REPO_ROOT, out)} (${(bytes / 1024).toFixed(1)} KB, ${spec.shots.length} shots)`);
 }
 
-try {
-  main(process.argv[2]);
-} catch (error) {
-  if (!(error instanceof SpecError)) throw error;
-  console.error(`new-demo: ${error.message}`);
-  process.exit(1);
+// Other scripts import the helpers above; only run the scaffold when this file is the entry point.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  try {
+    main(process.argv[2]);
+  } catch (error) {
+    if (!(error instanceof SpecError)) throw error;
+    console.error(`new-demo: ${error.message}`);
+    process.exit(1);
+  }
 }
