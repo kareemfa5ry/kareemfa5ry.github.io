@@ -2,6 +2,7 @@
 // One project from the projects collection: linked title, context, bullet list and technology tags.
 // data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
 import StackTags from "./projects/StackTags.astro";
+import { hasDemo } from "./projects/demos";
 import { render, type CollectionEntry } from "astro:content";
 
 interface Props {
@@ -21,6 +22,28 @@ const meta = period ? `${org}, ${period}` : org;
     </h3>
     <span class="meta">{meta}</span>
   </div>
+  {hasDemo(entry.id) && (
+    <a href={`/projects/${entry.id}/#demo`}>
+      <img
+        src={`/demos/${entry.id}/poster.jpg`}
+        width="1280"
+        height="720"
+        loading="lazy"
+        decoding="async"
+        alt={`Animated walkthrough of ${title}`}
+      />
+    </a>
+  )}
   <Content />
   <StackTags stack={stack} />
 </div>
+
+<style>
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px 0;
+  }
+</style>
