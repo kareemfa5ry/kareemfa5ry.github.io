@@ -45,7 +45,7 @@ worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Wor
 eslint.config.js            lint rules, including the fable-code size and complexity caps
 .prettierrc.mjs             formatting (printWidth 120, Astro plugin)
 AGENTS.md, CLAUDE.md        rules for AI coding agents (Copilot, Claude Code, Codex)
-.claude/                    agent skills (fable-code) and the Claude Code hook settings; .claude/worktrees/ is harness output, git- and prettier-ignored
+.claude/                    agent skills (fable-code, project-demo) and the Claude Code hook settings; .claude/worktrees/ is harness output, git- and prettier-ignored
 ```
 
 ## Develop

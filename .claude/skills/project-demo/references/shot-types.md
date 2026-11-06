@@ -8,11 +8,11 @@ with its defaults by `scripts/new_demo.mjs`, so the template is the one home of 
 | -------------- | ----------------------- | ----------- | ----------------------------------------------- |
 | `title`        | `shots/title.js`        | done        | kinetic typography: heading, tagline, stack     |
 | `metrics`      | `shots/metrics.js`      | done        | 1-4 big numbers counting up, with labels        |
-| `pipeline`     | `shots/pipeline.js`     | later phase | stages in a row lighting up, data flowing along |
-| `architecture` | `shots/architecture.js` | later phase | boxes and arrows revealed in order              |
-| `chart`        | `shots/chart.js`        | later phase | a line or bar chart drawing, with counters      |
-| `hero3d`       | `shots/hero3d.js`       | later phase | a Three.js scene with a slow camera move        |
-| `outro`        | `shots/outro.js`        | later phase | call to action with repo / live links           |
+| `pipeline`     | `shots/pipeline.js`     | done | stages in a row lighting up, data flowing along |
+| `architecture` | `shots/architecture.js` | done | boxes and arrows revealed in order              |
+| `chart`        | `shots/chart.js`        | done | a line or bar chart drawing, with counters      |
+| `hero3d`       | `shots/hero3d.js`       | done | a Three.js scene with a slow camera move        |
+| `outro`        | `shots/outro.js`        | done | call to action with repo / live links           |
 
 ## The template contract
 
@@ -108,34 +108,73 @@ Side by side in 16:9, stacked in 9:16. `min_ms` 3000.
 }
 ```
 
-## Planned types: shape agreed, params up to the phase that builds them
+## pipeline
 
-- **pipeline**: `stages: [{ label, detail? }]` (2-5) in a row (a column in 9:16), connectors in `--rule` that fill
-  with `--accent` as a marker travels stage to stage (proxy progress + `onUpdate`), the active stage on
-  `--accent-soft`.
-- **architecture**: `nodes: [{ id, label, x, y }]` on a coarse grid and `edges: [{ from, to, label? }]`, revealed
-  in `order` (ids); arrows as inline SVG paths drawn by tweening `stroke-dashoffset`.
-- **chart**: `kind: "line" | "bar"`, `series: [{ label, values: [] }]`, `x_labels`, `unit`; inline SVG, the line
-  drawn by `stroke-dashoffset`, bars by `scaleY`, a counter for the last value. No chart library.
-- **outro**: `heading`, `links` defaulting to `spec.links` (repo, live) shown as text URLs (a video frame cannot be
-  clicked); live, the same text is a real anchor with `target="_top"`.
-- **hero3d**: see below.
+Stages arrive, then a marker travels along them: connectors fill with the accent, reached stages sit on
+`--accent-soft`. Row in 16:9, column in 9:16. `min_ms` 3500.
+
+| Param               | Type   | Default | Meaning                      |
+| ------------------- | ------ | ------- | ---------------------------- |
+| `heading`           | string | `""`    | optional line above          |
+| `stages` (required) | array  |         | 2 to 5 stages, in flow order |
+| `stages[].label`    | string |         | stage name (required)        |
+| `stages[].detail`   | string | `""`    | short line under the name    |
+
+## architecture
+
+Boxes on a coarse grid, revealed one by one in `order`; an arrow draws once both its ends are shown. One SVG
+(160x80, or 80x160 with the grid transposed in 9:16). Labels of about 12 characters fit. `min_ms` 4000.
+
+| Param                 | Type    | Default | Meaning                                   |
+| --------------------- | ------- | ------- | ----------------------------------------- |
+| `nodes` (required)    | array   |         | 2 to 8 boxes                              |
+| `nodes[].id`          | string  |         | unique id (required)                      |
+| `nodes[].label`       | string  |         | text in the box (required)                |
+| `nodes[].x`, `.y`     | integer |         | grid column 0-4, row 0-2 (required)       |
+| `edges` (required)    | array   |         | 0 to 12 arrows                            |
+| `edges[].from`, `.to` | string  |         | node ids (required)                       |
+| `edges[].label`       | string  | `""`    | short text on the arrow                   |
+| `order`               | array   | `[]`    | node ids in reveal order; empty = `nodes` |
+
+## chart
+
+Inline SVG, no library. Lines draw by `stroke-dashoffset`, bars grow by `scaleY`; a counter above counts to the
+last value of the first series (one decimal unless that value is whole). Series use accent, ink, muted.
+`min_ms` 3500.
+
+| Param                 | Type   | Default  | Meaning                    |
+| --------------------- | ------ | -------- | -------------------------- |
+| `kind`                | enum   | `"line"` | `line` or `bar` (grouped)  |
+| `unit`                | string | `""`     | appended to the counter    |
+| `x_labels` (required) | array  |          | 2 to 12 labels             |
+| `series` (required)   | array  |          | 1 to 3 series              |
+| `series[].label`      | string |          | legend tag (required)      |
+| `series[].values`     | array  |          | 2 to 12 numbers (required) |
+
+## outro
+
+Call to action: heading, accent rule, then repo and live links as visible text URLs. Live they are real anchors
+with `target="_top"`. `links` is merged over `spec.links`. `min_ms` 2500.
+
+| Param        | Type   | Default                 | Meaning                         |
+| ------------ | ------ | ----------------------- | ------------------------------- |
+| `heading`    | string | `"See it for yourself"` | the call to action              |
+| `links.repo` | string | spec value              | `https://` URL, shown as Source |
+| `links.live` | string | spec value              | `https://` URL, shown as Live   |
 
 ## hero3d: how Three.js loads and stays deterministic
 
-The hook exists in `player.js`; the template does not yet.
+Implemented in `shots/hero3d.js`. `min_ms` 3000. Params: `shape` (`"cloud"` seeded points via `kit.rand`, or
+`"knot"` wireframe torus knot; default `cloud`), `orbit_deg` (integer 0-180, camera sweep, default 60), `heading`
+(optional line above, default `""`). Colours are read from `--accent` through a probe element.
 
 - The template declares `needs: ["three"]`. At load the player collects `needs` from the templates the spec uses
   and `import()`s only those URLs from `LIBS` (Three.js 0.187.0 ES module on cdnjs). A demo without a hero3d shot
-  never fetches Three.js. `demo.ready` resolves only after the import and the build, so render.mjs never
-  screenshots an empty canvas.
-- `build` gets the module as `kit.lib.three`. Create the renderer once with
-  `{ antialias: true, preserveDrawingBuffer: true }` (screenshots need the buffer), size it from `root`.
-- Never call `renderer.setAnimationLoop` or `requestAnimationFrame`. Tween a proxy `{ k: 0 }` to `{ k: 1 }` over the
-  shot on `tl` with `ease: "none"`, and in its `onUpdate` set the camera from `k` (a fixed path) and call
-  `renderer.render(scene, camera)`. Geometry that looks random is placed with `kit.rand()` at build.
-- Colours come from the tokens: a custom property holds the unresolved `light-dark(...)`, so give a probe element
-  `color: var(--accent)` and read its computed `color` at build.
-- Open: dynamic `import()` cannot carry an SRI hash. The hero3d phase decides between an import map with an
-  `integrity` entry (generated only when `three` is needed) and accepting the pinned URL without SRI; note the
-  choice here.
+  never fetches Three.js (checked: 0 requests). `demo.ready` resolves only after the import and the build.
+- `build` gets the module as `kit.lib.three`, creates the renderer once with
+  `{ antialias: true, alpha: true, preserveDrawingBuffer: true }`, sized from the `.view` box at build. If WebGL
+  is unavailable it warns and skips the scene.
+- Never `setAnimationLoop` or `requestAnimationFrame`. A proxy `{ k: 0 }` is tweened to 1 over the shot on `tl`
+  with `ease: "none"`; its `onUpdate` places the camera from `k` and renders.
+- **SRI decision:** dynamic `import()` cannot carry an SRI hash and an import map would need a player/scaffold
+  change, so the pinned cdnjs URL is imported without SRI (the version is exact; no other network call).

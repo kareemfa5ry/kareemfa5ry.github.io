@@ -20,7 +20,7 @@ to video, because every frame is a pure function of one number: the time `t` in 
 | `references/spec.schema.json`      | the spec format (JSON Schema 2020-12, the subset `check_schema.mjs` enforces)      |
 | `assets/templates/player.html`     | page shell: tokens, base classes, stage, captions, button, progress, GSAP tag      |
 | `assets/templates/player.js`       | runtime: master timeline, `window.demo`, autoplay, controls, PRNG, lib loader      |
-| `assets/templates/shots/<type>.js` | one shot template each (`title.js`, `metrics.js` so far)                           |
+| `assets/templates/shots/<type>.js` | one shot template each (all seven: title, metrics, pipeline, architecture, chart, hero3d, outro)                           |
 | `scripts/new-demo.sh`              | thin wrapper: `exec node new_demo.mjs "$@"`                                        |
 | `scripts/new_demo.mjs`             | the scaffold: validate, fill defaults, inline, check the byte budget, write        |
 | `scripts/check_schema.mjs`         | the hand-written JSON Schema checker and default filler (no ajv)                   |
