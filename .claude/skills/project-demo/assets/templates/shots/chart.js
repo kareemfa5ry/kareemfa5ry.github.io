@@ -52,7 +52,15 @@ DEMO_SHOTS.chart = {
     var TOP = 4;
     var NS = "http://www.w3.org/2000/svg";
     var n = p.x_labels.length;
-    var max = Math.max.apply(null, [1].concat.apply([], p.series.map(function (s) { return s.values; })));
+    var max = Math.max.apply(
+      null,
+      [1].concat.apply(
+        [],
+        p.series.map(function (s) {
+          return s.values;
+        }),
+      ),
+    );
     var last = p.series[0].values[p.series[0].values.length - 1];
     var legend = root.appendChild(kit.el("div", "legend"));
     var num = root.appendChild(kit.el("span", "num"));
@@ -86,11 +94,16 @@ DEMO_SHOTS.chart = {
       if (p.kind === "bar") {
         var bw = (slot * 0.7) / p.series.length;
         s.values.slice(0, n).forEach(function (v, i) {
-          var x = xOf(i) - (slot * 0.35) + si * bw;
+          var x = xOf(i) - slot * 0.35 + si * bw;
           shapes.push(add("rect", { x: x, y: yOf(v), width: bw * 0.9, height: BASE - yOf(v), class: "bar " + cls }));
         });
       } else {
-        var d = s.values.slice(0, n).map(function (v, i) { return (i ? "L" : "M") + xOf(i) + " " + yOf(v); }).join("");
+        var d = s.values
+          .slice(0, n)
+          .map(function (v, i) {
+            return (i ? "L" : "M") + xOf(i) + " " + yOf(v);
+          })
+          .join("");
         shapes.push(add("path", { d: d, pathLength: 1, class: "ln " + cls }));
       }
     });

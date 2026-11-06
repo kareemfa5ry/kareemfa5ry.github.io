@@ -4,15 +4,15 @@ A shot is one entry of `spec.shots`: `{ "type", "duration_ms", "caption", "param
 `assets/templates/shots/<type>.js`; `params` is checked against that template's own `params` schema and filled
 with its defaults by `scripts/new_demo.mjs`, so the template is the one home of its params.
 
-| Type           | File                    | Status      | What it shows                                   |
-| -------------- | ----------------------- | ----------- | ----------------------------------------------- |
-| `title`        | `shots/title.js`        | done        | kinetic typography: heading, tagline, stack     |
-| `metrics`      | `shots/metrics.js`      | done        | 1-4 big numbers counting up, with labels        |
-| `pipeline`     | `shots/pipeline.js`     | done | stages in a row lighting up, data flowing along |
-| `architecture` | `shots/architecture.js` | done | boxes and arrows revealed in order              |
-| `chart`        | `shots/chart.js`        | done | a line or bar chart drawing, with counters      |
-| `hero3d`       | `shots/hero3d.js`       | done | a Three.js scene with a slow camera move        |
-| `outro`        | `shots/outro.js`        | done | call to action with repo / live links           |
+| Type           | File                    | Status | What it shows                                   |
+| -------------- | ----------------------- | ------ | ----------------------------------------------- |
+| `title`        | `shots/title.js`        | done   | kinetic typography: heading, tagline, stack     |
+| `metrics`      | `shots/metrics.js`      | done   | 1-4 big numbers counting up, with labels        |
+| `pipeline`     | `shots/pipeline.js`     | done   | stages in a row lighting up, data flowing along |
+| `architecture` | `shots/architecture.js` | done   | boxes and arrows revealed in order              |
+| `chart`        | `shots/chart.js`        | done   | a line or bar chart drawing, with counters      |
+| `hero3d`       | `shots/hero3d.js`       | done   | a Three.js scene with a slow camera move        |
+| `outro`        | `shots/outro.js`        | done   | call to action with repo / live links           |
 
 ## The template contract
 
