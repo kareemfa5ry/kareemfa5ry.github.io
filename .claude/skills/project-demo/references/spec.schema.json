@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project-demo/spec.schema.json",
+  "title": "Project demo spec",
+  "description": "public/demos/<slug>/spec.json. scripts/check_schema.mjs enforces the keywords used here; each shot's params are checked against its template's own params schema (references/shot-types.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "tagline", "shots"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Optional editor hint, e.g. a relative path to this file." },
+    "title": { "type": "string", "minLength": 1, "description": "Project name; the title shot's default heading." },
+    "tagline": { "type": "string", "minLength": 1, "description": "One sentence; the title shot's default tagline." },
+    "stack": {
+      "type": "array",
+      "default": [],
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Tech tags shown by the title shot."
+    },
+    "links": {
+      "type": "object",
+      "default": {},
+      "additionalProperties": false,
+      "properties": {
+        "repo": { "type": "string", "pattern": "^https://", "description": "Source repository URL." },
+        "live": { "type": "string", "pattern": "^https://", "description": "Live site or app URL." }
+      }
+    },
+    "aspect": {
+      "enum": ["16:9", "9:16"],
+      "default": "16:9",
+      "description": "Stage shape; 9:16 is the vertical variant."
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Seed for kit.rand, the only randomness a template may use."
+    },
+    "poster_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frame used for poster.jpg; render.mjs defaults to the metrics shot's start, else 1000."
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "duration_ms"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+$",
+            "description": "A template in assets/templates/shots/<type>.js."
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 20000,
+            "description": "How long the shot holds the stage; at least the template's min_ms."
+          },
+          "caption": { "type": "string", "default": "", "description": "Real text shown under the stage." },
+          "params": { "type": "object", "default": {}, "description": "Type-specific, see shot-types.md." }
+        }
+      }
+    }
+  }
+}

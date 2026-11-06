@@ -1,0 +1,210 @@
+<!doctype html>
+<!-- Demo page shell. scripts/new_demo.mjs fills the double-brace and "@ slot" comments below; never edit a
+     generated index.html by hand. Tokens and font stack are copied from src/styles/global.css (lines 10-40). -->
+<html lang="en" data-aspect="{{ASPECT}}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{TITLE}}</title>
+    <script>
+      // Pin the theme before first paint: ?theme=light|dark (from the site's html[data-theme]), else the system.
+      (function () {
+        var q = new URLSearchParams(location.search);
+        var theme = q.get("theme");
+        var html = document.documentElement;
+        if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
+        if (q.get("render") === "1") html.classList.add("render");
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: light-dark(#f7f9fc, #000814);
+        --surface: light-dark(#ffffff, #001d3d);
+        --ink: light-dark(#000814, #e8eef7);
+        --muted: light-dark(#4a5a70, #9fb1c9);
+        --rule: light-dark(#d5deea, #14365f);
+        --accent: light-dark(#003566, #ffc300);
+        --accent-soft: light-dark(#fff3c2, #003566);
+        --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* Type scale in cqmin: 1cqmin = 1% of the stage's short side, so 16:9 and 9:16 read the same size. */
+        --t-display: 11cqmin;
+        --t-h1: 7.5cqmin;
+        --t-h2: 5cqmin;
+        --t-body: 3.4cqmin;
+        --t-label: 2.6cqmin;
+        --gap: 4cqmin;
+        --pad: 7cqmin;
+        --radius: 1.6cqmin;
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font: var(--t-body) / 1.35 var(--font);
+      }
+      .render * {
+        transition: none !important;
+      }
+      .stage {
+        position: relative;
+        container-type: size;
+        overflow: hidden;
+        width: min(100vw, calc(100vh * 16 / 9));
+        aspect-ratio: 16 / 9;
+        background: var(--bg);
+        font-size: var(--t-body);
+      }
+      [data-aspect="9:16"] .stage {
+        width: min(100vw, calc(100vh * 9 / 16));
+        aspect-ratio: 9 / 16;
+      }
+      .shot {
+        position: absolute;
+        inset: 0 0 12cqmin;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--gap);
+        padding: var(--pad);
+        visibility: hidden;
+      }
+      .display,
+      .h1,
+      .h2 {
+        margin: 0;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+      .display {
+        font-size: var(--t-display);
+        font-weight: 800;
+      }
+      .h1 {
+        font-size: var(--t-h1);
+        font-weight: 750;
+      }
+      .h2 {
+        font-size: var(--t-h2);
+        font-weight: 700;
+      }
+      .lede {
+        margin: 0;
+        color: var(--muted);
+      }
+      .label {
+        font-size: var(--t-label);
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .tag {
+        display: inline-block;
+        padding: 0.5cqmin 1.6cqmin;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        background: var(--surface);
+        font-size: var(--t-label);
+      }
+      .rule {
+        height: 0.7cqmin;
+        background: var(--accent);
+        transform-origin: left center;
+      }
+      .card {
+        padding: var(--gap);
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+      .chrome {
+        position: absolute;
+        inset: auto 0 0;
+        display: flex;
+        align-items: center;
+        gap: var(--gap);
+        height: 12cqmin;
+        padding: 0 var(--pad);
+      }
+      .captions {
+        position: relative;
+        flex: 1;
+        height: 100%;
+      }
+      .caption {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        color: var(--muted);
+        visibility: hidden;
+      }
+      .control {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 2.4cqmin;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        font-size: var(--t-label);
+        cursor: pointer;
+      }
+      .control:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .render .control {
+        display: none;
+      }
+      .progress {
+        position: absolute;
+        inset: auto 0 0;
+        height: 0.8cqmin;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage" aria-label="{{TITLE}}: animated project demo">
+      <div class="shots"></div>
+      <div class="chrome">
+        <div class="captions"></div>
+        <button class="control" type="button">Play</button>
+      </div>
+      <div class="progress" aria-hidden="true"></div>
+    </main>
+    <!-- @spec -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.1/gsap.min.js"
+      integrity="sha512-VMHB/Dy1/3d+djJPdMhxbplbZgbfPNHy+yWCxB1MSrwUEcNE+gnviL/DwlGsh9wwobnRTiQc6ChK2ZoJamshXA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      window.DEMO_SHOTS = {};
+    </script>
+    <!-- @shots -->
+    <!-- @player -->
+  </body>
+</html>

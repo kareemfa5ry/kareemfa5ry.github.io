@@ -20,3 +20,9 @@ test-results/
 
 # Claude Code agent worktrees
 .claude/worktrees/
+
+# project-demo render output (scripts/render.mjs); only spec.json, index.html and poster.jpg are committed
+public/demos/*/demo.webm
+public/demos/*/demo.mp4
+public/demos/*/contact.png
+public/demos/*/frames/
