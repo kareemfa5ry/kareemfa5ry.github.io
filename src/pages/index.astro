@@ -10,6 +10,7 @@ import Downloads from "../components/Downloads.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
 import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
+import { EDUCATION } from "../site/education";
 import { personJsonLd } from "../site/person_jsonld";
 import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
 
@@ -33,13 +34,6 @@ const filterProjects = projects.map(({ id, data }) => ({
   title: data.title,
   skills: data.skills.map((skill) => skill.id),
 }));
-
-const EDUCATION = [
-  "BSc Accounting, Alexandria University, Faculty of Commerce (English section), 2010",
-  "ATPCO fare filing and coding, two-week instructor-led programme",
-  "Business Process Outsourcing Skills Programme, Information Technology Institute (ITI), nine months",
-  "Arabic (native) · English (full professional) · French (basic)",
-];
 ---
 
 <Base
