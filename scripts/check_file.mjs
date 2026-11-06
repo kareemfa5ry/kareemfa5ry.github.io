@@ -1,16 +1,30 @@
 // Claude Code PostToolUse hook for Edit|Write (wired in .claude/settings.json). Reads the hook JSON on stdin and
 // checks the one edited file: eslint, prettier, the layout caps from check_layout.mjs. Advisory, never edits files.
 // Prints each problem as `fable-code: ...` on stderr and exits 2 (fed back to the agent), or exits 0 silently.
-import { readFileSync, readdirSync } from "node:fs";
-import { dirname, extname, relative, resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { dirname, extname, join, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { ROOTS, SILENCE_ROOTS, SOURCE_EXTENSIONS, checkFile, looseViolation } from "./check_layout.mjs";
 
 const LINTED = new Set([".astro", ".ts", ".tsx", ".js", ".mjs"]);
 
+// The edited file's own project (a worktree has its own package.json and config); its binaries, else this repo's.
+const OWN_BINS = join(dirname(fileURLToPath(import.meta.url)), "..", "node_modules", ".bin");
+
+function projectRoot(file) {
+  let dir = dirname(file);
+  while (!existsSync(join(dir, "package.json")) && dirname(dir) !== dir) dir = dirname(dir);
+  return existsSync(join(dir, "package.json")) ? dir : "";
+}
+
 function bin(name, args) {
   const exe = process.platform === "win32" ? `${name}.cmd` : name;
-  const run = spawnSync(`node_modules/.bin/${exe}`, args, { encoding: "utf8", shell: process.platform === "win32" });
+  const local = join("node_modules", ".bin", exe);
+  const run = spawnSync(existsSync(local) ? local : join(OWN_BINS, exe), args, {
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
   return { status: run.status, out: `${run.stdout ?? ""}${run.stderr ?? ""}` };
 }
 
@@ -40,8 +54,8 @@ function problemsFor(rel) {
 
 const input = JSON.parse(readFileSync(0, "utf8") || "{}");
 const filePath = input?.tool_input?.file_path;
-if (filePath) {
-  const rootDir = resolve(process.env.CLAUDE_PROJECT_DIR ?? ".");
+const rootDir = filePath ? projectRoot(resolve(String(filePath))) : "";
+if (rootDir) {
   process.chdir(rootDir);
   const rel = relative(rootDir, resolve(String(filePath)))
     .split("\\")

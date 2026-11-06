@@ -39,3 +39,12 @@ test("a file outside the roots is ignored", () => {
   const run = hook(join(mkdtempSync(join(tmpdir(), "cf-")), "long.mjs"), "export const a = 1;\n".repeat(401));
   assert.equal(run.status, 0);
 });
+
+test("a file inside an agent worktree is checked against that worktree", () => {
+  const root = join(mkdtempSync(join(tmpdir(), "cf-")), ".claude", "worktrees", "x");
+  mkdirSync(join(root, "src"), { recursive: true });
+  writeFileSync(join(root, "package.json"), "{}");
+  const run = hook(join(root, "src", "bad.mjs"), "// eslint-disable-next-line no-console\nexport const a = 1;\n");
+  assert.equal(run.status, 2);
+  assert.match(run.stderr, /^fable-code: src\/bad\.mjs: lint silencing comment/m);
+});
