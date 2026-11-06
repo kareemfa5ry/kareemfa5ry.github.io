@@ -138,8 +138,8 @@ Boxes on a coarse grid, revealed one by one in `order`; an arrow draws once both
 
 ## chart
 
-Inline SVG, no library. Lines draw by `stroke-dashoffset`, bars grow by `scaleY`; a counter above counts to the
-last value of the first series (one decimal unless that value is whole). Series use accent, ink, muted.
+Inline SVG, no library. Lines draw by `stroke-dashoffset`, bars grow by `scaleY`; a counter above counts from the
+first value of the first series to its last (one decimal unless both are whole). Series use accent, ink, muted.
 `min_ms` 3500.
 
 | Param                 | Type   | Default  | Meaning                    |

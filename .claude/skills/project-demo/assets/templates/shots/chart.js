@@ -1,5 +1,6 @@
 // Shot "chart": an inline-SVG line or bar chart (no chart library). Lines draw by stroke-dashoffset, bars grow by
-// scaleY, and a big counter above counts to the last value of the first series. Series use accent, ink, muted.
+// scaleY, and a big counter above counts from the first value of the first series to its last. Series use accent,
+// ink, muted.
 DEMO_SHOTS.chart = {
   min_ms: 3500,
   params: {
@@ -61,7 +62,9 @@ DEMO_SHOTS.chart = {
         }),
       ),
     );
-    var last = p.series[0].values[p.series[0].values.length - 1];
+    var values = p.series[0].values;
+    var first = values[0];
+    var last = values[values.length - 1];
     var legend = root.appendChild(kit.el("div", "legend"));
     var num = root.appendChild(kit.el("span", "num"));
     var svg = root.appendChild(document.createElementNS(NS, "svg"));
@@ -107,8 +110,10 @@ DEMO_SHOTS.chart = {
         shapes.push(add("path", { d: d, pathLength: 1, class: "ln " + cls }));
       }
     });
-    var format = new Intl.NumberFormat("en-US", { maximumFractionDigits: Number.isInteger(last) ? 0 : 1 });
-    var counter = { v: 0 };
+    var format = new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: Number.isInteger(first) && Number.isInteger(last) ? 0 : 1,
+    });
+    var counter = { v: first };
     var paint = function () {
       num.textContent = format.format(counter.v) + p.unit;
     };
@@ -120,6 +125,6 @@ DEMO_SHOTS.chart = {
     } else {
       tl.fromTo(shapes, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: draw, ease: m.easeMove }, 0.3);
     }
-    tl.to(counter, { v: last, duration: draw, ease: m.easeCount, onUpdate: paint }, 0.3);
+    tl.fromTo(counter, { v: first }, { v: last, duration: draw, ease: m.easeCount, onUpdate: paint }, 0.3);
   },
 };
