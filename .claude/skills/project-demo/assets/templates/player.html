@@ -1,31 +1,25 @@
 <!doctype html>
 <!-- Demo page shell. scripts/new_demo.mjs fills the double-brace and "@ slot" comments below; never edit a
-     generated index.html by hand. Tokens and font stack are copied from src/styles/global.css (lines 10-40). -->
+     generated index.html by hand. Tokens come from /theme.css, the theme from /theme.js (public/, shared with the site); the font stack is copied from src/styles/global.css. -->
 <html lang="en" data-aspect="{{ASPECT}}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{TITLE}}</title>
+    <link rel="stylesheet" href="/theme.css" />
+    <script src="/theme.js"></script>
     <script>
-      // Pin the theme before first paint: ?theme=light|dark (from the site's html[data-theme]), else the system.
+      // ?render=1 is the video renderer. It may pin ?theme=light|dark after theme.js has applied the site's choice.
       (function () {
         var q = new URLSearchParams(location.search);
-        var theme = q.get("theme");
         var html = document.documentElement;
-        if (theme === "light" || theme === "dark") html.setAttribute("data-theme", theme);
-        if (q.get("render") === "1") html.classList.add("render");
+        if (q.get("render") !== "1") return;
+        html.classList.add("render");
+        if (q.get("theme") === "light" || q.get("theme") === "dark") applyTheme(q.get("theme"));
       })();
     </script>
     <style>
       :root {
-        color-scheme: light dark;
-        --bg: light-dark(#f7f9fc, #000814);
-        --surface: light-dark(#ffffff, #001d3d);
-        --ink: light-dark(#000814, #e8eef7);
-        --muted: light-dark(#4a5a70, #9fb1c9);
-        --rule: light-dark(#d5deea, #14365f);
-        --accent: light-dark(#003566, #ffc300);
-        --accent-soft: light-dark(#fff3c2, #003566);
         --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         /* Type scale in cqmin: 1cqmin = 1% of the stage's short side, so 16:9 and 9:16 read the same size. */
         --t-display: 11cqmin;
@@ -36,12 +30,6 @@
         --gap: 4cqmin;
         --pad: 7cqmin;
         --radius: 1.6cqmin;
-      }
-      :root[data-theme="light"] {
-        color-scheme: light;
-      }
-      :root[data-theme="dark"] {
-        color-scheme: dark;
       }
       * {
         box-sizing: border-box;
