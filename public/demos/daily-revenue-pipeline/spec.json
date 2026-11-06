@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../.claude/skills/project-demo/references/spec.schema.json",
+  "title": "Daily revenue data pipeline and forecasting dashboard",
+  "tagline": "A daily PostgreSQL pipeline that forecasts every flight departing in the next 14 days.",
+  "stack": ["PostgreSQL", "Materialized views", "Python", "React", "GraphQL", "Redis"],
+  "links": { "live": "https://kareemfa5ry.github.io/projects/daily-revenue-pipeline/" },
+  "aspect": "16:9",
+  "seed": 32,
+  "poster_ms": 12000,
+  "shots": [
+    {
+      "type": "title",
+      "duration_ms": 4000,
+      "caption": "A daily revenue pipeline and forecasting dashboard for Nesma Airlines."
+    },
+    {
+      "type": "pipeline",
+      "duration_ms": 6500,
+      "caption": "Daily exports are loaded, forecast against similar past flights, and scored for action.",
+      "params": {
+        "stages": [
+          { "label": "Daily exports", "detail": "tickets and flights" },
+          { "label": "PostgreSQL load", "detail": "only changed rows, by checksum" },
+          { "label": "Forecast", "detail": "next 14 days of flights" },
+          { "label": "Flagged flights", "detail": "pricing or inventory action" }
+        ]
+      }
+    },
+    {
+      "type": "metrics",
+      "duration_ms": 5500,
+      "caption": "Processing moved from Python into the database after the first version needed 35 GB and stalled.",
+      "params": {
+        "items": [
+          { "value": 17, "label": "restartable stages in the daily load" },
+          { "value": 9, "label": "for a normal daily run", "prefix": "~", "suffix": " min" }
+        ]
+      }
+    },
+    {
+      "type": "outro",
+      "duration_ms": 3500,
+      "caption": "Read the full project on the site.",
+      "params": { "heading": "See the full project" }
+    }
+  ]
+}
