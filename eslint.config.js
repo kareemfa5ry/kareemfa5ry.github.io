@@ -16,8 +16,9 @@ const FABLE_CODE_RULES = {
 };
 
 export default defineConfig(
-  // .claude/ holds the vendored skill and agent worktrees (a second tsconfig there confuses the TS parser).
-  { ignores: ["dist/", ".astro/", "node_modules/", "worker/.wrangler/", ".claude/"] },
+  // Agent worktrees in .claude/worktrees/ have their own tsconfig, which confuses the TS parser;
+  // the skills under .claude/skills/ stay linted.
+  { ignores: ["dist/", ".astro/", "node_modules/", "worker/.wrangler/", ".claude/worktrees/"] },
   tseslint.configs.recommended,
   eslintPluginAstro.configs.recommended,
   {

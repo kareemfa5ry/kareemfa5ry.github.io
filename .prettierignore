@@ -1,5 +1,5 @@
 # Not ours to reformat: the vendored agent skill and the lockfile.
-.claude/skills/
+.claude/skills/fable-code/
 package-lock.json
 dist/
 .astro/

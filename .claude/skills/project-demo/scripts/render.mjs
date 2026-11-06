@@ -53,7 +53,7 @@ function posterMs(spec) {
   return 1000;
 }
 
-async function capture(url, viewport, fps, poster, framesDir, posterPath) {
+async function capture({ url, viewport, fps, poster, framesDir, posterPath }) {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({ viewport });
@@ -73,13 +73,18 @@ async function capture(url, viewport, fps, poster, framesDir, posterPath) {
   }
 }
 
-function stitch(framesDir, fps, format, outDir, sheet, count) {
+function stitch({ framesDir, fps, format, outDir, sheet, count }) {
   const input = ["-framerate", String(fps), "-i", join(framesDir, "f%05d.png")];
   const outputs = { video: join(outDir, `demo.${format}`) };
   ffmpeg([...input, ...CODECS[format], outputs.video]);
   if (sheet) {
     outputs.sheet = join(outDir, "contact.png");
-    ffmpeg([...input, "-vf", `fps=1,scale=320:-2,tile=${SHEET_COLUMNS}x${Math.ceil(count / fps / SHEET_COLUMNS)}`, outputs.sheet]);
+    ffmpeg([
+      ...input,
+      "-vf",
+      `fps=1,scale=320:-2,tile=${SHEET_COLUMNS}x${Math.ceil(count / fps / SHEET_COLUMNS)}`,
+      outputs.sheet,
+    ]);
   }
   return outputs;
 }
@@ -90,7 +95,8 @@ async function main({ positionals: [slug], values }) {
   if (!(fps >= 1 && fps <= 60) || !(values.format in CODECS)) throw new SpecError("--fps is 1-60, --format webm|mp4");
   if (spawnSync("ffmpeg", ["-version"]).error) throw new SpecError("ffmpeg not found; install it (brew/apt/choco)");
   const demoDir = join(PUBLIC_DIR, "demos", slug);
-  if (!existsSync(join(demoDir, "index.html"))) throw new SpecError(`no index.html in public/demos/${slug}; run new-demo`);
+  if (!existsSync(join(demoDir, "index.html")))
+    throw new SpecError(`no index.html in public/demos/${slug}; run new-demo`);
   const spec = readJson(join(demoDir, "spec.json"));
   const viewport = spec.aspect === "9:16" ? { width: 720, height: 1280 } : { width: 1280, height: 720 };
   const framesDir = mkdtempSync(join(tmpdir(), `render-${slug}-`));
@@ -98,8 +104,11 @@ async function main({ positionals: [slug], values }) {
   try {
     const url = `http://127.0.0.1:${server.address().port}/demos/${slug}/?render=1`;
     const poster = join(demoDir, "poster.jpg");
-    const count = await capture(url, viewport, fps, posterMs(spec), framesDir, poster);
-    const outputs = { ...stitch(framesDir, fps, values.format, demoDir, values["contact-sheet"], count), poster };
+    const count = await capture({ url, viewport, fps, poster: posterMs(spec), framesDir, posterPath: poster });
+    const outputs = {
+      ...stitch({ framesDir, fps, format: values.format, outDir: demoDir, sheet: values["contact-sheet"], count }),
+      poster,
+    };
     console.log(`${count} frames at ${fps} fps`);
     for (const path of Object.values(outputs)) console.log(`${path} (${(statSync(path).size / 1024).toFixed(1)} KB)`);
   } finally {

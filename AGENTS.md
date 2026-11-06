@@ -26,7 +26,9 @@
   a push that changes pages.
 - **Hooks:** `npm install` activates `.githooks/` (pre-commit runs `npm run check`, pre-push runs
   `npm run build`). Never commit with `--no-verify` / `-n` and never `git push --force`; the Claude Code hook in
-  `.claude/settings.json` (`scripts/guard_git.mjs`) blocks both.
+  `.claude/settings.json` (`scripts/guard_git.mjs`) blocks both. A `PostToolUse` hook (`scripts/check_file.mjs`) checks every edited file in `src/`, `scripts/`,
+  `worker/`, `tests/`, `.github/` and `.claude/skills/project-demo/` (eslint, prettier, size caps, no silencing)
+  and feeds problems back as `fable-code:` lines: fix them before the next edit.
 - **Layout caps** (`npm run check:layout`, eslint `max-lines`): no source file (`.astro .ts .tsx .js .mjs .css`) over
   400 lines (aim under 300); at most 8 loose source files per folder under `src/`, `scripts/`, `.github/`
   (`index.ts` does not count): add a subfolder such as `src/components/sections/` instead; no

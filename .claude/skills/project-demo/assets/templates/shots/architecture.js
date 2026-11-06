@@ -124,11 +124,22 @@ DEMO_SHOTS.architecture = {
     var boxes = {};
     p.nodes.forEach(function (n) {
       var g = add(svg, "g", {});
-      add(g, "rect", { x: pos[n.id].x - NODE_W / 2, y: pos[n.id].y - NODE_H / 2, width: NODE_W, height: NODE_H, rx: 1.6, class: "box" });
+      add(g, "rect", {
+        x: pos[n.id].x - NODE_W / 2,
+        y: pos[n.id].y - NODE_H / 2,
+        width: NODE_W,
+        height: NODE_H,
+        rx: 1.6,
+        class: "box",
+      });
       add(g, "text", { x: pos[n.id].x, y: pos[n.id].y, class: "name" }, n.label);
       boxes[n.id] = g;
     });
-    var order = p.order.length ? p.order : p.nodes.map(function (n) { return n.id; });
+    var order = p.order.length
+      ? p.order
+      : p.nodes.map(function (n) {
+          return n.id;
+        });
     var step = Math.max((kit.dur * 0.6 - m.enter) / Math.max(order.length - 1, 1), m.stagger);
     var shownAt = {};
     order.forEach(function (id, i) {

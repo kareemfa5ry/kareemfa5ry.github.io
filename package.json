@@ -13,7 +13,7 @@
     "format:check": "prettier --check .",
     "typecheck": "astro check",
     "check:layout": "node scripts/check_layout.mjs",
-    "test:unit": "node --test \"tests/unit/*.test.mjs\"",
+    "test:unit": "node --test \"tests/unit/*.test.mjs\" \".claude/skills/project-demo/scripts/*.test.mjs\"",
     "test:e2e": "playwright test",
     "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
     "worker:deploy": "wrangler deploy --config worker/wrangler.jsonc",
