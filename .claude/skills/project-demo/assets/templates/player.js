@@ -1,6 +1,6 @@
 // Demo player: reads the inlined spec, builds ONE paused GSAP master timeline from the shot templates and drives
-// it. Live: autoplay when scrolled into view, play/pause/replay button. ?render=1: no autoplay, no controls, only
-// window.demo.seek moves the playhead. Contract (render.mjs relies on it):
+// it. Live: autoplay when scrolled into view, play/pause/replay button. ?render=1: no autoplay, no controls or
+// progress bar, only window.demo.seek moves the playhead. Contract (render.mjs relies on it):
 //   window.demo = { duration, ready, seek(tMs), play(), pause() }   await ready before the first seek.
 // Same t -> same DOM: nothing here reads the wall clock; randomness comes from kit.rand (seeded by spec.seed).
 // Inlined by scripts/new_demo.mjs after the GSAP script and the templates (which register on window.DEMO_SHOTS).

@@ -38,7 +38,8 @@ player pair stays apart from them; `new_demo.mjs` finds a type by its file name 
    `"$schema": "../../../.claude/skills/project-demo/references/spec.schema.json"` for editor hints). Shots in
    order; each has `type`, `duration_ms`, `caption` (real text, one sentence) and `params` (see shot-types.md).
 3. Scaffold: `.claude/skills/project-demo/scripts/new-demo.sh <slug>`
-   (Windows: `node .claude/skills/project-demo/scripts/new_demo.mjs <slug>`). It exits 1 and writes nothing if
+   (Windows: `node .claude/skills/project-demo/scripts/new_demo.mjs <slug>`). The output is prettier-formatted
+   (commit it as generated, never hand-edit it). It exits 1 and writes nothing if
    the spec is invalid (every problem is listed by path) or the page is over 300 KB.
 4. Look at it: open `public/demos/<slug>/index.html` in a browser (file:// works), also with `?theme=dark`,
    `?theme=light` and `?render=1`, then run the QA checklist below.
@@ -66,13 +67,13 @@ window.demo = { duration, ready, seek(tMs), play(), pause() };
 
 ## URL parameters and modes
 
-| Input                            | Effect                                                                     |
-| -------------------------------- | -------------------------------------------------------------------------- |
-| `?theme=light` / `?theme=dark`   | pins `html[data-theme]` before first paint, same tokens as the site        |
-| no `theme`                       | follows `prefers-color-scheme` (`color-scheme: light dark`)                |
-| `?render=1`                      | no autoplay, no controls, no CSS transitions; only `demo.seek` moves time  |
-| `prefers-reduced-motion: reduce` | (live only) opens on the final frame, no autoplay; Replay plays on request |
-| `spec.aspect: "9:16"`            | vertical stage (`html[data-aspect]`), letterboxed in any viewport          |
+| Input                            | Effect                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------- |
+| `?theme=light` / `?theme=dark`   | pins `html[data-theme]` before first paint, same tokens as the site                       |
+| no `theme`                       | follows `prefers-color-scheme` (`color-scheme: light dark`)                               |
+| `?render=1`                      | no autoplay, no controls or progress bar, no CSS transitions; only `demo.seek` moves time |
+| `prefers-reduced-motion: reduce` | (live only) opens on the final frame, no autoplay; Replay plays on request                |
+| `spec.aspect: "9:16"`            | vertical stage (`html[data-aspect]`), letterboxed in any viewport                         |
 
 Live mode: autoplays once when at least half the stage is on screen (IntersectionObserver; inside the site's
 iframe it tracks the page viewport), pauses when scrolled away, one button cycles Play / Pause / Replay (44 px

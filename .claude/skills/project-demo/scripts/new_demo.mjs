@@ -7,6 +7,7 @@ import { existsSync, readdirSync, readFileSync, realpathSync, writeFileSync } fr
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
+import { format, resolveConfig } from "prettier";
 import { applyDefaults, checkSchema } from "./check_schema.mjs";
 
 const SKILL_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -95,14 +96,19 @@ export function renderPage(spec, templates) {
   return shell.replace(/\{\{(TITLE|ASPECT)\}\}|<!-- @(spec|shots|player) -->/g, (_, a, b) => slots[a ?? b]);
 }
 
-function main(slug) {
+// The page is generated, so the scaffold formats it itself and `prettier --check` passes with no ignore entry.
+export async function formatPage(page, file) {
+  return format(page, { ...(await resolveConfig(file)), filepath: file });
+}
+
+async function main(slug) {
   if (!slug || !SLUG_PATTERN.test(slug)) throw new SpecError("usage: new-demo.sh <slug>  (lowercase, digits, - or _)");
   const demoDir = join(REPO_ROOT, "public", "demos", slug);
   const { spec, templates } = resolveSpec(readJson(join(demoDir, "spec.json")));
-  const page = renderPage(spec, templates);
+  const out = join(demoDir, "index.html");
+  const page = await formatPage(renderPage(spec, templates), out);
   const bytes = Buffer.byteLength(page);
   if (bytes > BUDGET_BYTES) throw new SpecError(`index.html is ${bytes} bytes, over the ${BUDGET_BYTES} budget`);
-  const out = join(demoDir, "index.html");
   writeFileSync(out, page);
   console.log(`wrote ${relative(REPO_ROOT, out)} (${(bytes / 1024).toFixed(1)} KB, ${spec.shots.length} shots)`);
 }
@@ -110,7 +116,7 @@ function main(slug) {
 // Other scripts import the helpers above; only run the scaffold when this file is the entry point.
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   try {
-    main(process.argv[2]);
+    await main(process.argv[2]);
   } catch (error) {
     if (!(error instanceof SpecError)) throw error;
     console.error(`new-demo: ${error.message}`);
