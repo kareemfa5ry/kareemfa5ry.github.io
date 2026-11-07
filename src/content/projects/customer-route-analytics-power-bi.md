@@ -9,20 +9,20 @@ skills: [bi-and-reporting, statistics-and-analysis, sql-and-databases]
 metrics: []
 screenshots:
   - src: ../../assets/projects/customer-route-analytics-power-bi/01-main-dashboard-filter-closed.png
-    alt: "Power BI-style sales dashboard for a fictional company (illustrative data) with total revenue of $165.23M (up 112.4% on last year), 1.92M transactions, 1.47M passengers, a yield of $112.19, a daily yield and passenger line chart from mid-2023 to late 2025, and a currency list led by NOK at $81,638,101 (49.4%)."
-    caption: "Main dashboard with the filter panel closed (illustrative data)"
+    alt: "Nesma Airlines sales dashboard in Power BI, with dummy numbers: total revenue of $175.32M (up $96M, 120%, on last year), 1.83M transactions, 1.6M passengers, a yield of $112.2, revenue split into fare, surcharge, penalty, service, ancillary, discount and commission cards, a daily yield and passenger line chart from mid-2022 to late 2024, and a currency list led by EGP at 54.31%."
+    caption: "Main dashboard with the filter panel closed (dummy numbers)"
   - src: ../../assets/projects/customer-route-analytics-power-bi/02-main-dashboard-filter-open.png
-    alt: "The same sales dashboard with the filter panel open, showing ten dropdown slicers (Year, Month, SOURCE, OPER_TYPE, ACTION, Sales_Channel, Country, Sector, Route, OUT_IN), all set to All, with Clear and Close buttons."
-    caption: "Main dashboard with the filter panel open"
+    alt: "The same sales dashboard, with dummy numbers, with the filter panel open: ten dropdown slicers (DOA_Year, DOA_Mon, SOURCE, OPER_TYPE, ACTION, Sales_Channel, Country, Sector, Route, OUT_IN), all set to All, with Clear and Close buttons."
+    caption: "Main dashboard with the filter panel open (dummy numbers)"
   - src: ../../assets/projects/customer-route-analytics-power-bi/03-decomposition-tree.png
-    alt: "Decomposition tree that splits total revenue of $165,234,897.98 by source, country, currency, agent, route, sector and trip type, following Agent ($35,973,586.49), Sweden ($8,906,412.27) and SEK ($6,412,908.14) down to Return trip at $1,018,462.39."
-    caption: "Revenue broken down level by level, from source to trip type"
+    alt: "Decomposition tree, with dummy numbers, that splits total revenue of $175,317,486.67 by source, country, currency, travel agent, route, sector and trip type, following BSP ($126,919,364.68), Egypt ($49,252,594.72), EGP, WONDER TRAVEL, RUH(CAI) and CAI/RUH down to one-way trips at $2,401,638.46."
+    caption: "Revenue broken down level by level, from source to trip type (dummy numbers)"
   - src: ../../assets/projects/customer-route-analytics-power-bi/04-revenue-by-country-map.png
-    alt: "Revenue by country shown as a bar list, a world map with bubbles and a table: Norway leads with $79.3M (48.0%) ahead of Sweden with $62.8M (38.0%), and the table total is $165,234,897.98."
-    caption: "Revenue by country as bars, map bubbles and a table"
+    alt: "Revenue by country, with dummy numbers, shown as a bar list, a world map and a table: Egypt leads with $89M (51.21%) ahead of Saudi Arabia with $70M (40.17%), and the table total is $173,788,802.60."
+    caption: "Revenue by country as bars, a map and a table (dummy numbers)"
   - src: ../../assets/projects/customer-route-analytics-power-bi/05-data-model.png
-    alt: "Data model diagram with 13 tables and 12 one-to-many relationships, where the Sales fact table in the lower right is linked to lookup tables such as Fare basis, Sale date, Action date, Sales agent and Agent type."
-    caption: "Data model: one sales fact table with 12 linked tables"
+    alt: "Power BI data model with one sales fact table, SALES_NE_YTD, linked one-to-many to lookup tables for fare basis, booking class, sale, action and departure dates, country, travel agent, service type, advance payment, currency and sector routes."
+    caption: "Data model: one sales fact table with its linked lookup tables"
 ---
 
 - Built dashboards for demand forecasting, customer segmentation, personalised offers and customer churn.
