@@ -14,6 +14,7 @@
     "typecheck": "astro check",
     "check:layout": "node scripts/check_layout.mjs",
     "cv:generate": "node scripts/cv/generate.mjs",
+    "cv:pdf": "node scripts/cv/build_pdf.mjs",
     "test:unit": "node --test \"tests/unit/*.test.mjs\" \".claude/skills/project-demo/scripts/*.test.mjs\"",
     "test:e2e": "playwright test",
     "worker:dev": "wrangler dev --config worker/wrangler.jsonc",

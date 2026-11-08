@@ -17,7 +17,7 @@ OPS = {
 
 
 def load_entries(numbers):
-    return {e["id"]: e for ents in numbers.values() for e in ents if e.get("kind") != "bar"}
+    return {e["id"]: e for ents in numbers.values() for e in ents if e.get("kind", "number") == "number"}
 
 
 def compute(rel, val):

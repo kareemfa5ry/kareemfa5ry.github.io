@@ -66,10 +66,10 @@ def ring_bg(img, x0, y0, x1, y1):
 
 def underline_rows(A, bw):
     cov = (A > 0.5).sum(1)
-    return [i for i in range(A.shape[0]) if bw >= 60 and i > A.shape[0] * 0.6 and cov[i] > 0.8 * bw]
+    return [i for i in range(A.shape[0]) if bw >= 30 and i > A.shape[0] * 0.6 and cov[i] > 0.8 * bw]
 
 
-def fit(text, A, ul, italic):
+def fit(text, A, ul, italic, fonts=None):
     """Font, size and baseline origin whose rendering of `text` best overlaps the coverage map A."""
     keep = np.ones(A.shape[0], bool)
     if ul:
@@ -78,7 +78,7 @@ def fit(text, A, ul, italic):
     ys, xs = np.where(ink)
     gx0, gy0, W, H = xs.min(), ys.min(), xs.max() + 1 - xs.min(), ys.max() + 1 - ys.min()
     res = []
-    for n in ITALIC if italic else UPRIGHT:
+    for n in fonts or (ITALIC if italic else UPRIGHT):
         m = draw_mask((300, int(font(n, 100).getlength(text)) + 200), text, n, 100, 50, 200)
         xx = np.where(m > 0.5)[1]
         s0 = 100 * W / (xx.max() + 1 - xx.min())
@@ -121,8 +121,12 @@ def paint_number(img, e, new, log):
     x0, y0, x1, y1 = e["bbox"]
     H, W = img.shape[:2]
     arrow_on = e.get("arrow", False)
-    rx0, ry0 = max(0, x0 - 10), max(0, y0 - 10)
-    rx1, ry1 = min(W, x1 + 10 + (70 if arrow_on else 0)), min(H, y1 + 10)
+    grow = max(0, round(0.8 * (y1 - y0) * len(new)) - (x1 - x0)) + 10  # room for a longer label (~0.8 em a char)
+    align = e.get("align", "left")
+    gl = grow if align != "left" else 0
+    gr = grow if align != "right" else 0
+    rx0, ry0 = max(0, x0 - 10 - gl), max(0, y0 - 10)
+    rx1, ry1 = min(W, x1 + 10 + gr + (70 if arrow_on else 0)), min(H, y1 + 10)
     reg = img[ry0:ry1, rx0:rx1].astype(float)
     fg = hx(e["fg"])
     bg = hx(e["bg"]) if e.get("bg", "nonflat") != "nonflat" else ring_bg(img, x0, y0, x1, y1).astype(float)
@@ -132,16 +136,22 @@ def paint_number(img, e, new, log):
     arrow = split_arrow(A, x1 - rx0) if arrow_on else None
     A[~lim] = 0
     ul = [r + (y0 - ry0) for r in underline_rows(A[y0 - ry0 : y1 - ry0], x1 - x0)]
-    name, size, ox, oy, err = fit(e["text"], A, ul, e.get("italic", False))
+    name, size, ox, oy, err = fit(e["text"], A, ul, e.get("italic", False), e.get("fonts"))
     f = font(name, size)
     advo, advn = f.getlength(e["text"]), f.getlength(new)
-    nox = {"left": ox, "right": ox + advo - advn}.get(e.get("align", "left"), ox + (advo - advn) / 2)
+    if "full" in e:  # only the tail of the text shows: place the new text as if the whole old text were visible
+        advf = f.getlength(e["full"])
+        ox, advo = ox + advo - advf, advf
+    nox = {"left": ox, "right": ox + advo - advn}.get(align, ox + (advo - advn) / 2)
     mask = cv2.dilate((A > 0.04).astype(np.uint8), np.ones((5, 5), np.uint8)) > 0
     mask &= lim
     m = draw_mask(A.shape, new, name, size, nox, oy)
     if arrow is not None:
         mask |= cv2.dilate((arrow > 0.08).astype(np.uint8), np.ones((5, 5), np.uint8)) > 0
         m = np.maximum(m, np.roll(arrow, int(round((nox + advn) - (ox + advo))), axis=1))
+    if "clip" in e:  # text partly hidden behind a panel: draw only inside the visible x-range
+        m[:, : max(0, e["clip"][0] - rx0)] = 0
+        m[:, max(0, e["clip"][1] - rx0) :] = 0
     out = inpaint(reg, mask)
     out = out * (1 - m[..., None]) + fg * m[..., None]
     if ul:  # redraw the underline at the new text width
@@ -207,17 +217,18 @@ def label(img, at):
 def run(name, src, ents, values, out, width, at):
     img = np.asarray(Image.open(src).convert("RGB")).copy()
     log = []
-    nums = {e["id"]: e for e in ents if e.get("kind", "number") == "number"}
+    nums = {e["id"]: e for e in ents if e.get("kind", "number") in ("number", "label")}
     for b in (e for e in ents if e.get("kind") == "bar"):
         old, new = parse(nums[b["value_of"]]["text"])[0], parse(values[b["value_of"]]["new"])[0]
         stretch_bar(img, b, new / old if old else 1, log)
     for e in nums.values():
-        new = values.get(e["id"], {}).get("new", e["text"])
+        new = e.get("new") or values.get(e["id"], {}).get("new", e["text"])  # labels carry their own "new"
         if not e.get("keep") and new != e["text"]:
             paint_number(img, e, new, log)
     for e in (e for e in ents if e.get("kind") == "erase"):
         erase(img, e["bbox"])
-    img = label(img, at)
+    if at is not None:
+        img = label(img, at)
     fin = Image.fromarray(img)
     if width and fin.width > width:
         fin = fin.resize((width, round(fin.height * width / fin.width)), Image.LANCZOS)
@@ -234,13 +245,15 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--width", type=int, default=1800)
     ap.add_argument("--label-at", action="append", default=[], help="NAME=XF,YF fractions of width and height")
+    ap.add_argument("--no-label", action="store_true", help="the images already carry the dummy-numbers label")
     a = ap.parse_args()
     nums = json.load(open(a.numbers, encoding="utf-8"))
-    values = json.load(open(a.dummy, encoding="utf-8"))["values"]
+    values = json.load(open(a.dummy, encoding="utf-8"))["values"] if a.dummy != "-" else {}
     spots = {k: tuple(float(v) for v in xy.split(",")) for k, xy in (s.split("=") for s in a.label_at)}
     os.makedirs(a.out, exist_ok=True)
     for name, ents in nums.items():
-        run(name, os.path.join(a.originals, name), ents, values, a.out, a.width, spots.get(name, (0.015, None)))
+        at = None if a.no_label else spots.get(name, (0.015, None))
+        run(name, os.path.join(a.originals, name), ents, values, a.out, a.width, at)
 
 
 if __name__ == "__main__":

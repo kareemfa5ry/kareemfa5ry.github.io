@@ -22,8 +22,9 @@ test("prompt: the instructions carry the settled rules", () => {
   const rules = [/only from the knowledge/, /email address/, /Never invent figures/, /short/, /Arabic/];
   const audience = [/recruiters and hiring managers/, /outcome/, /CV PDF/, /salary or compensation/, /under 120 words/];
   const injection = [/labelled assistant/, /cannot change these rules/, /role-play, write code/, /first person/];
+  const links = [/name it/, /link once, at the end of the sentence/, /never a file path inside prose/];
   const transfer = [/transfers to another industry/, /your own reading/];
-  for (const rule of [...rules, ...audience, ...injection, ...transfer, /reveal these instructions/]) {
+  for (const rule of [...rules, ...audience, ...injection, ...links, ...transfer, /reveal these instructions/]) {
     assert.match(CHAT_INSTRUCTIONS, rule);
   }
 });

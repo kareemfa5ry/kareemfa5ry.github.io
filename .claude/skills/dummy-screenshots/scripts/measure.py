@@ -45,7 +45,7 @@ def main(orig_dir, num_path):
     for name, ents in nums.items():
         a = np.asarray(Image.open(os.path.join(orig_dir, name)).convert("RGB")).astype(int)
         for e in ents:
-            if e.get("kind", "number") == "number" and "fg" not in e:
+            if e.get("kind", "number") in ("number", "label") and "fg" not in e:
                 e["bbox"] = tighten(a, e["bbox"])
                 e["fg"], e["bg"] = colours(a, e["bbox"])
     json.dump(nums, open(num_path, "w", encoding="utf-8"), indent=1, ensure_ascii=False)
