@@ -5,7 +5,7 @@ items:
   - Power BI
   - Power Query
   - Excel Data Model
-  - star schema models
+  - star schema models with one-to-many relationships
   - Excel and VBA
   - automated daily reports
 ---
