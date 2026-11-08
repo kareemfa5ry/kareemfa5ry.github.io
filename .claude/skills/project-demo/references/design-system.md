@@ -52,8 +52,10 @@ Numbers that count use `font-variant-numeric: tabular-nums` so they do not jitte
 
 ## Screenshots
 
-The image keeps its own ratio, centred in a frame filled with `--surface` (that is the letterbox colour, in both
-aspects) with a `--rule` border. Callouts are a `0.5cqmin` `--accent` outline with `--radius`, plus a `.tag`
+The image keeps its own ratio, centred in a frame that wears the site's screenshot look (ScreenshotGallery): `1px`
+`--rule` border, `--radius` corners, `--surface` fill, no shadow. The shot's padding is tight (2cqmin, none below), so
+the frame fills nearly the whole stage, whose background is `--bg` like the page. The shot's caption sits below it in
+the player's muted caption strip. Callouts are a `0.5cqmin` `--accent` outline with `--radius`, plus a `.tag`
 label filled with `--accent` (text `--bg`); they arrive one after another with `enter`/`easeEnter` and stay.
 The move is slow and linear over the whole shot: scale at most 1.25 and shift at most 10% (default 1.00 to 1.06).
 

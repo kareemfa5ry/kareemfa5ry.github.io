@@ -60,7 +60,7 @@ DEMO_SHOTS.screenshot = {
     return errors;
   },
   css:
-    ".shot-screenshot{padding-top:var(--gap)}" +
+    ".shot-screenshot{padding:2cqmin 2cqmin 0}" +
     ".shot-screenshot .frame{flex:1;min-height:0;container-type:size;display:grid;place-items:center;" +
     "overflow:hidden;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius)}" +
     ".shot-screenshot .pan{position:relative;width:fit-content;height:fit-content}" +
