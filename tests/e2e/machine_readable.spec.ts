@@ -13,6 +13,8 @@ test("/llms.txt is plain text starting with the name, with project bullets and r
   const text = await response.text();
   expect(text).toMatch(/^# Kareem Fakhry/);
   expect(text).toContain("- BSc Accounting, Alexandria University");
+  expect(text).toContain("## Industry and domain knowledge");
+  expect(text).toContain("## Glossary");
   expect(text).toContain("- Result: Unmatched baggage records: cut from 66% to under 1%");
 });
 
