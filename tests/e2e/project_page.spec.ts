@@ -23,6 +23,6 @@ test("a project with a demo embeds it in a reserved 16:9 box", async ({ page }) 
 });
 
 test("a project without a demo has no iframe", async ({ page }) => {
-  await page.goto("/projects/revenue-audit-engine/");
+  await page.goto("/projects/competitor-price-tracker/");
   await expect(page.locator("iframe")).toHaveCount(0);
 });
