@@ -1,6 +1,7 @@
 // "Ask about Kareem" chat. The section copy is server-rendered in index.astro; this island owns only the
 // conversation: transcript, input and the stream from the Worker (see useChatStream.ts).
 import { useRef, useState } from "react";
+import { STARTER_CHIPS } from "../site/chat";
 import { useChatStream } from "./useChatStream";
 import styles from "./ChatPanel.module.css";
 
@@ -27,6 +28,15 @@ export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; s
           </li>
         ))}
       </ol>
+      {lines.length === 0 && (
+        <div className={styles.chips} role="group" aria-label="Suggested questions">
+          {STARTER_CHIPS.map(({ label, prompt }) => (
+            <button key={label} type="button" className={styles.chip} disabled={busy} onClick={() => void send(prompt)}>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       <form
         className={styles.form}
         onSubmit={(e) => {

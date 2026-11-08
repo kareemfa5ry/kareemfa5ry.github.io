@@ -56,3 +56,24 @@ test("a human check that keeps failing says so and logs the code", async ({ page
   await expect(page.getByText("The human check did not complete.")).toBeVisible();
   expect(logs.some((t) => t.includes("Turnstile"))).toBe(true);
 });
+
+test("six starter chips show on open and tapping one sends its prompt, not its label", async ({ page }) => {
+  await stub(page, false);
+  await page.goto("/", { waitUntil: "networkidle" }); // client:idle hydration
+  await page.getByRole("button", { name: "Ask about Kareem" }).click();
+  const group = page.getByRole("group", { name: "Suggested questions" });
+  await expect(group.getByRole("button")).toHaveText([
+    "Tech stack",
+    "Transferable skills",
+    "Leadership",
+    "Results",
+    "Career in brief",
+    "Contact",
+  ]);
+  await group.getByRole("button", { name: "Contact" }).click();
+  await expect(
+    page.getByRole("log").getByText("How can I reach Kareem, and where can I download his CV?"),
+  ).toBeVisible();
+  await expect(page.getByText("Hello from the stub.")).toHaveCount(1);
+  await expect(group).toHaveCount(0);
+});

@@ -103,7 +103,7 @@ npm run worker:deploy    # wrangler deploy; needs `wrangler login` and the secre
 
 ## Local eval
 
-`npm run worker:eval` asks 20 recruiter-style questions (answer, refuse, partial, injection, Arabic) against the live
+`npm run worker:eval` asks 26 recruiter-style questions (answer, refuse, partial, injection, Arabic) against the live
 `/llms.txt` with the real system prompt and grades each reply with the regexes in `eval/questions.json`; it exits 1 if any fail.
-It costs 20 small Messages API calls, uses `ANTHROPIC_API_KEY` from your shell or `worker/.dev.vars` (never printed
+It costs 26 small Messages API calls, uses `ANTHROPIC_API_KEY` from your shell or `worker/.dev.vars` (never printed
 or written), and never runs in CI.

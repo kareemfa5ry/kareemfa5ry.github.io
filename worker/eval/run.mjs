@@ -23,6 +23,7 @@ async function ask(key, system, question) {
     body: JSON.stringify({
       model: CHAT_MODEL,
       max_tokens: MAX_ANSWER_TOKENS,
+      output_config: { effort: "low" }, // same as the worker, else thinking eats the token budget
       system,
       messages: [{ role: "user", content: question }],
     }),
