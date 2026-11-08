@@ -29,7 +29,7 @@ async function stub(page: Page, failAlways: boolean) {
 
 async function ask(page: Page, question: string) {
   const dialog = page.getByRole("dialog", { name: "Ask about Kareem" });
-  if (!(await dialog.isVisible())) await page.getByRole("button", { name: "Ask about Kareem" }).click();
+  if (!(await dialog.isVisible())) await page.locator(`button[aria-label="Ask about Kareem"]`).click();
   await expect(dialog).toBeVisible();
   await page.getByLabel("Your question").fill(question);
   await page.getByRole("button", { name: "Send" }).click();
@@ -60,7 +60,7 @@ test("a human check that keeps failing says so and logs the code", async ({ page
 test("six starter chips show on open and tapping one sends its prompt, not its label", async ({ page }) => {
   await stub(page, false);
   await page.goto("/", { waitUntil: "networkidle" }); // client:idle hydration
-  await page.getByRole("button", { name: "Ask about Kareem" }).click();
+  await page.locator(`button[aria-label="Ask about Kareem"]`).click();
   const group = page.getByRole("group", { name: "Suggested questions" });
   await expect(group.getByRole("button")).toHaveText([
     "Tech stack",
@@ -80,7 +80,7 @@ test("six starter chips show on open and tapping one sends its prompt, not its l
 async function openWithStub(page: Page) {
   await stub(page, false);
   await page.goto("/", { waitUntil: "networkidle" }); // client:idle hydration
-  await page.getByRole("button", { name: "Ask about Kareem" }).click();
+  await page.locator(`button[aria-label="Ask about Kareem"]`).click();
   return page.getByRole("group", { name: "Suggested questions" });
 }
 
