@@ -70,3 +70,29 @@ test("at phone width the open dialog fills the viewport", async ({ page }) => {
   const { box } = await viewportBox(page, "dialog");
   expect(box).toMatchObject({ x: 0, y: 0, width: 390, height: 844 });
 });
+
+test("docked chat on desktop reserves its width: switch label clear of the panel, no horizontal scroll", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await openChat(page);
+  await page.getByRole("button", { name: "Dock to side" }).click();
+  const panel = (await viewportBox(page, "dialog")).box;
+  await expect(page.locator("html")).toHaveAttribute("data-chat-dock", "side");
+  const label = page.locator("label.plane-switch").first();
+  const right = async () => {
+    const box = await label.boundingBox();
+    return (box?.x ?? 0) + (box?.width ?? 0);
+  };
+  await expect.poll(right).toBeLessThanOrEqual(1280 - panel.width + 1);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+test("docked chat at phone width is a full-width sheet with no body padding", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openChat(page);
+  await page.getByRole("button", { name: "Dock to side" }).click();
+  const { box } = await viewportBox(page, "dialog");
+  expect(box).toMatchObject({ x: 0, width: 390 });
+  expect(await page.evaluate(() => getComputedStyle(document.body).paddingInlineEnd)).toBe("0px");
+});
