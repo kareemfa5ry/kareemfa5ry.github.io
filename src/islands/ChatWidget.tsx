@@ -51,11 +51,17 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
 
   useEffect(() => setDocked(readDocked()), []);
 
+  // The hero button that last toggled the chat; minimizing from it returns focus there instead of the launcher.
+  const trigger = useRef<HTMLElement | null>(null);
   const opened = useRef(false);
   useEffect(() => {
     if (open) card.current?.querySelector("textarea")?.focus();
-    else if (opened.current) launcher.current?.focus();
+    else if (opened.current) (trigger.current ?? launcher.current)?.focus();
+    trigger.current = null;
     opened.current = open;
+    if (!open) setDocked(readDocked()); // a hero-opened dock lasts one opening; the saved choice returns
+    // Hero buttons show the label that matches this state (CSS keys off aria-expanded).
+    document.querySelectorAll("[data-chat-open]").forEach((el) => el.setAttribute("aria-expanded", String(open)));
   }, [open]);
 
   // Tell the page layout to reserve the docked panel's width; cleared on undock, minimize, close and unmount.
@@ -71,9 +77,15 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
     };
   }, [open, docked]);
 
-  // Static buttons elsewhere on the page (the hero's "Ask about Kareem") open the widget with data-chat-open.
+  // Static buttons elsewhere on the page (the hero's "Ask about Kareem") toggle the widget with data-chat-open.
   useEffect(() => {
-    const onClick = (e: MouseEvent) => (e.target as Element).closest("[data-chat-open]") && setOpen(true);
+    const onClick = (e: MouseEvent) => {
+      trigger.current = (e.target as Element).closest<HTMLElement>("[data-chat-open]");
+      if (!trigger.current) return;
+      // Floating, the card would cover the hero button; wide screens dock it so the button stays in reach.
+      if (window.matchMedia("(min-width: 48rem)").matches) setDocked(true);
+      setOpen((o) => !o);
+    };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);

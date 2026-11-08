@@ -56,7 +56,7 @@ test("dock makes the card full height and undock restores it", async ({ page }) 
 
 test("Minimize hides the dialog and returns focus to the launcher", async ({ page }) => {
   const launcher = await openChat(page);
-  await page.getByRole("button", { name: "Minimize" }).click();
+  await page.getByRole("button", { name: "Minimize", exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(launcher).toBeFocused();
 });

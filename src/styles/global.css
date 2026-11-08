@@ -86,6 +86,11 @@ h3 a:hover {
   cursor: pointer;
   font-family: inherit;
 }
+/* The chat island sets aria-expanded on [data-chat-open]; show the label for the current state. */
+[aria-expanded="true"] > .when-closed,
+[aria-expanded="false"] > .when-open {
+  display: none;
+}
 .btn:hover {
   text-decoration: none;
   filter: brightness(1.08);
