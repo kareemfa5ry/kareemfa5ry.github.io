@@ -50,7 +50,8 @@ worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Wor
 eslint.config.js            lint rules, including the fable-code size and complexity caps
 .prettierrc.mjs             formatting (printWidth 120, Astro plugin)
 AGENTS.md, CLAUDE.md        rules for AI coding agents (Copilot, Claude Code, Codex)
-.claude/                    agent skills (fable-code, ponytail, project-demo, dummy-screenshots) and the Claude Code hook settings; .claude/worktrees/ is harness output, git- and prettier-ignored
+.claude/skills/resume-update/ how to update the CV: fact -> file -> outputs, run order
+.claude/                    agent skills (fable-code, ponytail, project-demo, dummy-screenshots, resume-update) and the Claude Code hook settings; .claude/worktrees/ is harness output, git- and prettier-ignored
 ```
 
 ## Develop
@@ -107,6 +108,8 @@ in the repository: put it on one line in the ignored `cv/phone.txt`. Without tha
 loudly and leaves the phone out, so do not publish those PDFs.
 
 ## Updating a CV
+
+Agents: follow `.claude/skills/resume-update/SKILL.md`.
 
 1. Edit the content in `src/content/` or `src/site/` (the website and both CVs read the same files).
 2. `npm run cv:generate` rewrites `cv/*.tex`.
