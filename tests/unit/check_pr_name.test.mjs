@@ -2,12 +2,13 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
-const SCRIPT = new URL("../../scripts/check_pr_name.mjs", import.meta.url);
+const SCRIPT = fileURLToPath(new URL("../../scripts/check_pr_name.mjs", import.meta.url));
 const BASE_ENV = Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith("PR_")));
 
 function run(env) {
-  const result = spawnSync(process.execPath, [SCRIPT.pathname], { env: { ...BASE_ENV, ...env }, encoding: "utf8" });
+  const result = spawnSync(process.execPath, [SCRIPT], { env: { ...BASE_ENV, ...env }, encoding: "utf8" });
   return { code: result.status, stderr: result.stderr };
 }
 
