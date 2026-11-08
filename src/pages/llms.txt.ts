@@ -7,7 +7,7 @@ import { changeText, type Result } from "../components/charts/scale";
 import { type BulletItem, bulletsFor } from "../site/bullets";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
-import { EDUCATION } from "../site/education";
+import { EDUCATION, LANGUAGES } from "../site/education";
 import { DOMAIN } from "../site/knowledge/domain";
 import { GLOSSARY } from "../site/knowledge/glossary";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
@@ -64,7 +64,7 @@ export async function GET({ site }: APIContext) {
     ...skills.map(({ data }) => `- ${data.label}: ${data.items.join(", ")}`),
     "",
     "## Education, training and languages",
-    ...EDUCATION.map((line) => `- ${line}`),
+    ...[...EDUCATION, LANGUAGES].map((line) => `- ${line}`),
     "",
     "## Industry and domain knowledge",
     ...DOMAIN.map((line) => `- ${line}`),

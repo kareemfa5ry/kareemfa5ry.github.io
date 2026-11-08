@@ -27,3 +27,7 @@ public/demos/*/demo.mp4
 public/demos/*/contact.png
 public/demos/*/frames/
 __pycache__/
+
+# CV build: phone number (one line, per machine) and pdflatex output
+cv/phone.txt
+cv/out/

@@ -10,7 +10,7 @@ import Downloads from "../components/Downloads.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
 import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
-import { EDUCATION } from "../site/education";
+import { EDUCATION, LANGUAGES } from "../site/education";
 import { personJsonLd } from "../site/person_jsonld";
 import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
 
@@ -73,7 +73,7 @@ const filterProjects = projects.map(({ id, data }) => ({
   <section id="education">
     <h2>Education, training and languages</h2>
     <ul>
-      {EDUCATION.map((line) => (
+      {[...EDUCATION, LANGUAGES].map((line) => (
         <li>{line}</li>
       ))}
     </ul>

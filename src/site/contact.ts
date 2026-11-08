@@ -5,3 +5,4 @@ export const MAILTO = `mailto:${EMAIL}`;
 export const LINKEDIN_LABEL = "linkedin.com/in/kareem-fakhry";
 export const LINKEDIN_URL = `https://${LINKEDIN_LABEL}`;
 export const LOCATION = "Cairo, Egypt";
+export const LEGAL_NAME = "Kareem Fakhry Gaheed Abd-Allah";

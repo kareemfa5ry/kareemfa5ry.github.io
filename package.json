@@ -13,13 +13,14 @@
     "format:check": "prettier --check .",
     "typecheck": "astro check",
     "check:layout": "node scripts/check_layout.mjs",
+    "cv:generate": "node scripts/cv/generate.mjs",
     "test:unit": "node --test \"tests/unit/*.test.mjs\" \".claude/skills/project-demo/scripts/*.test.mjs\"",
     "test:e2e": "playwright test",
     "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
     "worker:deploy": "wrangler deploy --config worker/wrangler.jsonc",
     "worker:eval": "node worker/eval/run.mjs",
     "worker:test": "tsc -p worker/tsconfig.json && node --test \"worker/test/*.test.mjs\"",
-    "check": "npm run lint && npm run format:check && npm run typecheck && npm run check:layout && npm run test:unit && npm run worker:test",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm run check:layout && npm run test:unit && npm run worker:test && node scripts/cv/generate.mjs --check",
     "prepare": "git config core.hooksPath .githooks"
   },
   "devDependencies": {
@@ -39,7 +40,8 @@
     "react-dom": "^19.3.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1",
-    "wrangler": "^4.158.0"
+    "wrangler": "^4.158.0",
+    "yaml": "^2.9.1"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.5.0"
