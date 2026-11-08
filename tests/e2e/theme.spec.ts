@@ -59,6 +59,17 @@ test("switch label is visible on wide screens and only in the accessible name on
   await expect(page.getByRole("switch", { name: "Dark mode" })).toBeAttached();
 });
 
+test("the switch shows its state in words, On in dark and Off in light", async ({ page }) => {
+  await page.setViewportSize({ width: 1200, height: 800 });
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  const state = () =>
+    page.evaluate(() => getComputedStyle(document.querySelector(".plane-switch .state")!, "::before").content);
+  expect(await state()).toBe('": Off"');
+  await page.locator(".plane-switch").click();
+  expect(await state()).toBe('": On"');
+});
+
 test("the site links the shared theme files", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator('head link[rel="stylesheet"][href="/theme.css"]')).toHaveCount(1);
