@@ -66,9 +66,9 @@ export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; s
               type="button"
               className={styles.chip}
               disabled={busy}
-              onClick={() => {
+              onClick={async () => {
                 setUsed((u) => [...u, label]);
-                void send(prompt);
+                if (!(await send(prompt))) setUsed((u) => u.filter((l) => l !== label));
               }}
             >
               {label}

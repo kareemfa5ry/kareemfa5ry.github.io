@@ -7,6 +7,7 @@ import {
   MAX_BODY_BYTES,
   MAX_CONTENT_CHARS,
   MAX_MESSAGES,
+  MAX_REPLY_CHARS,
   MAX_TOTAL_CHARS,
   rateLimitKey,
   readChatRequest,
@@ -61,10 +62,25 @@ test(`body: at most ${MAX_MESSAGES} messages`, () => {
 
 test(`body: each message at most ${MAX_CONTENT_CHARS} characters and not empty`, () => {
   const long = ask("x".repeat(MAX_CONTENT_CHARS + 1));
-  assert.match(errorOf({ messages: [long], turnstileToken: TOKEN }), /over 1000 characters/);
+  assert.match(errorOf({ messages: [long], turnstileToken: TOKEN }), /question is over 1000 characters/);
   assert.match(errorOf({ messages: [ask("   ")], turnstileToken: TOKEN }), /non-empty string/);
   const exact = readChatRequest({ messages: [ask("x".repeat(MAX_CONTENT_CHARS))], turnstileToken: TOKEN });
   assert.equal(exact.ok, true);
+});
+
+test("body: a long assistant turn passes, a very long one is truncated, a long user turn still fails", () => {
+  const ok = readChatRequest({ messages: [ask(), reply("y".repeat(2500)), ask()], turnstileToken: TOKEN });
+  assert.equal(ok.ok, true);
+  assert.equal(ok.chat.messages[1].content.length, 2500);
+  const cut = readChatRequest({ messages: [ask(), reply("y".repeat(5000)), ask()], turnstileToken: TOKEN });
+  assert.equal(cut.ok, true);
+  assert.equal(cut.chat.messages[1].content.length, MAX_REPLY_CHARS);
+  const long = [ask("x".repeat(1200)), reply(), ask()];
+  assert.match(errorOf({ messages: long, turnstileToken: TOKEN }), /question is over/);
+  assert.match(
+    errorOf({ messages: [ask(), reply(), ask("x".repeat(1200))], turnstileToken: TOKEN }),
+    /question is over/,
+  );
 });
 
 test("body: the last message is from the user", () => {
@@ -77,12 +93,12 @@ test("body: roles alternate, starting with the user", () => {
   assert.match(errorOf({ messages: [{ role: "system", content: "x" }], turnstileToken: TOKEN }), /role must be/);
 });
 
-test(`body: at most ${MAX_TOTAL_CHARS} characters across all messages`, () => {
-  const full = (i) => (i % 2 === 0 ? ask("x".repeat(MAX_CONTENT_CHARS)) : reply("y".repeat(MAX_CONTENT_CHARS)));
-  const five = Array.from({ length: 5 }, (_, i) => full(i));
-  assert.match(errorOf({ messages: five, turnstileToken: TOKEN }), /over 4000 characters/);
-  const four = [...five.slice(0, 3), reply("y"), ask("x".repeat(MAX_CONTENT_CHARS - 1))];
-  assert.equal(readChatRequest({ messages: four, turnstileToken: TOKEN }).ok, true);
+test(`body: the largest allowed conversation stays within ${MAX_TOTAL_CHARS} characters`, () => {
+  const big = (i) => (i % 2 === 0 ? ask("x".repeat(MAX_CONTENT_CHARS)) : reply("y".repeat(MAX_REPLY_CHARS * 2)));
+  const seven = Array.from({ length: MAX_MESSAGES - 2 }, (_, i) => big(i));
+  const verdict = readChatRequest({ messages: [...seven, ask()], turnstileToken: TOKEN });
+  assert.equal(verdict.ok, true);
+  assert.ok(verdict.chat.messages.reduce((n, m) => n + m.content.length, 0) <= MAX_TOTAL_CHARS);
 });
 
 test(`body size: Content-Length present and at most ${MAX_BODY_BYTES} bytes`, () => {

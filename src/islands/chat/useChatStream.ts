@@ -1,5 +1,6 @@
 // Conversation state for ChatPanel: the transcript, the history sent to the Worker, Turnstile and the SSE read.
 import { useRef, useState } from "react";
+import { EMAIL } from "../../site/contact";
 import { trimHistory, type Turn } from "./chat_history";
 
 export interface Line {
@@ -47,11 +48,14 @@ const postChat = (workerUrl: string, messages: Turn[], turnstileToken: string) =
     body: JSON.stringify({ messages, turnstileToken }),
   });
 
+const SERVER_TROUBLE = `Something went wrong on our side. Please try again or email ${EMAIL}.`;
+
 /** Reads the SSE body, passing each text chunk on; returns the error message ("" when the stream was fine). */
 async function readChat(response: Response, onText: (chunk: string) => void): Promise<string> {
   if (!response.ok || !response.body) {
     const body = (await response.json().catch(() => ({}))) as { error?: string };
-    return body.error ?? "Something went wrong. Try again.";
+    console.warn("Chat server said:", response.status, body.error);
+    return SERVER_TROUBLE;
   }
   const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
   let buffer = "";
@@ -74,6 +78,7 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
   const [busy, setBusy] = useState(false);
   const past = useRef<Turn[]>([]);
   const nextId = useRef(0);
+  const failed = useRef<number[]>([]); // line ids of the last failed turn; the retry replaces them
   const widget = useRef<Promise<string>>(undefined);
   const waiting = useRef<{ ok: (token: string) => void; fail: (error: Error) => void }>(undefined);
 
@@ -131,10 +136,14 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
       }),
     );
 
+  /** Sends one question; resolves true when an answer came back. */
   const send = async (question: string) => {
+    const stale = failed.current;
+    failed.current = [];
+    setLines((all) => all.filter((l) => !stale.includes(l.id)));
     const messages = trimHistory([...past.current, { role: "user", content: question }]);
     setBusy(true);
-    add("user", question);
+    const asked = add("user", question);
     const answer = add("assistant", "");
     let text = "";
     let failure = "";
@@ -153,11 +162,12 @@ export function useChatStream(workerUrl: string, siteKey: string, box: React.Ref
     }
     if (failure || !text) {
       patch(answer, () => null);
-      add("system", failure || "No answer came back. Try again.");
+      failed.current = [asked, add("system", failure || "No answer came back. Try again.")];
     } else {
       past.current = [...messages, { role: "assistant", content: text }];
     }
     setBusy(false);
+    return failed.current.length === 0;
   };
 
   return { lines, busy, send, prepare };
