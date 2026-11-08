@@ -77,3 +77,10 @@ test("home page logs no console errors", async ({ page }) => {
   await page.waitForLoadState("networkidle");
   expect(errors).toEqual([]);
 });
+
+test("each project card has a demo badge ending in seconds", async ({ page }) => {
+  await page.goto("/");
+  const badges = page.locator(".badge");
+  await expect(badges).toHaveCount(PROJECTS.length);
+  for (const text of await badges.allTextContents()) expect(text).toMatch(/^Watch the demo · \d+ s$/);
+});

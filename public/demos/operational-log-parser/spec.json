@@ -6,7 +6,7 @@
   "links": { "live": "https://kareemfa5ry.github.io/projects/operational-log-parser/" },
   "aspect": "16:9",
   "seed": 29,
-  "poster_ms": 16500,
+  "poster_ms": 10000,
   "shots": [
     {
       "type": "title",
