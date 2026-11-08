@@ -65,8 +65,12 @@ def ring_bg(img, x0, y0, x1, y1):
 
 
 def underline_rows(A, bw):
+    """Rows of a full-width line under the text, set off by a nearly empty row (a digit's base stroke is not)."""
     cov = (A > 0.5).sum(1)
-    return [i for i in range(A.shape[0]) if bw >= 30 and i > A.shape[0] * 0.6 and cov[i] > 0.8 * bw]
+    rows = [i for i in range(A.shape[0]) if bw >= 30 and i > A.shape[0] * 0.6 and cov[i] > 0.8 * bw]
+    if not rows or not any(cov[r] < 0.2 * bw for r in range(int(A.shape[0] * 0.5), min(rows))):
+        return []
+    return rows
 
 
 def fit(text, A, ul, italic, fonts=None):
@@ -76,6 +80,8 @@ def fit(text, A, ul, italic, fonts=None):
         keep[max(0, min(ul) - 1) : max(ul) + 2] = False
     ink = (A > 0.5) & keep[:, None]
     ys, xs = np.where(ink)
+    if len(xs) == 0:
+        return None  # no ink of the expected colour in the box: wrong box or colour
     gx0, gy0, W, H = xs.min(), ys.min(), xs.max() + 1 - xs.min(), ys.max() + 1 - ys.min()
     res = []
     for n in fonts or (ITALIC if italic else UPRIGHT):
@@ -136,7 +142,11 @@ def paint_number(img, e, new, log):
     arrow = split_arrow(A, x1 - rx0) if arrow_on else None
     A[~lim] = 0
     ul = [r + (y0 - ry0) for r in underline_rows(A[y0 - ry0 : y1 - ry0], x1 - x0)]
-    name, size, ox, oy, err = fit(e["text"], A, ul, e.get("italic", False), e.get("fonts"))
+    fitted = fit(e["text"], A, ul, e.get("italic", False), e.get("fonts"))
+    if fitted is None:
+        log.append(f"{e['id']} {e['text']} SKIPPED: no ink in box {e['bbox']}")
+        return
+    name, size, ox, oy, err = fitted
     f = font(name, size)
     advo, advn = f.getlength(e["text"]), f.getlength(new)
     if "full" in e:  # only the tail of the text shows: place the new text as if the whole old text were visible
