@@ -7,4 +7,5 @@ items:
   - overbooking
   - demand forecasting
   - group and contract pricing
+  - competitor price tracking
 ---

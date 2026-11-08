@@ -2,9 +2,10 @@
 label: Statistics and analysis
 order: 5
 items:
-  - Descriptive statistics
+  - Descriptive statistics (mean, median, spread)
   - box plots and outlier checks
-  - significance tests
-  - customer segmentation
+  - significance tests on samples
+  - demand forecasting
+  - customer segmentation (classification)
   - churn analysis
 ---

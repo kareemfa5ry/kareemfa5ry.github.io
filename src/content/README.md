@@ -19,37 +19,37 @@ numbers. Use lower-case file names with hyphens (`competitor-price-tracker.md`).
 
 ## projects
 
-| Field         | Type                           | Required | Meaning                                                                |
-| ------------- | ------------------------------ | -------- | ---------------------------------------------------------------------- |
-| `title`       | text                           | yes      | Project name, shown as the heading.                                    |
-| `org`         | text                           | yes      | Organisation the work was done for.                                    |
-| `period`      | text, quoted                   | no       | When, shown as typed: `"2026"` or `"2023–2024"`; omit if no year.      |
-| `order`       | whole number from 1            | yes      | Position in the Projects section, 1 first.                             |
-| `summary`     | text, one sentence             | yes      | What it does and why it mattered; used on cards and as chat context.   |
-| `stack`       | list of text                   | yes      | Technology tags, shown as chips in this order.                         |
-| `skills`      | list of skill ids              | yes      | Skill groups this project proves, e.g. `[sql-and-databases]`.          |
-| `metrics`     | list of `{value, label}`       | yes      | Headline numbers; `[]` when there are none.                            |
-| `screenshots` | list of `{src, alt, caption?}` | yes      | Images; `[]` when there are none. See `src/assets/projects/README.md`. |
-| `results`     | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`. See below.     |
-| `bullets`     | list of text or `{text, cv}`   | yes      | Bullets; `cv: [sda, rpm]` limits a bullet to those CV PDFs only.       |
+| Field         | Type                           | Required | Meaning                                                                                          |
+| ------------- | ------------------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| `title`       | text                           | yes      | Project name, shown as the heading.                                                              |
+| `org`         | text                           | yes      | Organisation the work was done for.                                                              |
+| `period`      | text, quoted                   | no       | When, shown as typed: `"2026"` or `"2023–2024"`; omit if no year.                                |
+| `order`       | whole number from 1            | yes      | Position in the Projects section, 1 first.                                                       |
+| `summary`     | text, one sentence             | yes      | What it does and why it mattered; used on cards and as chat context.                             |
+| `stack`       | list of text                   | yes      | Technology tags, shown as chips in this order.                                                   |
+| `skills`      | list of skill ids              | yes      | Skill groups this project proves, e.g. `[sql-and-databases]`.                                    |
+| `metrics`     | list of `{value, label}`       | yes      | Headline numbers; `[]` when there are none.                                                      |
+| `screenshots` | list of `{src, alt, caption?}` | yes      | Images; `[]` when there are none. See `src/assets/projects/README.md`.                           |
+| `results`     | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`. See below.                               |
+| `bullets`     | list of text or `{text, cv}`   | yes      | Bullets; no `cv` = everywhere; `cv: [sda]` = that PDF (and the site) only; `cv: []` = site only. |
 
 A screenshot entry: `src` is the path from the project file to the image
 (`../../assets/projects/<slug>/01-dashboard.png`), `alt` describes the image and is mandatory, `caption` is optional.
 
 ## experience
 
-| Field      | Type                           | Required | Meaning                                                         |
-| ---------- | ------------------------------ | -------- | --------------------------------------------------------------- |
-| `title`    | text                           | no       | Job title; omit when the roles are in the note (Air Arabia).    |
-| `org`      | text                           | yes      | Employer or client.                                             |
-| `location` | text                           | yes      | City or region.                                                 |
-| `start`    | `"YYYY-MM"`, quoted            | yes      | First month in the role.                                        |
-| `end`      | `"YYYY-MM"`, quoted, or `null` | yes      | Last month in the role; `null` while it is current ("Present"). |
-| `note`     | text                           | no       | Context line shown above the bullets.                           |
-| `order`    | whole number from 1            | yes      | Position in the Experience section, 1 first.                    |
-| `projects` | list of project ids            | no       | Projects done in this role, e.g. `[daily-revenue-pipeline]`.    |
-| `results`  | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`.         |
-| `bullets`  | list of text or `{text, cv}`   | yes      | Bullets; `cv: [sda, rpm]` limits a bullet to those CVs only.    |
+| Field      | Type                           | Required | Meaning                                                                                          |
+| ---------- | ------------------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| `title`    | text                           | no       | Job title; omit when the roles are in the note (Air Arabia).                                     |
+| `org`      | text                           | yes      | Employer or client.                                                                              |
+| `location` | text                           | yes      | City or region.                                                                                  |
+| `start`    | `"YYYY-MM"`, quoted            | yes      | First month in the role.                                                                         |
+| `end`      | `"YYYY-MM"`, quoted, or `null` | yes      | Last month in the role; `null` while it is current ("Present").                                  |
+| `note`     | text                           | no       | Context line shown above the bullets.                                                            |
+| `order`    | whole number from 1            | yes      | Position in the Experience section, 1 first.                                                     |
+| `projects` | list of project ids            | no       | Projects done in this role, e.g. `[daily-revenue-pipeline]`.                                     |
+| `results`  | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`.                                          |
+| `bullets`  | list of text or `{text, cv}`   | yes      | Bullets; no `cv` = everywhere; `cv: [sda]` = that PDF (and the site) only; `cv: []` = site only. |
 
 ### results (projects and experience)
 
