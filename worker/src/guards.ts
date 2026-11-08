@@ -3,8 +3,10 @@
 
 export const MAX_BODY_BYTES = 32768;
 export const MAX_MESSAGES = 8;
+// Only what the visitor typed is capped hard; a bot reply (up to ~3000 characters) is cut, not refused.
 export const MAX_CONTENT_CHARS = 1000;
-export const MAX_TOTAL_CHARS = 4000;
+export const MAX_REPLY_CHARS = 4000;
+export const MAX_TOTAL_CHARS = 20000;
 // Turnstile tokens are at most 2048 characters (Cloudflare siteverify docs).
 export const MAX_TOKEN_CHARS = 2048;
 
@@ -54,7 +56,10 @@ export function readChatRequest(body: unknown): ChatRequestVerdict {
   }
   const problem = findMessagesProblem(messages);
   if (problem) return { ok: false, error: problem };
-  const chat = (messages as ChatMessage[]).map(({ role, content }) => ({ role, content }));
+  const chat = (messages as ChatMessage[]).map(({ role, content }) => ({
+    role,
+    content: role === "assistant" ? content.slice(0, MAX_REPLY_CHARS) : content,
+  }));
   return { ok: true, chat: { messages: chat, turnstileToken } };
 }
 
@@ -66,7 +71,10 @@ function findMessagesProblem(messages: unknown): string | null {
     if (problem) return problem;
   }
   if ((messages.at(-1) as ChatMessage).role !== "user") return "The last message must be from the user.";
-  const total = (messages as ChatMessage[]).reduce((sum, message) => sum + message.content.length, 0);
+  const total = (messages as ChatMessage[]).reduce(
+    (sum, { role, content }) => sum + Math.min(content.length, role === "assistant" ? MAX_REPLY_CHARS : Infinity),
+    0,
+  );
   if (total > MAX_TOTAL_CHARS) return `The conversation is over ${MAX_TOTAL_CHARS} characters; start a new one.`;
   return null;
 }
@@ -79,7 +87,8 @@ function findMessageProblem(message: unknown, index: number): string | null {
   if (typeof content !== "string" || content.trim().length === 0) {
     return `messages[${index}].content must be a non-empty string.`;
   }
-  if (content.length > MAX_CONTENT_CHARS) return `messages[${index}] is over ${MAX_CONTENT_CHARS} characters.`;
+  if (role === "user" && content.length > MAX_CONTENT_CHARS)
+    return `A question is over ${MAX_CONTENT_CHARS} characters.`;
   return null;
 }
 

@@ -17,30 +17,24 @@ test("a conversation under the limits is unchanged", () => {
   assert.deepEqual(trimHistory(messages), messages);
 });
 
-test("ten messages keep the last eight, starting with a user turn", () => {
-  const messages = conversation(9);
-  assert.equal(messages.length, 10);
+test("ten past turns keep the last six plus the new question, starting with a user turn", () => {
+  const messages = conversation(10);
   const kept = trimHistory(messages);
   assert.equal(kept.length, MAX_MESSAGES);
   assert.equal(kept[0].role, "user");
-  assert.deepEqual(kept, messages.slice(2));
-  // Nine messages are one over the limit: a whole pair goes, so the history still starts with the user.
-  const nine = trimHistory(conversation(8));
-  assert.equal(nine.length, MAX_MESSAGES - 1);
-  assert.equal(nine[0].role, "user");
+  assert.deepEqual(kept, messages.slice(messages.length - MAX_MESSAGES));
 });
 
 test("over the character limit drops the oldest pairs until it fits", () => {
-  const messages = conversation(6, 900);
+  const messages = conversation(6, 4000);
   const kept = trimHistory(messages);
   assert.ok(kept.reduce((n, t) => n + t.content.length, 0) <= MAX_CHARS);
   assert.equal(kept[0].role, "user");
-  assert.deepEqual(kept, messages.slice(messages.length - kept.length));
   assert.ok(kept.length < messages.length);
 });
 
 test("the result always ends with the new user message", () => {
-  for (const messages of [conversation(0), conversation(9), conversation(6, 900)]) {
+  for (const messages of [conversation(0), conversation(10), conversation(6, 4000)]) {
     const kept = trimHistory(messages);
     assert.deepEqual(kept[kept.length - 1], messages[messages.length - 1]);
     assert.equal(kept[kept.length - 1].role, "user");

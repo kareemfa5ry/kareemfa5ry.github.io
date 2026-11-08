@@ -155,3 +155,26 @@ test("a reply with a long token neither overflows nor clips, and its email and U
   expect(fits).toBe(true);
   await page.screenshot({ path: test.info().outputPath("chat-readable.png") });
 });
+
+test("a 400 shows one plain sentence, returns the chip, and the retry leaves one user bubble", async ({ page }) => {
+  const group = await openWithStub(page);
+  let calls = 0;
+  await page.route("**/chat", (r) =>
+    ++calls === 1
+      ? r.fulfill({
+          status: 400,
+          contentType: "application/json",
+          body: '{"error":"messages[5] is over 1000 characters."}',
+        })
+      : r.fulfill({ contentType: "text/event-stream", body: SSE }),
+  );
+  const prompt = "How can I reach Kareem, and where can I download his CV?";
+  await group.getByRole("button", { name: "Contact" }).click();
+  await expect(page.getByText("Something went wrong on our side. Please try again or email")).toBeVisible();
+  await expect(page.getByText("over 1000 characters")).toHaveCount(0);
+  await expect(group.getByRole("button", { name: "Contact" })).toBeVisible();
+  await group.getByRole("button", { name: "Contact" }).click();
+  await expect(page.getByText("Hello from the stub.")).toHaveCount(1);
+  await expect(page.getByText("Something went wrong")).toHaveCount(0);
+  await expect(page.getByRole("log").getByText(prompt)).toHaveCount(1);
+});
