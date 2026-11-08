@@ -50,6 +50,13 @@ Numbers that count use `font-variant-numeric: tabular-nums` so they do not jitte
   string) only arranges these; it scopes every selector under `.shot-<type>`.
 - 9:16: stack what sits side by side in 16:9 (`[data-aspect='9:16'] .shot-<type> ...`).
 
+## Screenshots
+
+The image keeps its own ratio, centred in a frame filled with `--surface` (that is the letterbox colour, in both
+aspects) with a `--rule` border. Callouts are a `0.5cqmin` `--accent` outline with `--radius`, plus a `.tag`
+label filled with `--accent` (text `--bg`); they arrive one after another with `enter`/`easeEnter` and stay.
+The move is slow and linear over the whole shot: scale at most 1.25 and shift at most 10% (default 1.00 to 1.06).
+
 ## Motion
 
 | `kit.motion` key | Value          | Use                                                   |
