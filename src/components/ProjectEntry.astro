@@ -25,7 +25,17 @@ const meta = period ? `${org}, ${period}` : org;
   {hasDemo(entry.id) && (
     <a class="poster" href={`/projects/${entry.id}/#demo`}>
       <img
+        class="only-light"
         src={`/demos/${entry.id}/poster.jpg`}
+        width="1280"
+        height="720"
+        loading="lazy"
+        decoding="async"
+        alt={`Animated walkthrough of ${title}`}
+      />
+      <img
+        class="only-dark"
+        src={`/demos/${entry.id}/poster-dark.jpg`}
         width="1280"
         height="720"
         loading="lazy"
