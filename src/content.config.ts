@@ -30,8 +30,9 @@ const bullet = z.union([
     text: z.string().min(1).describe("The bullet sentence."),
     cv: z
       .array(z.enum(["sda", "rpm"]))
-      .min(1)
-      .describe("CV PDFs that show this bullet; the site shows it always."),
+      .describe(
+        "CV PDFs that show this bullet; [] shows it on the site, llms.txt and resume.json only. The site shows every bullet.",
+      ),
   }),
 ]);
 
