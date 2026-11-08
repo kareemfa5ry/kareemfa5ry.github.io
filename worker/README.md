@@ -17,6 +17,7 @@ and streams Claude's answer. It answers only from the site's `/llms.txt`, so the
 | `src/prompt.ts`         | the fixed instructions and the byte-stable, cached system prompt                                                                          |
 | `src/claude_stream.ts`  | the Claude call (`claude-sonnet-5-5`, streaming) as SSE; closing frame; API error -> message                                              |
 | `src/sse.ts`            | SSE frame encoding                                                                                                                        |
+| `eval/`                 | `run.mjs` and `questions.json`: the local recruiter-style eval (`npm run worker:eval`)                                                    |
 | `test/*.test.mjs`       | `node --test`: guards, prompt, SSE, closing frame and errors; `index.test.mjs` drives the router with fake bindings and a stubbed `fetch` |
 
 `scripts/check_layout.mjs` scans `worker/` (400-line cap, 8 loose files per folder, no grab-bag names), and
@@ -99,3 +100,10 @@ npm run worker:deploy    # wrangler deploy; needs `wrangler login` and the secre
 - **Request size:** 32 KB body, 4000 characters of conversation.
 - **`max_tokens` 600** and effort `low` per answer, and the system prompt is
   cached (`cache_control: ephemeral`), so repeat questions read the knowledge at the cache-read price.
+
+## Local eval
+
+`npm run worker:eval` asks 20 recruiter-style questions (answer, refuse, partial, injection, Arabic) against the live
+`/llms.txt` with the real system prompt and grades each reply with the regexes in `eval/questions.json`; it exits 1 if any fail.
+It costs 20 small Messages API calls, uses `ANTHROPIC_API_KEY` from your shell or `worker/.dev.vars` (never printed
+or written), and never runs in CI.
