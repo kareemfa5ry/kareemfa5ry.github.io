@@ -129,3 +129,29 @@ test("a visitor who scrolled up is not pulled down by the next reply", async ({ 
   await expect(page.getByText("THE END")).toHaveCount(2);
   expect(await page.getByRole("log").evaluate((el) => el.scrollTop)).toBeLessThanOrEqual(48);
 });
+
+const TOKEN = "x".repeat(120);
+const CONTACT = JSON.stringify({
+  text:
+    `Reach Kareem at kareemfa5ry@gmail.com or read the Senior Data Analyst CV: ` +
+    `https://kareemfa5ry.github.io/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf ${TOKEN}`,
+});
+
+test("a reply with a long token neither overflows nor clips, and its email and URL are links", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await openWithStub(page);
+  await page.route("**/chat", (r) => r.fulfill({ contentType: "text/event-stream", body: `data: ${CONTACT}\n\n` }));
+  await page.getByRole("button", { name: "Dock to side" }).click();
+  await ask(page, "How do I reach Kareem?");
+  const reply = page.getByRole("log").locator("li").last();
+  await expect(reply.getByRole("link", { name: "kareemfa5ry@gmail.com" })).toHaveAttribute(
+    "href",
+    "mailto:kareemfa5ry@gmail.com",
+  );
+  const cv = reply.getByRole("link", { name: "Kareem Fakhry CV Senior Data Analyst" });
+  await expect(cv).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(cv).toHaveAttribute("target", "_blank");
+  const fits = await page.getByRole("log").evaluate((el) => el.scrollWidth <= el.clientWidth);
+  expect(fits).toBe(true);
+  await page.screenshot({ path: test.info().outputPath("chat-readable.png") });
+});
