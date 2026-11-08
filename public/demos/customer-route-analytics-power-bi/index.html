@@ -196,17 +196,17 @@
         "links": { "live": "https://kareemfa5ry.github.io/projects/customer-route-analytics-power-bi/" },
         "aspect": "16:9",
         "seed": 40,
-        "poster_ms": 6000,
+        "poster_ms": 12500,
         "shots": [
           {
             "type": "title",
-            "duration_ms": 4000,
+            "duration_ms": 3500,
             "caption": "Customer and route analytics in Power BI for Nesma Airlines.",
             "params": { "heading": "", "tagline": "", "show_stack": true }
           },
           {
             "type": "pipeline",
-            "duration_ms": 6500,
+            "duration_ms": 4500,
             "caption": "Dashboards were built for demand forecasting, customer segmentation, personalised offers and churn.",
             "params": {
               "heading": "Four dashboards",
@@ -219,8 +219,71 @@
             }
           },
           {
+            "type": "screenshot",
+            "duration_ms": 6000,
+            "caption": "Main dashboard: revenue, transactions, passengers and yield.",
+            "params": {
+              "image": "01-main-dashboard-filter-closed.png",
+              "alt": "Nesma Airlines sales dashboard in Power BI, with dummy numbers and placeholder names: four KPI tiles for revenue, transactions, passengers and yield, revenue split into seven cards, a daily yield and passengers line chart, and a currency list.",
+              "move": { "from": { "x": -5, "y": 8, "scale": 1.2 }, "to": { "x": 0, "y": 0, "scale": 1.06 } },
+              "callouts": [
+                { "x": 18, "y": 3, "w": 62, "h": 25, "label": "Revenue, passengers, yield at a glance" },
+                { "x": 6, "y": 50, "w": 70, "h": 42, "label": "Daily trend" }
+              ],
+              "caption": ""
+            }
+          },
+          {
+            "type": "screenshot",
+            "duration_ms": 6000,
+            "caption": "Filters slice the view by period, source, operation type and sales channel.",
+            "params": {
+              "image": "02-main-dashboard-filter-open.png",
+              "alt": "The same sales dashboard, with dummy numbers, with the filter panel open: ten dropdown slicers, all set to All, with Clear and Close buttons.",
+              "move": { "from": { "x": 4, "y": 3, "scale": 1.15 }, "to": { "x": -3, "y": 0, "scale": 1.15 } },
+              "callouts": [
+                { "x": 6, "y": 4, "w": 44, "h": 37, "label": "Filter panel" },
+                { "x": 6, "y": 52, "w": 70, "h": 26, "label": "The view it changes" }
+              ],
+              "caption": ""
+            }
+          },
+          {
+            "type": "screenshot",
+            "duration_ms": 5000,
+            "caption": "Revenue drilled down level by level, by route and agent.",
+            "params": {
+              "image": "03-decomposition-tree.png",
+              "alt": "Decomposition tree, with dummy numbers, that splits total revenue by source, country, currency, travel agent, route, sector and trip type. Names are placeholders.",
+              "callouts": [{ "x": 2, "y": 50.5, "w": 11.5, "h": 8.5, "label": "Total revenue" }],
+              "caption": ""
+            }
+          },
+          {
+            "type": "screenshot",
+            "duration_ms": 4500,
+            "caption": "Revenue by country as bars, a map and a table.",
+            "params": {
+              "image": "04-revenue-by-country-map.png",
+              "alt": "Revenue by country, with dummy numbers, shown as a bar list, a world map and a table. Country names are placeholders.",
+              "callouts": [{ "x": 5, "y": 2.8, "w": 90, "h": 4, "label": "Top country by revenue" }],
+              "caption": ""
+            }
+          },
+          {
+            "type": "screenshot",
+            "duration_ms": 5000,
+            "caption": "A star schema: one sales fact table linked one-to-many to lookup tables.",
+            "params": {
+              "image": "05-data-model.png",
+              "alt": "Power BI data model with one sales fact table linked one-to-many to lookup tables for fare basis, booking class, sale, action and departure dates, country, travel agent, service type, advance payment, currency and sector routes.",
+              "callouts": [{ "x": 53.5, "y": 60, "w": 12.5, "h": 36.5, "label": "Central fact table" }],
+              "caption": ""
+            }
+          },
+          {
             "type": "pipeline",
-            "duration_ms": 6500,
+            "duration_ms": 4500,
             "caption": "Significance tests on sampled routes checked whether differences were real before acting on them.",
             "params": {
               "heading": "Checking route differences",
@@ -234,7 +297,7 @@
           },
           {
             "type": "outro",
-            "duration_ms": 3500,
+            "duration_ms": 3000,
             "caption": "Read the full project on the site.",
             "params": { "heading": "See the full project", "links": {} }
           }
@@ -365,6 +428,107 @@
           tl.from(cards, { yPercent: 25, autoAlpha: 0, duration: m.enter, ease: m.easeEnter, stagger: m.stagger }, 0.1);
           var travel = Math.max(kit.dur * 0.6 - 0.8, m.move);
           tl.to(marker, { k: cards.length - 1, duration: travel, ease: "none", onUpdate: paint }, 0.8);
+        },
+      };
+    </script>
+    <script>
+      // Shot "screenshot": a real product screenshot (img/<name>.webp, made by scripts/images.mjs from
+      // src/assets/projects/<slug>/<image>) with a slow Ken Burns move and optional callouts that outline regions in turn.
+      // The image keeps its own ratio inside the stage (letterboxed on --surface); callouts are in percent of the image.
+      var SCREENSHOT_POINT = {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          x: { type: "number", minimum: -10, maximum: 10, description: "Shift right, percent of the image width." },
+          y: { type: "number", minimum: -10, maximum: 10, description: "Shift down, percent of the image height." },
+          scale: { type: "number", minimum: 1, maximum: 1.25, description: "Zoom ratio." },
+        },
+      };
+
+      DEMO_SHOTS.screenshot = {
+        min_ms: 4000,
+        params: {
+          type: "object",
+          additionalProperties: false,
+          required: ["image", "alt"],
+          properties: {
+            image: {
+              type: "string",
+              pattern: "^[A-Za-z0-9_.-]+\\.(png|jpe?g|webp)$",
+              description: "File name inside src/assets/projects/<slug>/ (no folders).",
+            },
+            alt: { type: "string", minLength: 1, description: "What the screenshot shows, for screen readers." },
+            caption: { type: "string", default: "", description: "Optional line above the image." },
+            move: {
+              type: "object",
+              additionalProperties: false,
+              description: "Ken Burns. Missing keys use x 1.5 y 1 scale 1 (from) and x 0 y 0 scale 1.06 (to).",
+              properties: { from: SCREENSHOT_POINT, to: SCREENSHOT_POINT },
+            },
+            callouts: {
+              type: "array",
+              default: [],
+              maxItems: 4,
+              description: "Regions outlined one after another, in percent of the image.",
+              items: {
+                type: "object",
+                additionalProperties: false,
+                required: ["x", "y", "w", "h", "label"],
+                properties: {
+                  x: { type: "number", minimum: 0, maximum: 100, description: "Left edge." },
+                  y: { type: "number", minimum: 0, maximum: 100, description: "Top edge." },
+                  w: { type: "number", minimum: 1, maximum: 100, description: "Width." },
+                  h: { type: "number", minimum: 1, maximum: 100, description: "Height." },
+                  label: { type: "string", minLength: 1, description: "Short text on the outline." },
+                },
+              },
+            },
+          },
+        },
+        validate: function (p, at) {
+          var errors = [];
+          p.callouts.forEach(function (c, i) {
+            if (c.x + c.w > 100) errors.push(at + ".callouts[" + i + "]: x + w goes past the image (100)");
+            if (c.y + c.h > 100) errors.push(at + ".callouts[" + i + "]: y + h goes past the image (100)");
+          });
+          return errors;
+        },
+        css:
+          ".shot-screenshot{padding:2cqmin 2cqmin 0}" +
+          ".shot-screenshot .frame{flex:1;min-height:0;container-type:size;display:grid;place-items:center;" +
+          "overflow:hidden;background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius)}" +
+          ".shot-screenshot .pan{position:relative;width:fit-content;height:fit-content}" +
+          ".shot-screenshot img{display:block;max-width:100cqw;max-height:100cqh}" +
+          ".shot-screenshot .callout{position:absolute;border:0.5cqmin solid var(--accent);border-radius:var(--radius)}" +
+          ".shot-screenshot .callout .tag{position:absolute;left:0;top:100%;margin-top:0.8cqmin;white-space:nowrap;" +
+          "background:var(--accent);color:var(--bg);border-color:var(--accent)}" +
+          ".shot-screenshot .callout.above .tag{top:auto;bottom:100%;margin:0 0 0.8cqmin}",
+        build: function (tl, p, root, kit) {
+          var m = kit.motion;
+          if (p.caption) root.appendChild(kit.el("p", "lede", p.caption));
+          var frame = root.appendChild(kit.el("div", "frame"));
+          var pan = frame.appendChild(kit.el("div", "pan"));
+          var img = pan.appendChild(kit.el("img"));
+          img.src = "img/" + p.image.replace(/\.[^.]+$/, "") + ".webp";
+          img.alt = p.alt;
+          img.loading = "eager";
+          var move = p.move || {};
+          var from = Object.assign({ x: 1.5, y: 1, scale: 1 }, move.from);
+          var to = Object.assign({ x: 0, y: 0, scale: 1.06 }, move.to);
+          tl.from(frame, { autoAlpha: 0, duration: m.enter }, 0);
+          tl.fromTo(
+            pan,
+            { xPercent: from.x, yPercent: from.y, scale: from.scale },
+            { xPercent: to.x, yPercent: to.y, scale: to.scale, duration: kit.dur, ease: "none" },
+            0,
+          );
+          var step = Math.min(1.4, (kit.dur * 0.6) / Math.max(p.callouts.length, 1));
+          p.callouts.forEach(function (c, i) {
+            var box = pan.appendChild(kit.el("div", c.y + c.h > 80 ? "callout above" : "callout"));
+            box.style.cssText = "left:" + c.x + "%;top:" + c.y + "%;width:" + c.w + "%;height:" + c.h + "%";
+            box.appendChild(kit.el("span", "tag", c.label));
+            tl.from(box, { autoAlpha: 0, scale: 0.94, duration: m.enter, ease: m.easeEnter }, 0.8 + i * step);
+          });
         },
       };
     </script>
@@ -622,6 +786,21 @@
         }, 0);
         window.demo = { duration: duration, seek: seek, play: play, pause: pause };
         window.demo.ready = loadLibs(neededLibs()).then(build);
+      })();
+    </script>
+    <script>
+      // Inlined by scripts/new_demo.mjs right after player.js, only when a spec has screenshot shots. Runs before anything
+      // can read window.demo.ready, so render.mjs and capture tools wait until every <img> is loaded and decoded.
+      (function () {
+        "use strict";
+        var base = window.demo.ready;
+        window.demo.ready = base.then(function () {
+          return Promise.all(
+            Array.from(document.images, function (img) {
+              return img.decode();
+            }),
+          );
+        });
       })();
     </script>
   </body>

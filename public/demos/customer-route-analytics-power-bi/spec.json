@@ -3,49 +3,201 @@
   "title": "Customer and route analytics in Power BI",
   "tagline": "Power BI dashboards for demand, customers and churn, backed by significance tests on sampled routes.",
   "stack": ["Power BI", "Power Query", "Star schema", "SQL", "Excel"],
-  "links": { "live": "https://kareemfa5ry.github.io/projects/customer-route-analytics-power-bi/" },
+  "links": {
+    "live": "https://kareemfa5ry.github.io/projects/customer-route-analytics-power-bi/"
+  },
   "aspect": "16:9",
   "seed": 40,
-  "poster_ms": 6000,
+  "poster_ms": 12500,
   "shots": [
     {
       "type": "title",
-      "duration_ms": 4000,
+      "duration_ms": 3500,
       "caption": "Customer and route analytics in Power BI for Nesma Airlines."
     },
     {
       "type": "pipeline",
-      "duration_ms": 6500,
+      "duration_ms": 4500,
       "caption": "Dashboards were built for demand forecasting, customer segmentation, personalised offers and churn.",
       "params": {
         "heading": "Four dashboards",
         "stages": [
-          { "label": "Demand forecasting" },
-          { "label": "Customer segmentation" },
-          { "label": "Personalised offers" },
-          { "label": "Customer churn" }
+          {
+            "label": "Demand forecasting"
+          },
+          {
+            "label": "Customer segmentation"
+          },
+          {
+            "label": "Personalised offers"
+          },
+          {
+            "label": "Customer churn"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 6000,
+      "caption": "Main dashboard: revenue, transactions, passengers and yield.",
+      "params": {
+        "image": "01-main-dashboard-filter-closed.png",
+        "alt": "Nesma Airlines sales dashboard in Power BI, with dummy numbers and placeholder names: four KPI tiles for revenue, transactions, passengers and yield, revenue split into seven cards, a daily yield and passengers line chart, and a currency list.",
+        "move": {
+          "from": {
+            "x": -5,
+            "y": 8,
+            "scale": 1.2
+          },
+          "to": {
+            "x": 0,
+            "y": 0,
+            "scale": 1.06
+          }
+        },
+        "callouts": [
+          {
+            "x": 18,
+            "y": 3,
+            "w": 62,
+            "h": 25,
+            "label": "Revenue, passengers, yield at a glance"
+          },
+          {
+            "x": 6,
+            "y": 50,
+            "w": 70,
+            "h": 42,
+            "label": "Daily trend"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 6000,
+      "caption": "Filters slice the view by period, source, operation type and sales channel.",
+      "params": {
+        "image": "02-main-dashboard-filter-open.png",
+        "alt": "The same sales dashboard, with dummy numbers, with the filter panel open: ten dropdown slicers, all set to All, with Clear and Close buttons.",
+        "move": {
+          "from": {
+            "x": 4,
+            "y": 3,
+            "scale": 1.15
+          },
+          "to": {
+            "x": -3,
+            "y": 0,
+            "scale": 1.15
+          }
+        },
+        "callouts": [
+          {
+            "x": 6,
+            "y": 4,
+            "w": 44,
+            "h": 37,
+            "label": "Filter panel"
+          },
+          {
+            "x": 6,
+            "y": 52,
+            "w": 70,
+            "h": 26,
+            "label": "The view it changes"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 5000,
+      "caption": "Revenue drilled down level by level, by route and agent.",
+      "params": {
+        "image": "03-decomposition-tree.png",
+        "alt": "Decomposition tree, with dummy numbers, that splits total revenue by source, country, currency, travel agent, route, sector and trip type. Names are placeholders.",
+        "callouts": [
+          {
+            "x": 2,
+            "y": 50.5,
+            "w": 11.5,
+            "h": 8.5,
+            "label": "Total revenue"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 4500,
+      "caption": "Revenue by country as bars, a map and a table.",
+      "params": {
+        "image": "04-revenue-by-country-map.png",
+        "alt": "Revenue by country, with dummy numbers, shown as a bar list, a world map and a table. Country names are placeholders.",
+        "callouts": [
+          {
+            "x": 5,
+            "y": 2.8,
+            "w": 90,
+            "h": 4,
+            "label": "Top country by revenue"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 5000,
+      "caption": "A star schema: one sales fact table linked one-to-many to lookup tables.",
+      "params": {
+        "image": "05-data-model.png",
+        "alt": "Power BI data model with one sales fact table linked one-to-many to lookup tables for fare basis, booking class, sale, action and departure dates, country, travel agent, service type, advance payment, currency and sector routes.",
+        "callouts": [
+          {
+            "x": 53.5,
+            "y": 60,
+            "w": 12.5,
+            "h": 36.5,
+            "label": "Central fact table"
+          }
         ]
       }
     },
     {
       "type": "pipeline",
-      "duration_ms": 6500,
+      "duration_ms": 4500,
       "caption": "Significance tests on sampled routes checked whether differences were real before acting on them.",
       "params": {
         "heading": "Checking route differences",
         "stages": [
-          { "label": "Summary measures", "detail": "averages, medians, spread" },
-          { "label": "Box plots", "detail": "find outliers" },
-          { "label": "Significance tests", "detail": "on sampled routes" },
-          { "label": "Act", "detail": "once the difference is real" }
+          {
+            "label": "Summary measures",
+            "detail": "averages, medians, spread"
+          },
+          {
+            "label": "Box plots",
+            "detail": "find outliers"
+          },
+          {
+            "label": "Significance tests",
+            "detail": "on sampled routes"
+          },
+          {
+            "label": "Act",
+            "detail": "once the difference is real"
+          }
         ]
       }
     },
     {
       "type": "outro",
-      "duration_ms": 3500,
+      "duration_ms": 3000,
       "caption": "Read the full project on the site.",
-      "params": { "heading": "See the full project" }
+      "params": {
+        "heading": "See the full project"
+      }
     }
   ]
 }
