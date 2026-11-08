@@ -1,0 +1,51 @@
+{
+  "$schema": "../../../.claude/skills/project-demo/references/spec.schema.json",
+  "title": "Customer and route analytics in Power BI",
+  "tagline": "Power BI dashboards for demand, customers and churn, backed by significance tests on sampled routes.",
+  "stack": ["Power BI", "Power Query", "Star schema", "SQL", "Excel"],
+  "links": { "live": "https://kareemfa5ry.github.io/projects/customer-route-analytics-power-bi/" },
+  "aspect": "16:9",
+  "seed": 40,
+  "poster_ms": 6000,
+  "shots": [
+    {
+      "type": "title",
+      "duration_ms": 4000,
+      "caption": "Customer and route analytics in Power BI for Nesma Airlines."
+    },
+    {
+      "type": "pipeline",
+      "duration_ms": 6500,
+      "caption": "Dashboards were built for demand forecasting, customer segmentation, personalised offers and churn.",
+      "params": {
+        "heading": "Four dashboards",
+        "stages": [
+          { "label": "Demand forecasting" },
+          { "label": "Customer segmentation" },
+          { "label": "Personalised offers" },
+          { "label": "Customer churn" }
+        ]
+      }
+    },
+    {
+      "type": "pipeline",
+      "duration_ms": 6500,
+      "caption": "Significance tests on sampled routes checked whether differences were real before acting on them.",
+      "params": {
+        "heading": "Checking route differences",
+        "stages": [
+          { "label": "Summary measures", "detail": "averages, medians, spread" },
+          { "label": "Box plots", "detail": "find outliers" },
+          { "label": "Significance tests", "detail": "on sampled routes" },
+          { "label": "Act", "detail": "once the difference is real" }
+        ]
+      }
+    },
+    {
+      "type": "outro",
+      "duration_ms": 3500,
+      "caption": "Read the full project on the site.",
+      "params": { "heading": "See the full project" }
+    }
+  ]
+}

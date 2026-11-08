@@ -21,10 +21,13 @@ function projectRoot(file) {
 function bin(name, args) {
   const exe = process.platform === "win32" ? `${name}.cmd` : name;
   const local = join("node_modules", ".bin", exe);
-  const run = spawnSync(existsSync(local) ? local : join(OWN_BINS, exe), args, {
-    encoding: "utf8",
-    shell: process.platform === "win32",
-  });
+  const path = existsSync(local) ? local : join(OWN_BINS, exe);
+  // Checked before spawning: on Windows the shell turns a missing binary into exit 1, never ENOENT.
+  if (!existsSync(path)) {
+    console.error(`fable-code: ${name} not found: run npm install in ${process.cwd()}`);
+    process.exit(2);
+  }
+  const run = spawnSync(path, args, { encoding: "utf8", shell: process.platform === "win32" });
   return { status: run.status, out: `${run.stdout ?? ""}${run.stderr ?? ""}` };
 }
 

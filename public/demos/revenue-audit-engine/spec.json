@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../.claude/skills/project-demo/references/spec.schema.json",
+  "title": "Revenue audit engine",
+  "tagline": "An audit that checks every ticket against filed fare rules and contracted fees.",
+  "stack": ["Excel & VBA", "Power Query", "pandas", "Amadeus billing files"],
+  "links": { "live": "https://kareemfa5ry.github.io/projects/revenue-audit-engine/" },
+  "aspect": "16:9",
+  "seed": 39,
+  "poster_ms": 12000,
+  "shots": [
+    {
+      "type": "title",
+      "duration_ms": 3500,
+      "caption": "A revenue audit engine for Nesma Airlines."
+    },
+    {
+      "type": "pipeline",
+      "duration_ms": 6500,
+      "caption": "Every ticket is checked against fare rules and fees, and breaches are sorted into 38 standard categories.",
+      "params": {
+        "stages": [
+          { "label": "Every ticket", "detail": "Amadeus billing files" },
+          { "label": "Fare rules and fees", "detail": "filed and contracted" },
+          { "label": "38 breach categories", "detail": "refunds, late cancellations, churning" },
+          { "label": "Cases to Finance", "detail": "manual check ran in parallel first" }
+        ]
+      }
+    },
+    {
+      "type": "metrics",
+      "duration_ms": 6000,
+      "caption": "One quarter across 170 sales partners; Finance accepted about 95% of the cases submitted.",
+      "params": {
+        "items": [
+          { "value": 1305, "label": "breaches found in one quarter" },
+          { "value": 170, "label": "sales partners" },
+          { "value": 106000, "label": "USD, worth about", "prefix": "~" },
+          { "value": 95, "label": "of submitted cases accepted by Finance", "prefix": "~", "suffix": "%" }
+        ]
+      }
+    },
+    {
+      "type": "outro",
+      "duration_ms": 3500,
+      "caption": "Read the full project on the site.",
+      "params": { "heading": "See the full project" }
+    }
+  ]
+}
