@@ -42,7 +42,8 @@ def main(num_path, rel_path, out_path, seed=1):
     for i, e in ents.items():
         if i not in by_parent:
             v = parse(e["text"])[0]
-            val[i] = v if e.get("keep") else v * rng.uniform(LO, HI)
+            cap = e.get("max", float("inf"))  # redraw under the cap instead of piling up at it
+            val[i] = v if e.get("keep") else v * rng.uniform(LO, min(HI, max(LO, cap / v) if v > 0 else HI))
     for h, base in hidden.items():
         if h not in by_parent:
             val[h] = base * rng.uniform(LO, HI)

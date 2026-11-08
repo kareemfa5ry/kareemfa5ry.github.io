@@ -50,6 +50,10 @@ relations.json`**. It must print all relations holding. Fix relations, not the c
    weight or colour, clipped underlines, arrows that did not move, bars that disagree with their labels, and a
    label covering data. Fix with an `"erase"` entry, a better bbox, or `"align"`, then repaint from the
    originals (painting is never incremental).
+   Segmented bars (a mix bar with a label and a percent under each segment) are not a `bar` entry: erase the
+   section and redraw it from the new shares in its own small script, between two `paint.py` passes: first
+   `--width 0 --no-label` (full size, no label), then the redraw, then `paint.py` with an empty numbers file
+   (`{"<name>": []}`) and `-` to add the label and resize.
 6. **Hand off in the repo**: copy `final/*.png` over the images in `src/assets/projects/<slug>/`, update `alt`
    and `caption` in `src/content/projects/<slug>.md`, run `npm run check` and `npm run build` (on Node ≥ 22.23.4;
    with fnm in PowerShell, `fnm env --shell power-shell | Out-String | Invoke-Expression; fnm use v22.23.4`),
@@ -63,7 +67,9 @@ relations.json`**. It must print all relations holding. Fix relations, not the c
   `[x0, y0, x1, y1]` of the ink, `fg`, `bg` (`"#rrggbb"` or `"nonflat"`), `align` (`left` / `right` /
   `center`: how the visual anchors it; table cells are usually `right`, KPI cards `center`). Optional:
   `italic: true`, `arrow: true` (a trend icon right after the number moves with it), and `keep: true` (stays
-  as shown but can still feed relations, e.g. a figure you choose not to change).
+  as shown but can still feed relations, e.g. a figure you choose not to change), `max` (a base number is redrawn
+  below it, e.g. 99.9 for a load factor). Formats read and written as shown: `$1.2M`, `54.31%`, `5.9pp`,
+  `(210,541.28)`, `-0.8`, `+11,580`, `$-0.1` and hours `438:20`. Zeros (`0.0`, `-0.0`) should be `keep`.
 - **bar**: `id`, `kind: "bar"`, `bbox` of the bar including its outline, `fill` (bar colour), `value_of` (id
   of the number it draws). The bar is stretched or cut in its middle to the new / old ratio.
 - **label**: `id`, `kind: "label"`, `text` exactly as shown, `new` (the placeholder), `bbox`, `align`, and like a
