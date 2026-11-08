@@ -16,7 +16,7 @@ src/components/projects/    project-page parts: ScreenshotGallery, StackTags, De
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + useChatStream: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
-src/site/chat.ts            Worker URL and Turnstile site key for the chat panel (empty = no chat widget)
+src/site/chat.ts            Worker URL, Turnstile site key and starter chips for the chat panel (empty = no chat widget)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/education.ts       education, training and languages lines (home page, llms.txt)
