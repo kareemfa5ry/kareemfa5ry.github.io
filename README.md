@@ -99,18 +99,24 @@ Regenerate it when the tagline or the stats in `src/site/profile.ts` change.
 | Senior Data Analyst         | `public/assets/cv/Kareem_Fakhry_CV_Senior_Data_Analyst.pdf`     |
 | Revenue and Pricing Manager | `public/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf` |
 
-The LaTeX and Word sources and the build script live in the private `knowledge-base` repository, cloned next to
-this one. Its `build.ps1` writes the PDFs into `public/assets/cv/` here.
+Both PDFs are built from the generated LaTeX in `cv/` (see Layout); the content lives in `src/content/` and
+`src/site/`, and the CV header, style and layout in `cv/preamble.tex`.
+
+Needs `pdflatex` on PATH (MacTeX or BasicTeX on macOS, MiKTeX or TeX Live on Windows). The phone number is not
+in the repository: put it on one line in the ignored `cv/phone.txt`. Without that file the build warns
+loudly and leaves the phone out, so do not publish those PDFs.
 
 ## Updating a CV
 
-1. Edit and build the CV in the private repository; the PDFs land in `public/assets/cv/`.
-2. If the change affects the website text, update the matching Markdown file in `src/content/`.
-3. Commit on a branch (the pre-commit hook runs `npm run check`) and open a pull request; merging publishes `main`.
+1. Edit the content in `src/content/` or `src/site/` (the website and both CVs read the same files).
+2. `npm run cv:generate` rewrites `cv/*.tex`.
+3. `npm run cv:pdf` builds both PDFs into `public/assets/cv/` and updates `cv/built-from.json`.
+4. Commit on a branch (the pre-commit hook runs `npm run check`, which fails when a PDF is out of date) and open a
+   pull request; merging publishes `main`.
 
 ## What never goes in this repository
 
-It is public. No secrets or API keys, no CV sources, no screenshots with real company figures or names, no raw
+It is public. No secrets or API keys, no phone number, no screenshots with real company figures or names, no raw
 company data. Private material belongs in the `knowledge-base` repository.
 
 ## Publishing on GitHub Pages
