@@ -1,0 +1,700 @@
+<!doctype html>
+<!-- Demo page shell. scripts/new_demo.mjs fills the double-brace and "@ slot" comments below; never edit a
+     generated index.html by hand. Tokens come from /theme.css, the theme from /theme.js (public/, shared with the site); the font stack is copied from src/styles/global.css. -->
+<html lang="en" data-aspect="16:9">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Revenue audit engine</title>
+    <link rel="stylesheet" href="/theme.css" />
+    <script src="/theme.js"></script>
+    <script>
+      // ?render=1 is the video renderer. It may pin ?theme=light|dark after theme.js has applied the site's choice.
+      (function () {
+        var q = new URLSearchParams(location.search);
+        var html = document.documentElement;
+        if (q.get("render") !== "1") return;
+        html.classList.add("render");
+        if (q.get("theme") === "light" || q.get("theme") === "dark") applyTheme(q.get("theme"));
+      })();
+    </script>
+    <style>
+      :root {
+        --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        /* Type scale in cqmin: 1cqmin = 1% of the stage's short side, so 16:9 and 9:16 read the same size. */
+        --t-display: 11cqmin;
+        --t-h1: 7.5cqmin;
+        --t-h2: 5cqmin;
+        --t-body: 3.4cqmin;
+        --t-label: 2.6cqmin;
+        --gap: 4cqmin;
+        --pad: 7cqmin;
+        --radius: 1.6cqmin;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font: var(--t-body) / 1.35 var(--font);
+      }
+      .render * {
+        transition: none !important;
+      }
+      .stage {
+        position: relative;
+        container-type: size;
+        overflow: hidden;
+        width: min(100vw, calc(100vh * 16 / 9));
+        aspect-ratio: 16 / 9;
+        background: var(--bg);
+        font-size: var(--t-body);
+      }
+      [data-aspect="9:16"] .stage {
+        width: min(100vw, calc(100vh * 9 / 16));
+        aspect-ratio: 9 / 16;
+      }
+      .shot {
+        position: absolute;
+        inset: 0 0 12cqmin;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--gap);
+        padding: var(--pad);
+        visibility: hidden;
+      }
+      .display,
+      .h1,
+      .h2 {
+        margin: 0;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+      .display {
+        font-size: var(--t-display);
+        font-weight: 800;
+      }
+      .h1 {
+        font-size: var(--t-h1);
+        font-weight: 750;
+      }
+      .h2 {
+        font-size: var(--t-h2);
+        font-weight: 700;
+      }
+      .lede {
+        margin: 0;
+        color: var(--muted);
+      }
+      .label {
+        font-size: var(--t-label);
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .tag {
+        display: inline-block;
+        padding: 0.5cqmin 1.6cqmin;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        background: var(--surface);
+        font-size: var(--t-label);
+      }
+      .rule {
+        height: 0.7cqmin;
+        background: var(--accent);
+        transform-origin: left center;
+      }
+      .card {
+        padding: var(--gap);
+        border: 1px solid var(--rule);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+      .chrome {
+        position: absolute;
+        inset: auto 0 0;
+        display: flex;
+        align-items: center;
+        gap: var(--gap);
+        height: 12cqmin;
+        padding: 0 var(--pad);
+      }
+      .captions {
+        position: relative;
+        flex: 1;
+        height: 100%;
+      }
+      .caption {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        color: var(--muted);
+        visibility: hidden;
+      }
+      .control {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0 2.4cqmin;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        font-size: var(--t-label);
+        cursor: pointer;
+      }
+      .control:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .render .control,
+      .render .progress {
+        display: none;
+      }
+      .progress {
+        position: absolute;
+        inset: auto 0 0;
+        height: 0.8cqmin;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage" aria-label="Revenue audit engine: animated project demo">
+      <div class="shots"></div>
+      <div class="chrome">
+        <div class="captions"></div>
+        <button class="control" type="button">Play</button>
+      </div>
+      <div class="progress" aria-hidden="true"></div>
+    </main>
+    <script type="application/json" id="demo-spec">
+      {
+        "$schema": "../../../.claude/skills/project-demo/references/spec.schema.json",
+        "title": "Revenue audit engine",
+        "tagline": "An audit that checks every ticket against filed fare rules and contracted fees.",
+        "stack": ["Excel & VBA", "Power Query", "pandas", "Amadeus billing files"],
+        "links": { "live": "https://kareemfa5ry.github.io/projects/revenue-audit-engine/" },
+        "aspect": "16:9",
+        "seed": 39,
+        "poster_ms": 12000,
+        "shots": [
+          {
+            "type": "title",
+            "duration_ms": 3500,
+            "caption": "A revenue audit engine for Nesma Airlines.",
+            "params": { "heading": "", "tagline": "", "show_stack": true }
+          },
+          {
+            "type": "pipeline",
+            "duration_ms": 6500,
+            "caption": "Every ticket is checked against fare rules and fees, and breaches are sorted into 38 standard categories.",
+            "params": {
+              "stages": [
+                { "label": "Every ticket", "detail": "Amadeus billing files" },
+                { "label": "Fare rules and fees", "detail": "filed and contracted" },
+                { "label": "38 breach categories", "detail": "refunds, late cancellations, churning" },
+                { "label": "Cases to Finance", "detail": "manual check ran in parallel first" }
+              ],
+              "heading": ""
+            }
+          },
+          {
+            "type": "metrics",
+            "duration_ms": 6000,
+            "caption": "One quarter across 170 sales partners; Finance accepted about 95% of the cases submitted.",
+            "params": {
+              "items": [
+                { "value": 1305, "label": "breaches found in one quarter", "prefix": "", "suffix": "", "decimals": 0 },
+                { "value": 170, "label": "sales partners", "prefix": "", "suffix": "", "decimals": 0 },
+                { "value": 106000, "label": "USD, worth about", "prefix": "~", "suffix": "", "decimals": 0 },
+                {
+                  "value": 95,
+                  "label": "of submitted cases accepted by Finance",
+                  "prefix": "~",
+                  "suffix": "%",
+                  "decimals": 0
+                }
+              ],
+              "heading": ""
+            }
+          },
+          {
+            "type": "outro",
+            "duration_ms": 3500,
+            "caption": "Read the full project on the site.",
+            "params": { "heading": "See the full project", "links": {} }
+          }
+        ]
+      }
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.1/gsap.min.js"
+      integrity="sha512-VMHB/Dy1/3d+djJPdMhxbplbZgbfPNHy+yWCxB1MSrwUEcNE+gnviL/DwlGsh9wwobnRTiQc6ChK2ZoJamshXA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      window.DEMO_SHOTS = {};
+    </script>
+    <script>
+      // Shot "title": kinetic typography. The heading rises word by word out of a mask, an accent rule draws under it,
+      // then the tagline and the stack tags follow. Empty heading / tagline fall back to the spec's title / tagline.
+      DEMO_SHOTS.title = {
+        min_ms: 2500,
+        params: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            heading: { type: "string", default: "", description: "Big words; empty = spec.title." },
+            tagline: { type: "string", default: "", description: "One line under the heading; empty = spec.tagline." },
+            show_stack: { type: "boolean", default: true, description: "Show spec.stack as tags." },
+          },
+        },
+        css:
+          ".shot-title .words{display:flex;flex-wrap:wrap;gap:0 .28em}" +
+          ".shot-title .mask{display:inline-block;overflow:hidden;padding-bottom:.08em}" +
+          ".shot-title .word{display:inline-block}" +
+          ".shot-title .rule{width:22cqmin}" +
+          ".shot-title .tags{display:flex;flex-wrap:wrap;gap:1.2cqmin}",
+        build: function (tl, p, root, kit) {
+          var m = kit.motion;
+          var heading = root.appendChild(kit.el("h1", "display words"));
+          var words = (p.heading || kit.spec.title).split(/\s+/).map(function (text) {
+            return heading.appendChild(kit.el("span", "mask")).appendChild(kit.el("span", "word", text));
+          });
+          var rule = root.appendChild(kit.el("div", "rule"));
+          var tagline = root.appendChild(kit.el("p", "lede", p.tagline || kit.spec.tagline));
+          var tags = root.appendChild(kit.el("div", "tags"));
+          var stack = p.show_stack ? kit.spec.stack : [];
+          var chips = stack.map(function (name) {
+            return tags.appendChild(kit.el("span", "tag", name));
+          });
+
+          tl.from(words, { yPercent: 110, duration: m.enter, ease: m.easeEnter, stagger: m.stagger }, 0.1);
+          tl.from(rule, { scaleX: 0, duration: m.move, ease: m.easeMove }, ">-0.3");
+          tl.from(tagline, { yPercent: 60, autoAlpha: 0, duration: m.enter, ease: m.easeEnter }, "<0.15");
+          if (chips.length) {
+            tl.from(
+              chips,
+              { yPercent: 60, autoAlpha: 0, duration: m.enter, ease: m.easeEnter, stagger: m.stagger },
+              "<0.3",
+            );
+          }
+        },
+      };
+    </script>
+    <script>
+      // Shot "pipeline": stages in a row (a column in 9:16). Stages arrive, then a marker travels from stage to stage:
+      // each connector fills with the accent as it passes and every stage it has reached sits on --accent-soft.
+      // The travel is a proxy tweened on tl; paint() reads only the proxy, so seek(t) gives the same frame.
+      DEMO_SHOTS.pipeline = {
+        min_ms: 3500,
+        params: {
+          type: "object",
+          additionalProperties: false,
+          required: ["stages"],
+          properties: {
+            heading: { type: "string", default: "", description: "Optional line above the stages." },
+            stages: {
+              type: "array",
+              minItems: 2,
+              maxItems: 5,
+              description: "Stages in flow order, e.g. data, model, output.",
+              items: {
+                type: "object",
+                additionalProperties: false,
+                required: ["label"],
+                properties: {
+                  label: { type: "string", minLength: 1, description: "Stage name." },
+                  detail: { type: "string", default: "", description: "One short line under the name." },
+                },
+              },
+            },
+          },
+        },
+        css:
+          ".shot-pipeline .flow{display:flex;align-items:stretch}" +
+          "[data-aspect='9:16'] .shot-pipeline .flow{flex-direction:column}" +
+          ".shot-pipeline .stage-card{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:1cqmin}" +
+          ".shot-pipeline .stage-card.on{background:var(--accent-soft);border-color:var(--accent)}" +
+          ".shot-pipeline .link{flex:0 0 5cqmin;align-self:center;width:5cqmin;height:.7cqmin;background:var(--rule)}" +
+          ".shot-pipeline .link i{display:block;height:100%;background:var(--accent);" +
+          "transform:scaleX(var(--f,0));transform-origin:left center}" +
+          "[data-aspect='9:16'] .shot-pipeline .link{width:.7cqmin;height:5cqmin}" +
+          "[data-aspect='9:16'] .shot-pipeline .link i{width:100%;height:100%;" +
+          "transform:scaleY(var(--f,0));transform-origin:center top}",
+        build: function (tl, p, root, kit) {
+          var m = kit.motion;
+          if (p.heading)
+            tl.from(root.appendChild(kit.el("h2", "h2", p.heading)), { autoAlpha: 0, duration: m.enter }, 0);
+          var flow = root.appendChild(kit.el("div", "flow"));
+          var cards = [];
+          var fills = [];
+          p.stages.forEach(function (stage, i) {
+            if (i) fills.push(flow.appendChild(kit.el("div", "link")).appendChild(kit.el("i")));
+            var card = flow.appendChild(kit.el("div", "card stage-card"));
+            card.appendChild(kit.el("span", "h2", stage.label));
+            if (stage.detail) card.appendChild(kit.el("span", "lede", stage.detail));
+            cards.push(card);
+          });
+          var marker = { k: 0 };
+          var paint = function () {
+            var reached = Math.round(marker.k);
+            cards.forEach(function (card, i) {
+              card.classList.toggle("on", i <= reached);
+            });
+            fills.forEach(function (fill, i) {
+              fill.style.setProperty("--f", Math.min(Math.max(marker.k - i, 0), 1).toFixed(4));
+            });
+          };
+          paint();
+          tl.from(cards, { yPercent: 25, autoAlpha: 0, duration: m.enter, ease: m.easeEnter, stagger: m.stagger }, 0.1);
+          var travel = Math.max(kit.dur * 0.6 - 0.8, m.move);
+          tl.to(marker, { k: cards.length - 1, duration: travel, ease: "none", onUpdate: paint }, 0.8);
+        },
+      };
+    </script>
+    <script>
+      // Shot "metrics": big-number impact stats. Cards rise in turn, each number counts up from 0 to its value (fixed
+      // en-US formatting, so the same t prints the same digits everywhere), and an accent rule draws under it.
+      DEMO_SHOTS.metrics = {
+        min_ms: 3000,
+        params: {
+          type: "object",
+          additionalProperties: false,
+          required: ["items"],
+          properties: {
+            heading: { type: "string", default: "", description: "Optional line above the numbers." },
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 4,
+              description: "One card per stat, left to right (top to bottom in 9:16).",
+              items: {
+                type: "object",
+                additionalProperties: false,
+                required: ["value", "label"],
+                properties: {
+                  value: { type: "number", description: "Final number the counter lands on." },
+                  label: { type: "string", minLength: 1, description: "What the number measures." },
+                  prefix: { type: "string", default: "", description: "Before the number, e.g. a currency sign." },
+                  suffix: { type: "string", default: "", description: "After the number, e.g. % or x." },
+                  decimals: {
+                    type: "integer",
+                    minimum: 0,
+                    maximum: 3,
+                    default: 0,
+                    description: "Digits after the point.",
+                  },
+                },
+              },
+            },
+          },
+        },
+        css:
+          ".shot-metrics .grid{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:var(--gap)}" +
+          "[data-aspect='9:16'] .shot-metrics .grid{grid-auto-flow:row}" +
+          ".shot-metrics .num{display:block;font-size:var(--t-h1);font-weight:800;font-variant-numeric:tabular-nums}" +
+          ".shot-metrics .rule{margin:1.6cqmin 0;width:8cqmin}",
+        build: function (tl, p, root, kit) {
+          var m = kit.motion;
+          var countFor = Math.max(kit.dur * 0.55, m.move);
+          if (p.heading)
+            tl.from(root.appendChild(kit.el("h2", "h2", p.heading)), { autoAlpha: 0, duration: m.enter }, 0);
+          var grid = root.appendChild(kit.el("div", "grid"));
+          p.items.forEach(function (item, i) {
+            var at = 0.2 + i * m.stagger * 2;
+            var card = grid.appendChild(kit.el("div", "card"));
+            var num = card.appendChild(kit.el("span", "num"));
+            var rule = card.appendChild(kit.el("div", "rule"));
+            card.appendChild(kit.el("span", "label", item.label));
+            var format = new Intl.NumberFormat("en-US", {
+              minimumFractionDigits: item.decimals,
+              maximumFractionDigits: item.decimals,
+            });
+            var counter = { v: 0 };
+            var paint = function () {
+              num.textContent = item.prefix + format.format(counter.v) + item.suffix;
+            };
+            paint();
+            tl.from(card, { yPercent: 25, autoAlpha: 0, duration: m.enter, ease: m.easeEnter }, at);
+            tl.to(counter, { v: item.value, duration: countFor, ease: m.easeCount, onUpdate: paint }, at + 0.1);
+            tl.from(rule, { scaleX: 0, duration: m.move, ease: m.easeMove }, at + 0.3);
+          });
+        },
+      };
+    </script>
+    <script>
+      // Shot "outro": call to action. Heading, accent rule, then the repo / live links as visible text URLs (a video
+      // frame cannot be clicked). Live, each is a real anchor with target="_top" so it leaves the iframe.
+      DEMO_SHOTS.outro = {
+        min_ms: 2500,
+        params: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            heading: { type: "string", default: "See it for yourself", description: "The call to action." },
+            links: {
+              type: "object",
+              default: {},
+              additionalProperties: false,
+              description: "Override spec.links; anything unset falls back to it.",
+              properties: {
+                repo: { type: "string", pattern: "^https://", description: "Source repository URL." },
+                live: { type: "string", pattern: "^https://", description: "Live site or app URL." },
+              },
+            },
+          },
+        },
+        css:
+          ".shot-outro .rule{width:22cqmin}" +
+          ".shot-outro .links,.shot-outro .links div{display:flex;flex-direction:column;gap:var(--gap)}" +
+          ".shot-outro .links div{gap:.5cqmin;align-items:flex-start}" +
+          ".shot-outro a{color:var(--ink);text-decoration:none;border-bottom:.5cqmin solid var(--accent);" +
+          "overflow-wrap:anywhere;font-size:var(--t-h2);font-weight:700}",
+        build: function (tl, p, root, kit) {
+          var m = kit.motion;
+          var links = Object.assign({}, kit.spec.links, p.links);
+          var heading = root.appendChild(kit.el("h1", "display", p.heading));
+          var rule = root.appendChild(kit.el("div", "rule"));
+          var box = root.appendChild(kit.el("div", "links"));
+          var rows = [
+            ["Source", links.repo],
+            ["Live", links.live],
+          ]
+            .filter(function (row) {
+              return row[1];
+            })
+            .map(function (row) {
+              var item = box.appendChild(kit.el("div"));
+              item.appendChild(kit.el("span", "label", row[0]));
+              var a = item.appendChild(kit.el("a", "", row[1].replace(/^https:\/\//, "")));
+              a.href = row[1];
+              a.target = "_top";
+              a.rel = "noopener";
+              return item;
+            });
+          tl.from(heading, { yPercent: 40, autoAlpha: 0, duration: m.enter, ease: m.easeEnter }, 0.1);
+          tl.from(rule, { scaleX: 0, duration: m.move, ease: m.easeMove }, ">-0.3");
+          tl.from(
+            rows,
+            { yPercent: 40, autoAlpha: 0, duration: m.enter, ease: m.easeEnter, stagger: m.stagger * 2 },
+            "<0.2",
+          );
+        },
+      };
+    </script>
+    <script>
+      // Demo player: reads the inlined spec, builds ONE paused GSAP master timeline from the shot templates and drives
+      // it. Live: autoplay when scrolled into view, play/pause/replay button. ?render=1: no autoplay, no controls or
+      // progress bar, only window.demo.seek moves the playhead. Contract (render.mjs relies on it):
+      //   window.demo = { duration, ready, seek(tMs), play(), pause() }   await ready before the first seek.
+      // Same t -> same DOM: nothing here reads the wall clock; randomness comes from kit.rand (seeded by spec.seed).
+      // Inlined by scripts/new_demo.mjs after the GSAP script and the templates (which register on window.DEMO_SHOTS).
+      (function () {
+        "use strict";
+
+        // Pinned ES modules for templates that declare needs: ["three"]; imported only when a shot in the spec needs it.
+        var LIBS = {
+          three: "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.187.0/three.module.min.js",
+        };
+        // Motion tokens (references/design-system.md); templates read them from kit.motion, never re-type them.
+        var MOTION = {
+          enter: 0.6,
+          move: 0.9,
+          stagger: 0.08,
+          fade: 0.3,
+          easeEnter: "power3.out",
+          easeMove: "power2.inOut",
+          easeCount: "power2.out",
+        };
+        var VISIBLE_RATIO = 0.5;
+
+        var spec = JSON.parse(document.getElementById("demo-spec").textContent);
+        var query = new URLSearchParams(location.search);
+        var renderMode = query.get("render") === "1";
+        var reducedMotion = !renderMode && matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var stage = document.querySelector(".stage");
+        var button = stage.querySelector(".control");
+        var master = null;
+        var userPaused = false;
+
+        // mulberry32: tiny seeded PRNG, returns floats in [0, 1). Same seed -> same sequence on every load.
+        function seededRandom(seed) {
+          var a = seed >>> 0;
+          return function () {
+            a = (a + 0x6d2b79f5) >>> 0;
+            var t = a;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        function el(tag, className, text) {
+          var node = document.createElement(tag);
+          if (className) node.className = className;
+          if (text !== undefined && text !== null) node.textContent = String(text);
+          return node;
+        }
+
+        function templateFor(type) {
+          var def = window.DEMO_SHOTS[type];
+          if (!def) throw new Error("project-demo: no template registered for shot type '" + type + "'");
+          return def;
+        }
+
+        function neededLibs() {
+          var names = [];
+          spec.shots.forEach(function (shot) {
+            (templateFor(shot.type).needs || []).forEach(function (name) {
+              if (names.indexOf(name) < 0) names.push(name);
+            });
+          });
+          return names;
+        }
+
+        function loadLibs(names) {
+          return Promise.all(
+            names.map(function (name) {
+              return import(LIBS[name]);
+            }),
+          ).then(function (modules) {
+            var lib = {};
+            names.forEach(function (name, i) {
+              lib[name] = modules[i];
+            });
+            return lib;
+          });
+        }
+
+        function injectTemplateCss() {
+          var seen = {};
+          var css = "";
+          spec.shots.forEach(function (shot) {
+            var def = templateFor(shot.type);
+            if (def.css && !seen[shot.type]) css += def.css;
+            seen[shot.type] = true;
+          });
+          document.head.appendChild(el("style", "", css));
+        }
+
+        // One shot: its section and caption are visible for [start, start + dur); the last shot stays on the end frame.
+        function addShot(shot, start, isLast, kit) {
+          var dur = shot.duration_ms / 1000;
+          var root = stage.querySelector(".shots").appendChild(el("section", "shot shot-" + shot.type));
+          var caption = stage.querySelector(".captions").appendChild(el("p", "caption", shot.caption || ""));
+          var layers = [root, caption];
+          var sub = gsap.timeline();
+          templateFor(shot.type).build(sub, shot.params, root, Object.assign({ dur: dur }, kit));
+          if (sub.duration() > dur + 0.001)
+            console.warn("project-demo: shot '" + shot.type + "' runs past duration_ms");
+          // The first shot is shown at build time, not by a zero-length tween at 0 (those do not render on a seek to 0).
+          if (start === 0) gsap.set(layers, { autoAlpha: 1 });
+          else master.fromTo(layers, { autoAlpha: 0 }, { autoAlpha: 1, duration: MOTION.fade, ease: "none" }, start);
+          master.add(sub, start);
+          if (!isLast)
+            master.to(layers, { autoAlpha: 0, duration: MOTION.fade, ease: "none" }, start + dur - MOTION.fade);
+        }
+
+        function build(lib) {
+          var kit = {
+            rand: seededRandom(spec.seed),
+            motion: MOTION,
+            el: el,
+            spec: spec,
+            lib: lib,
+            aspect: spec.aspect,
+          };
+          var total = window.demo.duration / 1000;
+          var start = 0;
+          injectTemplateCss();
+          master = gsap.timeline({ paused: true, onComplete: syncButton });
+          spec.shots.forEach(function (shot, i) {
+            addShot(shot, start, i === spec.shots.length - 1, kit);
+            start += shot.duration_ms / 1000;
+          });
+          master.fromTo(
+            stage.querySelector(".progress"),
+            { scaleX: 0 },
+            { scaleX: 1, duration: total, ease: "none" },
+            0,
+          );
+          master.set({}, {}, total);
+          master.seek(reducedMotion ? total : 0, false);
+          if (!renderMode && !reducedMotion) watchVisibility();
+          syncButton();
+        }
+
+        // Not master.isActive(): that stays false until the first tick after play(), so the label would lag.
+        function isPlaying() {
+          return !master.paused() && master.progress() < 1;
+        }
+
+        function syncButton() {
+          var ended = master.progress() === 1;
+          var playing = isPlaying();
+          button.textContent = playing ? "Pause" : ended ? "Replay" : "Play";
+          button.setAttribute("aria-label", button.textContent + " demo");
+        }
+
+        function play() {
+          if (master.progress() === 1) master.restart();
+          else master.play();
+          syncButton();
+        }
+
+        function pause() {
+          master.pause();
+          syncButton();
+        }
+
+        function seek(tMs) {
+          master.pause();
+          master.seek(Math.min(Math.max(tMs, 0), window.demo.duration) / 1000, false);
+          syncButton();
+        }
+
+        // Autoplay while at least half the stage is on screen (inside the site's iframe this tracks the page viewport).
+        function watchVisibility() {
+          new IntersectionObserver(
+            function (entries) {
+              var visible = entries[0].intersectionRatio >= VISIBLE_RATIO;
+              if (visible && !userPaused && master.progress() < 1) play();
+              if (!visible && isPlaying()) pause();
+            },
+            { threshold: [0, VISIBLE_RATIO] },
+          ).observe(stage);
+        }
+
+        button.addEventListener("click", function () {
+          userPaused = isPlaying();
+          if (userPaused) pause();
+          else play();
+        });
+
+        var duration = spec.shots.reduce(function (sum, shot) {
+          return sum + shot.duration_ms;
+        }, 0);
+        window.demo = { duration: duration, seek: seek, play: play, pause: pause };
+        window.demo.ready = loadLibs(neededLibs()).then(build);
+      })();
+    </script>
+  </body>
+</html>

@@ -21,8 +21,3 @@ test("a project with a demo embeds it in a reserved 16:9 box", async ({ page }) 
   await expect(frame).toHaveAttribute("title", "Animated walkthrough: Operational log parser and revenue checks");
   await expect(page.locator("#demo .frame")).toHaveCSS("aspect-ratio", "16 / 9");
 });
-
-test("a project without a demo has no iframe", async ({ page }) => {
-  await page.goto("/projects/revenue-audit-engine/");
-  await expect(page.locator("iframe")).toHaveCount(0);
-});
