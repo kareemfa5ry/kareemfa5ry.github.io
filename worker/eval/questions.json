@@ -211,5 +211,12 @@
     "expect": "answer",
     "must": ["kareemfa5ry@gmail\\.com", "(PDF|CV)", "(LinkedIn|assets/cv)"],
     "must_not": ["(can only|only) discuss Kareem", "decline", "cannot help", "can't help"]
+  },
+  {
+    "id": "availability-remote",
+    "question": "Is Kareem open to remote or relocation, and what kinds of roles?",
+    "expect": "answer",
+    "must": ["remote", "relocat"],
+    "must_not": ["(can only|only) discuss Kareem", "decline", "cannot help", "can't help"]
   }
 ]

@@ -1,4 +1,4 @@
-// Kareem's headline text: tagline, profile paragraph and the four stat tiles. The one home for the page header
+// Kareem's headline text: tagline, profile paragraph and the stats, availability. The one home for the page header
 // and profile section; collection entries (src/content/) hold the rest of the CV.
 export interface Stat {
   /** The number as displayed, e.g. "68M". */
@@ -18,6 +18,15 @@ export const PROFILE_SUMMARY =
 export const STATS: readonly Stat[] = [
   { value: "3×", label: "revenue growth in one year, USD 1.6M → 5.0M" },
   { value: "USD 1.5M", label: "refund backlog cleared, ~60% without cash" },
-  { value: "68M", label: "operational log records parsed and linked" },
   { value: "95%", label: "of audit breach cases accepted by Finance" },
+  { value: "68M", label: "operational log records parsed and linked" },
+];
+
+/** The first three STATS, the outcome numbers the hero shows. */
+export const HERO_STATS = STATS.slice(0, 3);
+
+export const AVAILABILITY: readonly string[] = [
+  "Open to full-time, part-time, contract and consulting roles.",
+  "Roles: revenue or analytics management, senior analyst, AI enablement, consultant.",
+  "Onsite, hybrid or remote. Based in Cairo, Egypt and open to relocation.",
 ];

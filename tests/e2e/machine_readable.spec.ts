@@ -15,6 +15,7 @@ test("/llms.txt is plain text starting with the name, with project bullets and r
   expect(text).toContain("- BSc Accounting, Alexandria University");
   expect(text).toContain("## Industry and domain knowledge");
   expect(text).toContain("## Glossary");
+  expect(text).toContain("## Availability");
   expect(text).toContain("- Result: Unmatched baggage records: cut from 66% to under 1%");
 });
 

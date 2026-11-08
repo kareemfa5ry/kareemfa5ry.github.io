@@ -31,6 +31,7 @@ Legend: **auto** = reaches it on `npm run build`; **gen** = also needs `npm run 
 | Legal name in the CV header                           | `src/site/contact.ts` (`LEGAL_NAME`)                                                                  | not shown        | not shown        | not shown                  | gen + pdf                                   |
 | Tagline                                               | `src/site/profile.ts` (`TAGLINE`)                                                                     | auto             | auto, bot        | auto (`label`)             | not used                                    |
 | Summary                                               | `src/site/profile.ts` (`PROFILE_SUMMARY`)                                                             | auto             | auto, bot        | auto                       | gen + pdf, the CVs without an override      |
+| Availability                                          | `src/site/profile.ts` (`AVAILABILITY`)                                                                | auto (hero)      | auto, bot        | not shown                  | not used                                    |
 | Stat tiles                                            | `src/site/profile.ts` (`STATS`)                                                                       | auto             | not shown        | not shown                  | not shown                                   |
 | CV headline (header line 2)                           | `src/site/cv_files.ts` (`headline`)                                                                   | not shown        | not shown        | not shown                  | gen + pdf                                   |
 | CV summary override                                   | `src/site/cv_files.ts` (`summary`; set for `rpm` today, so its PDF ignores `PROFILE_SUMMARY`)         | not shown        | not shown        | not shown                  | gen + pdf, that CV only                     |
@@ -101,8 +102,8 @@ id to that list. The generator throws on an unknown project id and warns and ski
   `cv_files.ts` override, not a second sentence.
 - Keep `/llms.txt` under the chatbot cap, 65536 bytes (`MAX_KNOWLEDGE_BYTES`; the fetch fails at or above it).
   After a big addition run `npm run build` and `wc -c dist/llms.txt`.
-- Keep bullet counts per CV sensible. Current targets, roles in page order: Senior Data Analyst 2, 6, 6, 2 and
-  Revenue and Pricing Manager 2, 8, 7, 3, unless the owner gives new numbers. Count with `bulletsFor(bullets,
+- Keep bullet counts per CV sensible. Current targets, roles in page order: Senior Data Analyst 2, 7, 6, 2 and
+  Revenue and Pricing Manager 2, 9, 7, 3, unless the owner gives new numbers. Count with `bulletsFor(bullets,
 cvId)` in a throwaway `node -e` and commit nothing. Check the PDF page count after adding a lot.
 - Never copy private material from the private `knowledge-base` repo into content, and never put the phone number
   in any text file.

@@ -81,7 +81,10 @@ h3 a:hover {
   color: var(--bg);
 }
 .btn.secondary {
+  background: transparent;
   color: var(--accent);
+  cursor: pointer;
+  font-family: inherit;
 }
 .btn:hover {
   text-decoration: none;

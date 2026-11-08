@@ -1,4 +1,4 @@
-// Home page: title, nav links and sections, the four stat tiles, the five project links, no console errors.
+// Home page: title, nav links and sections, the hero stats, the five project links, no console errors.
 import { expect, test } from "@playwright/test";
 
 const PROJECTS = [
@@ -9,7 +9,7 @@ const PROJECTS = [
   "revenue-audit-engine",
 ];
 
-test("home page has its title, nav links and four stat tiles", async ({ page }) => {
+test("home page has its title, nav links and no stat tiles below the hero", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/Kareem Fakhry/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Kareem Fakhry");
@@ -17,7 +17,25 @@ test("home page has its title, nav links and four stat tiles", async ({ page }) 
     await expect(page.locator(`nav a[href="#${id}"]`)).toBeVisible();
     await expect(page.locator(`#${id}`)).toHaveCount(1);
   }
-  await expect(page.locator(".stats").first().locator(".stat")).toHaveCount(4);
+  await expect(page.locator(".stats")).toHaveCount(0);
+});
+
+test("hero has a CV button per role, three proof numbers and availability", async ({ page }) => {
+  await page.goto("/");
+  const hero = page.locator("header").first();
+  for (const role of ["Senior Data Analyst CV", "Revenue and Pricing Manager CV"]) {
+    await expect(hero.getByRole("link", { name: role })).toHaveAttribute("href", /\.pdf$/);
+  }
+  await expect(hero.locator(".proof li")).toHaveCount(3);
+  await expect(hero).toContainText("open to relocation");
+  await expect(hero.getByRole("link", { name: "LinkedIn" })).toBeVisible();
+});
+
+test("hero Ask about Kareem opens the chat with the question box focused", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForTimeout(500); // client:idle hydration
+  await page.locator("header [data-chat-open]").click();
+  await expect(page.getByRole("textbox", { name: "Your question" })).toBeFocused();
 });
 
 test("home page links the five project pages", async ({ page }) => {

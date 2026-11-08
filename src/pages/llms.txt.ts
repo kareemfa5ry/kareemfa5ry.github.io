@@ -10,7 +10,7 @@ import { CV_FILES } from "../site/cv_files";
 import { EDUCATION, LANGUAGES } from "../site/education";
 import { DOMAIN } from "../site/knowledge/domain";
 import { GLOSSARY } from "../site/knowledge/glossary";
-import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
+import { AVAILABILITY, PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
 const byOrder = <T extends { data: { order: number } }>(entries: T[]) =>
   [...entries].sort((a, b) => a.data.order - b.data.order);
@@ -53,6 +53,9 @@ export async function GET({ site }: APIContext) {
     `> ${TAGLINE}`,
     "",
     PROFILE_SUMMARY,
+    "",
+    "## Availability",
+    ...AVAILABILITY.map((line) => `- ${line}`),
     "",
     "## Projects",
     "",
