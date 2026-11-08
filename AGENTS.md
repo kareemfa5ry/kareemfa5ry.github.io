@@ -6,6 +6,10 @@
 - Pair it with the `ponytail` skill in `.claude/skills/ponytail/SKILL.md` (MIT, vendored): the laziest solution
   that works, reuse before stdlib before platform before dependency before new code. fable-code governs shape and
   wins on any conflict; ponytail governs size. Mark deliberate shortcuts with a `ponytail:` comment.
+- Two more skills ship with the repo: `orchestrator` (`.claude/skills/orchestrator/SKILL.md`: a Fable or Opus
+  session plans and delegates to Haiku / Sonnet / Opus workers by severity, protects its own context) and
+  `plain-english` (`.claude/skills/plain-english/SKILL.md`: explanations a reader outside software can follow).
+  Use the orchestrator for any multi-step task; it still routes every code change through fable-code.
 - Pull requests: one feature each. NN is the number GitHub gives the PR: branch `feature/NN-short-name` (or
   `chore/NN-...`, lowercase), title `NN: <the feature it adds>`. Before cutting the branch, `git fetch origin main`
   and predict NN (the next issue or PR number, as other people merge too):
