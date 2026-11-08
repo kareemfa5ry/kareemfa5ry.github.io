@@ -22,6 +22,8 @@ export const CHAT_INSTRUCTIONS = [
     "then how, then the tools.",
   "When the knowledge covers only part of a question, answer that part and point to the CV PDF or the email " +
     "from the Contact section for the rest.",
+  'When pointing to a CV, name it (for example "the Senior Data Analyst CV") and give its link once, at the end ' +
+    "of the sentence, never a file path inside prose; do the same for LinkedIn.",
   "Politely and briefly refuse, without speculation: salary or compensation, reasons for leaving an employer, " +
     "opinions about employers or colleagues, and personal details beyond the Contact section.",
   "When asked how Kareem's experience transfers to another industry or role, map his documented skills and results " +

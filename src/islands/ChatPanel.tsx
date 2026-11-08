@@ -2,11 +2,29 @@
 // conversation: transcript, input and the stream from the Worker (see useChatStream.ts).
 import { useRef, useState } from "react";
 import { STARTER_CHIPS } from "../site/chat";
+import { linkify } from "./chat/linkify";
 import { useStickToBottom } from "./chat/useStickToBottom";
 import { useChatStream } from "./chat/useChatStream";
 import styles from "./ChatPanel.module.css";
 
 const MAX = 1000;
+
+/** Text nodes plus anchors; nothing the model writes is ever parsed as HTML. */
+function Linked({ text }: { text: string }) {
+  return linkify(text).map((part, i) =>
+    typeof part === "string" ? (
+      part
+    ) : (
+      <a
+        key={i}
+        href={part.href}
+        {...(part.href.startsWith("mailto:") ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+      >
+        {part.text}
+      </a>
+    ),
+  );
+}
 
 export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; siteKey: string }) {
   const box = useRef<HTMLDivElement>(null);
@@ -32,7 +50,7 @@ export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; s
       <ol ref={log} className={styles.log} role="log" aria-live="polite" aria-label="Conversation">
         {lines.map((line) => (
           <li key={line.id} className={styles[line.role]}>
-            {line.text || "…"}
+            {line.role === "assistant" && line.text ? <Linked text={line.text} /> : line.text || "…"}
           </li>
         ))}
       </ol>
@@ -69,7 +87,7 @@ export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; s
         <textarea
           id="chat-input"
           className={styles.input}
-          rows={3}
+          rows={2}
           maxLength={MAX}
           value={draft}
           onFocus={prepare}
