@@ -27,8 +27,9 @@ const { tagline } = Astro.props;
         {cv.title} CV
       </a>
     ))}
-    <button type="button" class="btn secondary" data-chat-open>
-      Ask about Kareem
+    <button type="button" class="btn secondary" data-chat-open aria-expanded="false">
+      <span class="when-closed">Ask about Kareem</span>
+      <span class="when-open">Minimize the chat</span>
     </button>
   </div>
   <div class="contact">

@@ -38,6 +38,26 @@ test("hero Ask about Kareem opens the chat with the question box focused", async
   await expect(page.getByRole("textbox", { name: "Your question" })).toBeFocused();
 });
 
+test("hero ask button toggles the chat and its label", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForTimeout(500); // client:idle hydration
+  const button = page.locator("header [data-chat-open]");
+  const dialog = page.getByRole("dialog", { name: "Ask about Kareem" });
+  await expect(button).toHaveText("Ask about Kareem", { useInnerText: true });
+  await button.click();
+  await expect(dialog).toBeVisible();
+  await expect(button).toHaveText("Minimize the chat", { useInnerText: true });
+  await expect(button).toHaveAttribute("aria-expanded", "true");
+  await button.click();
+  await expect(dialog).toBeHidden();
+  await expect(button).toHaveText("Ask about Kareem", { useInnerText: true });
+  await expect(button).toHaveAttribute("aria-expanded", "false");
+  await expect(button).toBeFocused();
+  await button.click();
+  await dialog.getByRole("button", { name: "Minimize", exact: true }).click();
+  await expect(button).toHaveText("Ask about Kareem", { useInnerText: true });
+});
+
 test("home page links the five project pages", async ({ page }) => {
   await page.goto("/");
   for (const slug of PROJECTS) {
