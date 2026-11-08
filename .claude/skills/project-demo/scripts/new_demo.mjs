@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 import { format, resolveConfig } from "prettier";
 import { applyDefaults, checkSchema } from "./check_schema.mjs";
+import { writeImages } from "./images.mjs";
 
 const SKILL_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const REPO_ROOT = join(SKILL_DIR, "..", "..", "..");
@@ -90,7 +91,9 @@ export function renderPage(spec, templates) {
     ASPECT: spec.aspect,
     spec: `<script type="application/json" id="demo-spec">${specJson}</script>`,
     shots: [...templates.values()].map(({ source }) => inlineScript(source)).join("\n"),
-    player: inlineScript(readFileSync(join(TEMPLATES_DIR, "player.js"), "utf8")),
+    player: ["player.js", ...(spec.shots.some((shot) => shot.type === "screenshot") ? ["images-ready.js"] : [])]
+      .map((name) => inlineScript(readFileSync(join(TEMPLATES_DIR, name), "utf8")))
+      .join("\n"),
   };
   // One pass over the shell, so text inserted by one slot is never scanned for the others.
   return shell.replace(/\{\{(TITLE|ASPECT)\}\}|<!-- @(spec|shots|player) -->/g, (_, a, b) => slots[a ?? b]);
@@ -101,6 +104,20 @@ export async function formatPage(page, file) {
   return format(page, { ...(await resolveConfig(file)), filepath: file });
 }
 
+// Screenshot shots read src/assets/projects/<slug>/<image>; the webp copies go to the demo folder, outside the budget.
+async function buildImages(spec, slug, demoDir) {
+  const images = spec.shots.filter((shot) => shot.type === "screenshot").map((shot) => shot.params.image);
+  if (!images.length) return;
+  try {
+    const srcDir = join(REPO_ROOT, "src", "assets", "projects", slug);
+    for (const { file, bytes } of await writeImages(images, srcDir, join(demoDir, "img"))) {
+      console.log(`wrote ${relative(REPO_ROOT, file)} (${bytes} bytes)`);
+    }
+  } catch (error) {
+    throw new SpecError(error.message);
+  }
+}
+
 async function main(slug) {
   if (!slug || !SLUG_PATTERN.test(slug)) throw new SpecError("usage: new-demo.sh <slug>  (lowercase, digits, - or _)");
   const demoDir = join(REPO_ROOT, "public", "demos", slug);
@@ -109,6 +126,7 @@ async function main(slug) {
   const page = await formatPage(renderPage(spec, templates), out);
   const bytes = Buffer.byteLength(page);
   if (bytes > BUDGET_BYTES) throw new SpecError(`index.html is ${bytes} bytes, over the ${BUDGET_BYTES} budget`);
+  await buildImages(spec, slug, demoDir);
   writeFileSync(out, page);
   console.log(`wrote ${relative(REPO_ROOT, out)} (${(bytes / 1024).toFixed(1)} KB, ${spec.shots.length} shots)`);
 }

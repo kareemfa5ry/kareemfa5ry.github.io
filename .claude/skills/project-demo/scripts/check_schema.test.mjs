@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import vm from "node:vm";
 import { applyDefaults, checkSchema } from "./check_schema.mjs";
 
 const schema = JSON.parse(readFileSync(new URL("../references/spec.schema.json", import.meta.url), "utf8"));
@@ -40,4 +41,17 @@ test("inherited names are not treated as declared properties", () => {
   const closed = { type: "object", additionalProperties: false, properties: { a: { type: "string" } } };
   const value = JSON.parse('{"constructor": 1}');
   assert.deepEqual(checkSchema(value, closed), ["spec.constructor: is not allowed"]);
+});
+
+test("a screenshot shot needs its image and keeps callouts inside the image", () => {
+  const template = new URL("../assets/templates/shots/screenshot.js", import.meta.url);
+  const sandbox = { DEMO_SHOTS: {} };
+  vm.runInNewContext(readFileSync(template, "utf8"), sandbox);
+  const params = JSON.parse(JSON.stringify(sandbox.DEMO_SHOTS.screenshot.params)); // same-realm copy
+  const ok = { image: "a.png", alt: "A", callouts: [{ x: 10, y: 10, w: 20, h: 20, label: "L" }] };
+  assert.deepEqual(checkSchema(ok, params), []);
+  assert.deepEqual(checkSchema({ alt: "A" }, params), ["spec.image: is required"]);
+  assert.deepEqual(checkSchema({ ...ok, callouts: [{ ...ok.callouts[0], x: 101 }] }, params), [
+    "spec.callouts[0].x: must be <= 100",
+  ]);
 });
