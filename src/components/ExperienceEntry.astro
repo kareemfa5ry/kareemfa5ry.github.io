@@ -2,17 +2,11 @@
 // One job from the experience collection: heading, place and dates, optional context note, bullet list.
 import BeforeAfterChart from "./charts/BeforeAfterChart.astro";
 import { bulletsFor, smartQuotes } from "../site/bullets";
+import { monthLabel } from "../site/month";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
   entry: CollectionEntry<"experience">;
-}
-
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function monthLabel(yearMonth: string): string {
-  const [year, month] = yearMonth.split("-");
-  return `${MONTHS[Number(month) - 1]} ${year}`;
 }
 
 const { entry } = Astro.props;

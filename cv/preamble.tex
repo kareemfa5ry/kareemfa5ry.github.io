@@ -1,0 +1,37 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[a4paper,left=1.5cm,right=1.5cm,top=1.2cm,bottom=1.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled=0.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{ink}{HTML}{222222}
+\definecolor{muted}{HTML}{555555}
+\definecolor{rule}{HTML}{BBBBBB}
+\color{ink}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\raggedright
+
+\titleformat{\section}{\normalsize\bfseries}{}{0pt}{\MakeUppercase}[{\color{rule}\titlerule[0.4pt]}]
+\titlespacing*{\section}{0pt}{9pt}{4pt}
+
+\setlist[itemize]{leftmargin=1.1em,label=\textbullet,itemsep=1pt,topsep=1pt,parsep=0pt,partopsep=0pt}
+
+% \role{title}{organisation}{place and dates}
+\newcommand{\role}[3]{\vspace{5pt}\needspace{3\baselineskip}\textbf{#1}\,\,|\,\,#2\hfill{\small\color{muted}#3}\par}
+% \rolenote{text}
+\newcommand{\rolenote}[1]{{\small\itshape\color{muted}#1}\par}
+% \project{name}{context}
+\newcommand{\project}[2]{\vspace{4pt}\needspace{3\baselineskip}\textbf{#1}\hfill{\small\color{muted}#2}\par}
+% \stack{tools}
+\newcommand{\stack}[1]{{\small\itshape\color{muted}\hspace{1.1em}\textbf{Stack:} #1}\par}
+
+% \cvphone: set by the PDF build from cv/phone.txt; empty when unset
+\providecommand{\cvphone}{}

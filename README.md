@@ -19,9 +19,10 @@ src/islands/                React islands (ProjectFilter: filter chips; ChatWidg
 src/site/chat.ts            Worker URL, Turnstile site key and starter chips for the chat panel (empty = no chat widget)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
-src/site/education.ts       education, training and languages lines (home page, llms.txt)
+src/site/education.ts       education and training lines plus the languages line (home page, llms.txt, CV .tex)
 src/site/knowledge/       domain.ts (industry facts) and glossary.ts (terms) for llms.txt
-src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)
+src/site/cv_files.ts        the two CVs: titles, paths, headlines, ordered project and skill ids (Downloads, llms.txt, .tex)
+src/site/month.ts           monthLabel: "2026-02" -> "Feb 2026" (experience dates, CV .tex)
 src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page head
 src/site/bullets.ts         the front matter bullets of an entry, shared by the pages, llms.txt and resume.json
 public/theme.css            the palette tokens and color-scheme; linked by the site and the demos
@@ -38,6 +39,9 @@ tests/e2e/                  Playwright smoke specs of the built site (see tests/
 playwright.config.ts        Playwright config: Chromium, serves dist/ with `npm run preview` on port 4321
 lighthouserc.json           Lighthouse CI budget: category minimums for / and a project page
 scripts/                    Node checks and the Claude Code hooks (see scripts/README.md)
+scripts/cv/                 generate.mjs and latex.mjs: content -> cv/*.tex (`npm run cv:generate`; `--check` runs in `npm run check`)
+cv/                         preamble.tex (hand-written) and the two generated CV .tex files; built-from.json holds their hashes
+cv/phone.txt, cv/out/       ignored by version control: the phone number (one line) and pdflatex output
 worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Worker: src/, test/, wrangler.jsonc
                             (see worker/README.md); the layout check and eslint cover it too
 .githooks/                  pre-commit (npm run check) and pre-push (npm run build)
