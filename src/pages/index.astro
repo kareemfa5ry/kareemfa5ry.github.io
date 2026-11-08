@@ -2,7 +2,6 @@
 // The CV page: composes the sections from the content collections and src/site/profile.ts.
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
-import Stats from "../components/Stats.astro";
 import ExperienceEntry from "../components/ExperienceEntry.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
@@ -12,7 +11,7 @@ import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
 import { EDUCATION, LANGUAGES } from "../site/education";
 import { personJsonLd } from "../site/person_jsonld";
-import { PROFILE_SUMMARY, STATS, TAGLINE } from "../site/profile";
+import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
 const PAGE = {
   title: `${FULL_NAME} — Revenue & Data Analytics`,
@@ -47,7 +46,6 @@ const filterProjects = projects.map(({ id, data }) => ({
   <section id="profile">
     <h2>Profile</h2>
     <p>{PROFILE_SUMMARY}</p>
-    <Stats stats={STATS} />
   </section>
 
   <section id="experience">

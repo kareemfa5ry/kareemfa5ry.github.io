@@ -71,6 +71,13 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
     };
   }, [open, docked]);
 
+  // Static buttons elsewhere on the page (the hero's "Ask about Kareem") open the widget with data-chat-open.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => (e.target as Element).closest("[data-chat-open]") && setOpen(true);
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, []);
+
   const minimize = () => setOpen(false);
 
   const toggleDock = () => {

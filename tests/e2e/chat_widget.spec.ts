@@ -4,7 +4,11 @@ import { expect, test, type Page } from "@playwright/test";
 const PROJECT = "/projects/daily-revenue-pipeline/";
 
 async function viewportBox(page: Page, name: string) {
-  const box = await page.getByRole(name === "dialog" ? "dialog" : "button", { name: "Ask about Kareem" }).boundingBox();
+  const target =
+    name === "dialog"
+      ? page.getByRole("dialog", { name: "Ask about Kareem" })
+      : page.locator(`button[aria-label="Ask about Kareem"]`);
+  const box = await target.boundingBox();
   const size = page.viewportSize();
   if (!box || !size) throw new Error("no box or viewport");
   return { box, size };
@@ -12,7 +16,7 @@ async function viewportBox(page: Page, name: string) {
 
 async function openChat(page: Page) {
   await page.goto("/");
-  const launcher = page.getByRole("button", { name: "Ask about Kareem" });
+  const launcher = page.locator(`button[aria-label="Ask about Kareem"]`);
   await expect(launcher).toBeVisible();
   await page.waitForTimeout(500); // client:idle hydration
   await launcher.click();
@@ -22,7 +26,7 @@ async function openChat(page: Page) {
 for (const path of ["/", PROJECT]) {
   test(`launcher is visible on ${path} and stays in the viewport after scrolling`, async ({ page }) => {
     await page.goto(path);
-    await expect(page.getByRole("button", { name: "Ask about Kareem" })).toBeVisible();
+    await expect(page.locator(`button[aria-label="Ask about Kareem"]`)).toBeVisible();
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     const { box, size } = await viewportBox(page, "button");
     expect(box.y).toBeGreaterThanOrEqual(0);
