@@ -1,7 +1,7 @@
-// trimHistory (src/islands/chat_history.ts): limits, pair dropping, ends with the user turn.
+// trimHistory (src/islands/chat/chat_history.ts): limits, pair dropping, ends with the user turn.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { MAX_CHARS, MAX_MESSAGES, trimHistory } from "../../src/islands/chat_history.ts";
+import { MAX_CHARS, MAX_MESSAGES, trimHistory } from "../../src/islands/chat/chat_history.ts";
 
 /** n alternating turns starting with the user, each `size` characters long, then a final user turn. */
 function conversation(n, size = 10) {

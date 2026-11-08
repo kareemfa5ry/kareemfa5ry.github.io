@@ -1,4 +1,4 @@
-// The chat survives a failed human check on a later turn (src/islands/useChatStream.ts); Turnstile is stubbed.
+// The chat survives a failed human check on a later turn (src/islands/chat/useChatStream.ts); Turnstile is stubbed.
 import { expect, test, type Page } from "@playwright/test";
 
 const SSE = 'data: {"text":"Hello from the stub."}\n\ndata: {"done":true}\n\n';
@@ -75,5 +75,57 @@ test("six starter chips show on open and tapping one sends its prompt, not its l
     page.getByRole("log").getByText("How can I reach Kareem, and where can I download his CV?"),
   ).toBeVisible();
   await expect(page.getByText("Hello from the stub.")).toHaveCount(1);
+});
+
+async function openWithStub(page: Page) {
+  await stub(page, false);
+  await page.goto("/", { waitUntil: "networkidle" }); // client:idle hydration
+  await page.getByRole("button", { name: "Ask about Kareem" }).click();
+  return page.getByRole("group", { name: "Suggested questions" });
+}
+
+test("a used chip leaves the row above the composer; the other five stay", async ({ page }) => {
+  const group = await openWithStub(page);
+  await group.getByRole("button", { name: "Contact" }).click();
+  await expect(page.getByText("Hello from the stub.")).toHaveCount(1);
+  await expect(group.getByRole("button")).toHaveText([
+    "Tech stack",
+    "Transferable skills",
+    "Leadership",
+    "Results",
+    "Career in brief",
+  ]);
+  await page.screenshot({ path: test.info().outputPath("chat-followups.png") }); // for eyeballing; test-results is ignored
+});
+
+test("a free-text first question means no chips at all", async ({ page }) => {
+  const group = await openWithStub(page);
+  await ask(page, "My own question?");
+  await expect(page.getByText("Hello from the stub.")).toHaveCount(1);
   await expect(group).toHaveCount(0);
+});
+
+const LONG = JSON.stringify({ text: Array.from({ length: 80 }, (_, i) => `Line ${i}\n`).join("") + "THE END" });
+const longReply = (page: Page) =>
+  page.route("**/chat", (r) => r.fulfill({ contentType: "text/event-stream", body: `data: ${LONG}\n\n` }));
+const gap = (page: Page) => page.getByRole("log").evaluate((el) => el.scrollHeight - el.scrollTop - el.clientHeight);
+
+test("a long reply keeps its newest text in view", async ({ page }) => {
+  await openWithStub(page);
+  await longReply(page);
+  await ask(page, "Tell me everything");
+  await expect(page.getByText("THE END")).toBeVisible();
+  await expect.poll(() => gap(page)).toBeLessThanOrEqual(2);
+  await page.screenshot({ path: test.info().outputPath("chat-autoscroll.png") }); // for eyeballing; test-results is ignored
+});
+
+test("a visitor who scrolled up is not pulled down by the next reply", async ({ page }) => {
+  await openWithStub(page);
+  await longReply(page);
+  await ask(page, "First");
+  await expect(page.getByText("THE END")).toHaveCount(1);
+  await page.getByRole("log").evaluate((el) => el.scrollTo(0, 0));
+  await ask(page, "Second");
+  await expect(page.getByText("THE END")).toHaveCount(2);
+  expect(await page.getByRole("log").evaluate((el) => el.scrollTop)).toBeLessThanOrEqual(48);
 });

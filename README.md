@@ -14,7 +14,7 @@ src/components/             one component per concern: Nav, Hero, Stats, Experie
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags, Demo (iframe of a generated demo), demos.ts (hasDemo)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
-src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + useChatStream: the chat); rule:
+src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL, Turnstile site key and starter chips for the chat panel (empty = no chat widget)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
