@@ -22,8 +22,8 @@ const { tagline } = Astro.props;
     ))}
   </ul>
   <div class="cta">
-    {CV_FILES.map((cv, i) => (
-      <a class={`btn ${i === 0 ? "primary" : "secondary"}`} href={cv.href} download>
+    {CV_FILES.map((cv) => (
+      <a class="btn primary" href={cv.href} download>
         {cv.title} CV
       </a>
     ))}
