@@ -1,0 +1,47 @@
+{
+  "$schema": "../../../.claude/skills/project-demo/references/spec.schema.json",
+  "title": "Competitor price tracker",
+  "tagline": "A scheduled scraper that collects competitors' fares 90 days ahead and emails the cleaned data every day.",
+  "stack": ["Python", "Web scraping", "Scheduled tasks", "Power Query"],
+  "links": { "live": "https://kareemfa5ry.github.io/projects/competitor-price-tracker/" },
+  "aspect": "16:9",
+  "seed": 41,
+  "poster_ms": 12000,
+  "shots": [
+    {
+      "type": "title",
+      "duration_ms": 4000,
+      "caption": "A competitor price tracker for Nesma Airlines."
+    },
+    {
+      "type": "pipeline",
+      "duration_ms": 6500,
+      "caption": "A scheduled scraper collects fares, cleans them, and emails the data to the team every day.",
+      "params": {
+        "stages": [
+          { "label": "Scheduled scraper", "detail": "one-way and 14-day return fares" },
+          { "label": "Cleaned data", "detail": "up to 8 competing airlines per route" },
+          { "label": "Daily email", "detail": "commercial, revenue, chairman" },
+          { "label": "Pricing dashboards", "detail": "fed by the same data" }
+        ]
+      }
+    },
+    {
+      "type": "metrics",
+      "duration_ms": 5500,
+      "caption": "It started as a script that captured fare calendar screenshots for the daily report.",
+      "params": {
+        "items": [
+          { "value": 90, "label": "of future fares collected", "suffix": " days" },
+          { "value": 8, "label": "competing airlines per route, at most" }
+        ]
+      }
+    },
+    {
+      "type": "outro",
+      "duration_ms": 3500,
+      "caption": "Read the full project on the site.",
+      "params": { "heading": "See the full project" }
+    }
+  ]
+}
