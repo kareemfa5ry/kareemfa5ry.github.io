@@ -26,3 +26,4 @@ public/demos/*/demo.webm
 public/demos/*/demo.mp4
 public/demos/*/contact.png
 public/demos/*/frames/
+__pycache__/
