@@ -19,3 +19,20 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 }
+
+/* Show one of a light/dark pair: put .only-light on the light variant and .only-dark on the dark one. The two
+   "dark is active" conditions live here only (same as theme.js: html[data-theme], else the system setting). */
+html[data-theme="dark"] .only-light,
+html[data-theme="light"] .only-dark {
+  display: none !important;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .only-light {
+    display: none !important;
+  }
+}
+@media (prefers-color-scheme: light) {
+  html:not([data-theme="dark"]) .only-dark {
+    display: none !important;
+  }
+}

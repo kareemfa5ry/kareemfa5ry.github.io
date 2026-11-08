@@ -1,7 +1,8 @@
 // Render one demo to video: node render.mjs <slug> [--fps 30] [--format webm|mp4] [--contact-sheet]
 // Serves public/ locally, opens /demos/<slug>/?render=1 in Playwright Chromium, awaits demo.ready, steps
 // t = i * 1000 / fps with demo.seek, screenshots each frame and stitches them with ffmpeg (a host tool).
-// Writes demo.webm|mp4, poster.jpg (at spec.poster_ms) and, with --contact-sheet, contact.png into the demo folder.
+// Writes demo.webm|mp4, poster.jpg and poster-dark.jpg (light and dark, at spec.poster_ms)
+// and, with --contact-sheet, contact.png into the demo folder.
 import { spawnSync } from "node:child_process";
 import { createReadStream, existsSync, mkdtempSync, rmSync, statSync } from "node:fs";
 import { createServer } from "node:http";
@@ -12,7 +13,15 @@ import { chromium } from "@playwright/test";
 import { REPO_ROOT, SLUG_PATTERN, SpecError, readJson } from "./new_demo.mjs";
 
 const PUBLIC_DIR = join(REPO_ROOT, "public");
-const TYPES = { ".html": "text/html", ".js": "text/javascript", ".json": "application/json", ".jpg": "image/jpeg" };
+const TYPES = {
+  ".html": "text/html",
+  ".css": "text/css",
+  ".js": "text/javascript",
+  ".json": "application/json",
+  ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+};
 const CODECS = {
   webm: ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "32", "-pix_fmt", "yuv420p"],
   mp4: ["-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p", "-movflags", "+faststart"],
@@ -53,7 +62,7 @@ function posterMs(spec) {
   return 1000;
 }
 
-async function capture({ url, viewport, fps, poster, framesDir, posterPath }) {
+async function capture({ url, viewport, fps, poster, framesDir, posterPaths }) {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage({ viewport });
@@ -65,8 +74,12 @@ async function capture({ url, viewport, fps, poster, framesDir, posterPath }) {
       await page.evaluate((t) => window.demo.seek(t), (i * 1000) / fps);
       await page.screenshot({ path: join(framesDir, `f${String(i).padStart(5, "0")}.png`) });
     }
-    await page.evaluate((t) => window.demo.seek(t), poster);
-    await page.screenshot({ path: posterPath, type: "jpeg", quality: 85 });
+    for (const [theme, path] of Object.entries(posterPaths)) {
+      await page.goto(`${url}&theme=${theme}`);
+      await page.evaluate(() => window.demo.ready);
+      await page.evaluate((t) => window.demo.seek(t), poster);
+      await page.screenshot({ path, type: "jpeg", quality: 85 });
+    }
     return count;
   } finally {
     await browser.close();
@@ -103,11 +116,11 @@ async function main({ positionals: [slug], values }) {
   const server = await serve();
   try {
     const url = `http://127.0.0.1:${server.address().port}/demos/${slug}/?render=1`;
-    const poster = join(demoDir, "poster.jpg");
-    const count = await capture({ url, viewport, fps, poster: posterMs(spec), framesDir, posterPath: poster });
+    const posterPaths = { light: join(demoDir, "poster.jpg"), dark: join(demoDir, "poster-dark.jpg") };
+    const count = await capture({ url, viewport, fps, poster: posterMs(spec), framesDir, posterPaths });
     const outputs = {
       ...stitch({ framesDir, fps, format: values.format, outDir: demoDir, sheet: values["contact-sheet"], count }),
-      poster,
+      ...posterPaths,
     };
     console.log(`${count} frames at ${fps} fps`);
     for (const path of Object.values(outputs)) console.log(`${path} (${(statSync(path).size / 1024).toFixed(1)} KB)`);

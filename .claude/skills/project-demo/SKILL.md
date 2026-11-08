@@ -97,9 +97,10 @@ stitches with ffmpeg (a host tool; the script exits 1 and says so if it is missi
 `index.html`). Viewport: 1280x720, or 720x1280 for 9:16.
 
 - `demo.webm` (VP9) or `demo.mp4` (H.264, yuv420p, faststart), `contact.png` (one frame per second, 5 per row,
-  with `--contact-sheet`) and `poster.jpg` (quality 85) land in `public/demos/<slug>/`; it prints each path and size.
-- Poster frame: `spec.poster_ms`, else the metrics shot's start + 1000 ms, else 1000 ms. Commit `poster.jpg`;
-  the video and contact sheet are git-ignored.
+  with `--contact-sheet`) `poster.jpg` and `poster-dark.jpg` (quality 85) land in `public/demos/<slug>/`; it prints each path and size.
+- Poster frame: `spec.poster_ms`, else the metrics shot's start + 1000 ms, else 1000 ms, rendered twice with
+  `?render=1&theme=light` and `&theme=dark`. Commit both posters (the site shows the one matching the theme through
+  `.only-light` / `.only-dark` in `public/theme.css`); the video and contact sheet are git-ignored.
 - In CI: Actions > "Render demo" > Run workflow (inputs `slug`, `format`). It renders with `--contact-sheet` and
   uploads the files as the artifact `demo-<slug>` (14 days). It commits nothing.
 

@@ -20,6 +20,18 @@ test("home page has its title, nav links and no stat tiles below the hero", asyn
   await expect(page.locator(".stats")).toHaveCount(0);
 });
 
+test("home project posters follow the active theme", async ({ page }) => {
+  await page.goto("/");
+  const first = page.locator("#projects .poster").first();
+  await expect(first.locator("img.only-light")).toBeVisible();
+  await expect(first.locator("img.only-light")).toHaveAttribute("src", /\/poster\.jpg$/);
+  await expect(first.locator("img.only-dark")).toBeHidden();
+  await page.locator(".plane-switch").click();
+  await expect(first.locator("img.only-dark")).toBeVisible();
+  await expect(first.locator("img.only-dark")).toHaveAttribute("src", /\/poster-dark\.jpg$/);
+  await expect(first.locator("img.only-light")).toBeHidden();
+});
+
 test("hero has a CV button per role, three proof numbers and availability", async ({ page }) => {
   await page.goto("/");
   const hero = page.locator("header").first();
