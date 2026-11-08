@@ -12,6 +12,7 @@ with its defaults by `scripts/new_demo.mjs`, so the template is the one home of 
 | `architecture` | `shots/architecture.js` | done   | boxes and arrows revealed in order              |
 | `chart`        | `shots/chart.js`        | done   | a line or bar chart drawing, with counters      |
 | `hero3d`       | `shots/hero3d.js`       | done   | a Three.js scene with a slow camera move        |
+| `screenshot`   | `shots/screenshot.js`   | done   | a real product screenshot, slow zoom, callouts  |
 | `outro`        | `shots/outro.js`        | done   | call to action with repo / live links           |
 
 ## The template contract
@@ -150,6 +151,35 @@ first value of the first series to its last (one decimal unless both are whole).
 | `series` (required)   | array  |          | 1 to 3 series              |
 | `series[].label`      | string |          | legend tag (required)      |
 | `series[].values`     | array  |          | 2 to 12 numbers (required) |
+
+## screenshot
+
+A real screenshot from `src/assets/projects/<slug>/`, shown with a slow Ken Burns move; optional callouts outline
+regions one after another. `min_ms` 4000. The scaffold (`scripts/images.mjs`) writes
+`public/demos/<slug>/img/<name>.webp` (max 1280 px wide, quality 80 down to 60, each <= 300 KB, outside the page
+budget), prints each size and fails if the source is missing. The page waits for every image to load and decode
+before `demo.ready` resolves (`assets/templates/images-ready.js`, inlined only when a spec has a screenshot shot).
+
+| Param               | Type   | Default                  | Meaning                                     |
+| ------------------- | ------ | ------------------------ | ------------------------------------------- |
+| `image` (required)  | string |                          | file name in `src/assets/projects/<slug>/`  |
+| `alt` (required)    | string |                          | what the screenshot shows                   |
+| `caption`           | string | `""`                     | line above the image                        |
+| `move.from` / `.to` | object | 1.5/1/1.00 then 0/0/1.06 | `{x, y, scale}`: x, y in percent (-10..10)  |
+| `callouts[]`        | array  | `[]`                     | up to 4 of `{x, y, w, h, label}` in percent |
+
+```json
+{
+  "type": "screenshot",
+  "duration_ms": 5500,
+  "caption": "Main dashboard.",
+  "params": {
+    "image": "01-main.png",
+    "alt": "Sales dashboard.",
+    "callouts": [{ "x": 4, "y": 8, "w": 60, "h": 14, "label": "KPI strip" }]
+  }
+}
+```
 
 ## outro
 
