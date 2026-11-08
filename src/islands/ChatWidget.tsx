@@ -6,6 +6,8 @@ import ChatPanel from "./ChatPanel";
 import styles from "./ChatWidget.module.css";
 
 const DOCKED_KEY = "chat-docked";
+// Panel width while docked: 26rem, never more than 40% of the viewport. global.css reads it as body padding.
+const DOCK_WIDTH = "min(26rem, 40vw)";
 
 function readDocked(): boolean {
   try {
@@ -55,6 +57,19 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
     else if (opened.current) launcher.current?.focus();
     opened.current = open;
   }, [open]);
+
+  // Tell the page layout to reserve the docked panel's width; cleared on undock, minimize, close and unmount.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (open && docked) {
+      root.dataset.chatDock = "side";
+      root.style.setProperty("--chat-dock-width", DOCK_WIDTH);
+    }
+    return () => {
+      delete root.dataset.chatDock;
+      root.style.removeProperty("--chat-dock-width");
+    };
+  }, [open, docked]);
 
   const minimize = () => setOpen(false);
 

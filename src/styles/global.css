@@ -24,6 +24,24 @@ body {
     Arial,
     sans-serif;
 }
+/* Docked chat (set by ChatWidget) reserves its width so nothing sits behind it; nav, main and footer are in
+   normal flow and shrink with the body. Under 48rem the panel is a full-width sheet instead: no padding, and
+   the page behind it does not scroll. */
+@media (min-width: 48rem) {
+  html[data-chat-dock="side"] body {
+    padding-inline-end: var(--chat-dock-width);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    body {
+      transition: padding-inline-end 0.2s ease;
+    }
+  }
+}
+@media (max-width: 47.99rem) {
+  html[data-chat-dock="side"] {
+    overflow: hidden;
+  }
+}
 /* Links in running text are underlined so they never rely on colour alone (Lighthouse link-in-text-block). */
 a {
   color: var(--accent);
