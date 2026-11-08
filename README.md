@@ -23,7 +23,7 @@ src/site/education.ts       education, training and languages lines (home page, 
 src/site/knowledge/       domain.ts (industry facts) and glossary.ts (terms) for llms.txt
 src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)
 src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page head
-src/site/plain_bullets.ts   plain-text bullets from an entry's Markdown body, for llms.txt and resume.json
+src/site/bullets.ts         the front matter bullets of an entry, shared by the pages, llms.txt and resume.json
 public/theme.css            the palette tokens and color-scheme; linked by the site and the demos
 public/theme.js             theme storage key, readTheme/applyTheme/toggleTheme, cross-document storage sync
 src/pages/llms.txt.ts       /llms.txt endpoint: the CV as Markdown for AI assistants, generated from the content

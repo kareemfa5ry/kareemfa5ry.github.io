@@ -3,15 +3,15 @@
 // data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
 import StackTags from "./projects/StackTags.astro";
 import { hasDemo } from "./projects/demos";
-import { render, type CollectionEntry } from "astro:content";
+import { bulletsFor, smartQuotes } from "../site/bullets";
+import type { CollectionEntry } from "astro:content";
 
 interface Props {
   entry: CollectionEntry<"projects">;
 }
 
 const { entry } = Astro.props;
-const { title, org, period, stack } = entry.data;
-const { Content } = await render(entry);
+const { title, org, period, stack, bullets } = entry.data;
 const meta = period ? `${org}, ${period}` : org;
 ---
 
@@ -34,7 +34,11 @@ const meta = period ? `${org}, ${period}` : org;
       />
     </a>
   )}
-  <Content />
+  <ul>
+    {bulletsFor(bullets).map((text) => (
+      <li>{smartQuotes(text)}</li>
+    ))}
+  </ul>
   <StackTags stack={stack} />
 </div>
 
