@@ -12,16 +12,16 @@ description: >-
 
 Settled with Kareem on the Power BI project (PR 35). Do not ask these again, just do them:
 
-| Question                    | Answer                                                                                                                                                                                                                                                                           |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Generate look-alike images? | **No.** He rejected generated replicas. Always paint on his original screenshots.                                                                                                                                                                                                |
-| What changes?               | **Only numbers:** KPI values, deltas, percentages, table cells, data labels, totals, and bars whose length shows a number. Names (countries, agents, routes, currencies), logos, titles, slicer text, dates and axis ticks stay as they are. Line and sparkline shapes stay too. |
-| How fake?                   | Each base number × random 0.70–1.30, then every total, share, ratio and change recomputed from it, so the screenshots agree with each other within display rounding. Same format as shown ($1.2M stays one decimal and M).                                                       |
-| The label                   | Exactly `Dummy numbers — figures are illustrative, not real data.`: quote style (dark rounded box, gold bar on the left, italic Segoe UI) at the bottom left, moved (`--label-at`) wherever it would cover data.                                                                 |
-| Real names go public        | Mention it once in the handoff, don't block on it. He accepted it for Nesma.                                                                                                                                                                                                     |
-| Originals                   | Confidential. Only in the session scratchpad, never in the repo, deleted once the commit is pushed. Drop a stray original found in `src/assets/` from the commit and tell him.                                                                                                   |
-| Output                      | PNG, 1800 px wide (Astro serves ~200 kB WebP). Same file names as the images they replace.                                                                                                                                                                                       |
-| Alt text and captions       | Rewritten with the new numbers, and they say "dummy numbers".                                                                                                                                                                                                                    |
+| Question                    | Answer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Generate look-alike images? | **No.** He rejected generated replicas. Always paint on his original screenshots.                                                                                                                                                                                                                                                                                                                                                                                                                |
+| What changes?               | **Numbers, and identifying names.** Numbers: KPI values, deltas, percentages, table cells, data labels, totals, and bars whose length shows a number. Names become numbered placeholders (below). Logos, brand names, background photos, field headers, slicer text, dates and axis ticks stay. Line and sparkline shapes stay too.                                                                                                                                                              |
+| How fake?                   | Each base number × random 0.70–1.30, then every total, share, ratio and change recomputed from it, so the screenshots agree with each other within display rounding. Same format as shown ($1.2M stays one decimal and M).                                                                                                                                                                                                                                                                       |
+| The label                   | Exactly `Dummy numbers — figures are illustrative, not real data.`: quote style (dark rounded box, gold bar on the left, italic Segoe UI) at the bottom left, moved (`--label-at`) wherever it would cover data.                                                                                                                                                                                                                                                                                 |
+| Placeholder names           | Category values become `<Dimension> N`: `Source 1`, `Country 1`, `Currency 1`, `Agent 1`, `Route 1`, `Sector 1`, numbered by rank (largest first) and the same everywhere (Egypt is Country 1 on every screenshot). KPI names become `KPI-N`, the measures under KPI N become `KPI-N_SUP-M`, and a chart legend or table header naming a KPI's measure uses that KPI's name. `(Blank)` and values that reveal nothing (OW / RT) stay. A name cut in half by a panel edge is erased, not renamed. |
+| Originals                   | Confidential. Only in the session scratchpad, never in the repo, deleted once the commit is pushed. Drop a stray original found in `src/assets/` from the commit and tell him.                                                                                                                                                                                                                                                                                                                   |
+| Output                      | PNG, 1800 px wide (Astro serves ~200 kB WebP). Same file names as the images they replace.                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Alt text and captions       | Rewritten with the new numbers, and they say "dummy numbers".                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
 Before any file change, the repo question from memory still applies (public site vs knowledge_base) unless he
 already named the repo.
@@ -32,7 +32,9 @@ Work in `<scratchpad>/shots/`: `originals/` (his files), `final/`, `sheets/`. Sc
 this file. Run them with `python -E -s` (they import `numfmt.py` from their own folder; `-I` would break that).
 Needs `numpy pillow opencv-python` and the Segoe UI fonts in `C:/Windows/Fonts`.
 
-1. **Inventory every number → `numbers.json`.** View each original at full resolution in crops (whole images
+1. **Inventory every number and name → `numbers.json`.** Windows OCR finds most of them
+   (`Windows.Media.Ocr` from Windows PowerShell; invert dark themes and upscale 2.5× first) but misreads digits, so
+   take boxes from OCR and check every text by eye. Labels over a photo: find the box by the label's colour. View each original at full resolution in crops (whole images
    are downscaled when you view them). For every number write an entry with a rough `bbox` around its ink in
    original pixels. Then run `measure.py originals numbers.json` to tighten the boxes and fill in `fg` / `bg`. Do
    not miss any: a single real number left over defeats the point. Count them per visual against the screenshot.
@@ -40,7 +42,8 @@ Needs `numpy pillow opencv-python` and the Segoe UI fonts in `C:/Windows/Fonts`.
    `parent` of exactly one relation.
 3. **`gen_dummy.py numbers.json relations.json dummy.json [seed]`**, then **`check_dummy.py dummy.json
 relations.json`**. It must print all relations holding. Fix relations, not the checker.
-4. **`paint.py originals numbers.json dummy.json final [--label-at NAME=0.30,0.97]`**, then read each
+4. **`paint.py originals numbers.json dummy.json final [--label-at NAME=0.30,0.97]`** (`-` for dummy.json when
+   only labels change; `--no-label` when the images already carry the dummy-numbers label), then read each
    `final/*.log.txt`. An `err` above ~0.15 means a poor font fit: check that number closely.
 5. **Review by eye.** `sheet.py originals final numbers.json dummy.json sheets` gives before/after crops of every
    changed number. View every sheet and every final image whole. Look for leftover old digits, halos, wrong
@@ -63,6 +66,11 @@ relations.json`**. It must print all relations holding. Fix relations, not the c
   as shown but can still feed relations, e.g. a figure you choose not to change).
 - **bar**: `id`, `kind: "bar"`, `bbox` of the bar including its outline, `fill` (bar colour), `value_of` (id
   of the number it draws). The bar is stretched or cut in its middle to the new / old ratio.
+- **label**: `id`, `kind: "label"`, `text` exactly as shown, `new` (the placeholder), `bbox`, `align`, and like a
+  number `fg` / `bg` (`measure.py` fills them). Optional: `fonts` (candidate font files, e.g. `["segoeuib"]`): pin
+  one font for a whole visual, or rows come out in mixed weights. `full` + `clip` `[x0, x1]` for a name partly
+  hidden behind a panel: `text` is the visible tail, `full` the whole old name, and the new name is placed where
+  the whole old name was centred and drawn only inside `clip`.
 - **erase**: `kind: "erase"`, `bbox`: a speck to inpaint after painting.
 
 ## relations.json
