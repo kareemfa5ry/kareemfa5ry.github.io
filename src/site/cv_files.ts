@@ -39,6 +39,8 @@ export const CV_FILES: readonly CvFile[] = [
     blurb: "Pricing, capacity, distribution and revenue assurance.",
     href: "/assets/cv/Kareem_Fakhry_CV_Revenue_Pricing_Manager.pdf",
     headline: "Revenue and Pricing Manager | Pricing · Capacity · Demand Forecasting · Revenue Assurance",
+    summary:
+      "Revenue manager with 15 years in airline pricing, capacity, distribution and network planning, with the data skills to build the tools behind each decision. Restarted the commercial side of a grounded airline, cleared a USD 1.5 million refund backlog before sales reopened, and built the team, reports, forecasts and audits from nothing. Works closely with sales, finance, operations and technology partners.",
     projects: [
       "competitor-price-tracker",
       "daily-revenue-pipeline",
