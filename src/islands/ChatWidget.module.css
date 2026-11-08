@@ -36,9 +36,9 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(420px, 100vw);
+  width: var(--chat-dock-width);
   max-height: none;
-  height: 100vh;
+  height: 100dvh;
   border-radius: 0;
   border-width: 0 0 0 1px;
 }
@@ -79,12 +79,22 @@
   font-size: 14px;
   color: var(--muted);
 }
-@media (max-width: 640px) {
-  .card,
+/* Phones and small tablets: docked is a full-width sheet over the page (global.css adds no body padding). */
+@media (max-width: 47.99rem) {
   .card.docked {
     inset: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    border-width: 0;
+  }
+}
+@media (max-width: 640px) {
+  .card {
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
     max-height: none;
     border-radius: 0;
     border-width: 0;
