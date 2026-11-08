@@ -5,7 +5,7 @@ order: 6
 summary: >-
   A revenue management web app that ranks the flights departing in the next 14 days by risk and shows, for each
   flight, how its bookings, revenue and booking-class mix compare with a benchmark.
-stack: []
+stack: [React, TypeScript, GraphQL, Node.js, PostgreSQL, Redis, MapLibre GL, Docker]
 skills: [revenue-management, bi-and-reporting]
 metrics: []
 screenshots:
