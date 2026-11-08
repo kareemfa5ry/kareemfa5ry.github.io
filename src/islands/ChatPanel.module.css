@@ -102,3 +102,11 @@
   opacity: 0.5;
   cursor: default;
 }
+/* After the first message the row sits above the composer, smaller. */
+.compact {
+  gap: 6px;
+}
+.compact .chip {
+  font-size: 13px;
+  padding: 2px 8px;
+}
