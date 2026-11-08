@@ -7,6 +7,8 @@ import { changeText, type Result } from "../components/charts/scale";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { EDUCATION } from "../site/education";
+import { DOMAIN } from "../site/knowledge/domain";
+import { GLOSSARY } from "../site/knowledge/glossary";
 import { plainBullets } from "../site/plain_bullets";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
@@ -63,6 +65,12 @@ export async function GET({ site }: APIContext) {
     "",
     "## Education, training and languages",
     ...EDUCATION.map((line) => `- ${line}`),
+    "",
+    "## Industry and domain knowledge",
+    ...DOMAIN.map((line) => `- ${line}`),
+    "",
+    "## Glossary",
+    ...GLOSSARY.map(({ term, meaning }) => `- ${term}: ${meaning}`),
     "",
     "## CV",
     ...CV_FILES.map((cv) => `- [${cv.title}](${url(cv.href)}): ${cv.blurb}`),
