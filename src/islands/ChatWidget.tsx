@@ -59,6 +59,7 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
     else if (opened.current) (trigger.current ?? launcher.current)?.focus();
     trigger.current = null;
     opened.current = open;
+    if (!open) setDocked(readDocked()); // a hero-opened dock lasts one opening; the saved choice returns
     // Hero buttons show the label that matches this state (CSS keys off aria-expanded).
     document.querySelectorAll("[data-chat-open]").forEach((el) => el.setAttribute("aria-expanded", String(open)));
   }, [open]);
@@ -80,7 +81,10 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       trigger.current = (e.target as Element).closest<HTMLElement>("[data-chat-open]");
-      if (trigger.current) setOpen((o) => !o);
+      if (!trigger.current) return;
+      // Floating, the card would cover the hero button; wide screens dock it so the button stays in reach.
+      if (window.matchMedia("(min-width: 48rem)").matches) setDocked(true);
+      setOpen((o) => !o);
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);

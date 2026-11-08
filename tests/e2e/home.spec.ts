@@ -39,8 +39,6 @@ test("hero Ask about Kareem opens the chat with the question box focused", async
 });
 
 test("hero ask button toggles the chat and its label", async ({ page }) => {
-  // The open card covers the hero button below ~1260px wide (7px to spare at 1280); a wide viewport keeps it clickable.
-  await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto("/");
   await page.waitForTimeout(500); // client:idle hydration
   const button = page.locator("header [data-chat-open]");
@@ -50,6 +48,10 @@ test("hero ask button toggles the chat and its label", async ({ page }) => {
   await expect(dialog).toBeVisible();
   await expect(button).toHaveText("Minimize the chat", { useInnerText: true });
   await expect(button).toHaveAttribute("aria-expanded", "true");
+  // Opened from the hero it docks at the side, so the button is not under the card.
+  await expect
+    .poll(async () => (await button.boundingBox())!.x + (await button.boundingBox())!.width)
+    .toBeLessThanOrEqual((await dialog.boundingBox())!.x);
   await button.click();
   await expect(dialog).toBeHidden();
   await expect(button).toHaveText("Ask about Kareem", { useInnerText: true });
