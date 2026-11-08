@@ -20,6 +20,7 @@ src/site/chat.ts            Worker URL and Turnstile site key for the chat panel
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/education.ts       education, training and languages lines (home page, llms.txt)
+src/site/knowledge/       domain.ts (industry facts) and glossary.ts (terms) for llms.txt
 src/site/cv_files.ts        titles, descriptions and paths of the published CV PDFs (Downloads, llms.txt)
 src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page head
 src/site/plain_bullets.ts   plain-text bullets from an entry's Markdown body, for llms.txt and resume.json
