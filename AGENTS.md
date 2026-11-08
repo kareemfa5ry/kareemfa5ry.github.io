@@ -10,6 +10,8 @@
   session plans and delegates to Haiku / Sonnet / Opus workers by severity, protects its own context) and
   `plain-english` (`.claude/skills/plain-english/SKILL.md`: explanations a reader outside software can follow).
   Use the orchestrator for any multi-step task; it still routes every code change through fable-code.
+- `resume-update` (`.claude/skills/resume-update/SKILL.md`): use it for any change to the resume, CV, a role, project,
+  skill, education, contact or what the chatbot knows; it maps each fact to its file and the run order.
 - Pull requests: one feature each. NN is the number GitHub gives the PR: branch `feature/NN-short-name` (or
   `chore/NN-...`, lowercase), title `NN: <the feature it adds>`. Before cutting the branch, `git fetch origin main`
   and predict NN (the next issue or PR number, as other people merge too):
