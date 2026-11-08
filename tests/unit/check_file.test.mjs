@@ -2,7 +2,7 @@
 // case here failed: node could not find the script.
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
@@ -47,4 +47,17 @@ test("a file inside an agent worktree is checked against that worktree", () => {
   const run = hook(join(root, "src", "bad.mjs"), "// eslint-disable-next-line no-console\nexport const a = 1;\n");
   assert.equal(run.status, 2);
   assert.match(run.stderr, /^fable-code: src\/bad\.mjs: lint silencing comment/m);
+});
+
+test("a missing eslint binary is named, not reported as a format error", () => {
+  const root = mkdtempSync(join(tmpdir(), "cf-"));
+  mkdirSync(join(root, "scripts"));
+  mkdirSync(join(root, "src"));
+  writeFileSync(join(root, "package.json"), "{}");
+  for (const f of ["check_file.mjs", "check_layout.mjs"]) copyFileSync(join("scripts", f), join(root, "scripts", f));
+  writeFileSync(join(root, "src", "a.mjs"), "export const a = 1;\n");
+  const input = JSON.stringify({ tool_name: "Write", tool_input: { file_path: join(root, "src", "a.mjs") } });
+  const run = spawnSync("node", [join(root, "scripts", "check_file.mjs")], { input, encoding: "utf8" });
+  assert.equal(run.status, 2);
+  assert.match(run.stderr, /^fable-code: eslint not found: run npm install in .+\n$/);
 });
