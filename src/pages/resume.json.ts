@@ -1,8 +1,8 @@
 // /resume.json (JSON Resume v1, https://jsonresume.org/schema): the CV for recruiter tooling, from the content.
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
+import { bulletsFor } from "../site/bullets";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
-import { plainBullets } from "../site/plain_bullets";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
 export async function GET({ site }: APIContext) {
@@ -22,18 +22,18 @@ export async function GET({ site }: APIContext) {
       location: { city: "Cairo", countryCode: "EG" },
       profiles: [{ network: "LinkedIn", url: LINKEDIN_URL }],
     },
-    work: experience.map(({ data, body }) => ({
+    work: experience.map(({ data }) => ({
       name: data.org,
       position: data.title ?? data.org,
       startDate: data.start,
       ...(data.end && { endDate: data.end }),
       summary: data.note,
-      highlights: plainBullets(body),
+      highlights: bulletsFor(data.bullets),
     })),
-    projects: projects.map(({ id, data, body }) => ({
+    projects: projects.map(({ id, data }) => ({
       name: data.title,
       description: data.summary,
-      highlights: plainBullets(body),
+      highlights: bulletsFor(data.bullets),
       keywords: data.stack,
       url: new URL(`/projects/${id}/`, site).href,
     })),

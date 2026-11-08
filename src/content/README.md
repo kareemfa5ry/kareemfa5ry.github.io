@@ -2,7 +2,7 @@
 
 The CV text lives here as Markdown files, one file per entry. The front matter (between the two `---` lines) is
 checked against the schema in `src/content.config.ts` on every build: a missing required field, a misspelt key or
-a wrong type stops the build and names the file and the field. The body under the front matter is the bullet list.
+a wrong type stops the build and names the file and the field. The bullets are the `bullets` list in the front matter.
 
 Each folder has one finished example. Copy it, rename it and change the text.
 
@@ -31,7 +31,7 @@ numbers. Use lower-case file names with hyphens (`competitor-price-tracker.md`).
 | `metrics`     | list of `{value, label}`       | yes      | Headline numbers; `[]` when there are none.                            |
 | `screenshots` | list of `{src, alt, caption?}` | yes      | Images; `[]` when there are none. See `src/assets/projects/README.md`. |
 | `results`     | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`. See below.     |
-| body          | Markdown bullet list           | yes      | The project bullets.                                                   |
+| `bullets`     | list of text or `{text, cv}`   | yes      | Bullets; `cv: [sda, rpm]` limits a bullet to those CV PDFs only.       |
 
 A screenshot entry: `src` is the path from the project file to the image
 (`../../assets/projects/<slug>/01-dashboard.png`), `alt` describes the image and is mandatory, `caption` is optional.
@@ -49,7 +49,7 @@ A screenshot entry: `src` is the path from the project file to the image
 | `order`    | whole number from 1            | yes      | Position in the Experience section, 1 first.                    |
 | `projects` | list of project ids            | no       | Projects done in this role, e.g. `[daily-revenue-pipeline]`.    |
 | `results`  | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`.         |
-| body       | Markdown bullet list           | yes      | The job bullets.                                                |
+| `bullets`  | list of text or `{text, cv}`   | yes      | Bullets; `cv: [sda, rpm]` limits a bullet to those CVs only.    |
 
 ### results (projects and experience)
 
@@ -78,6 +78,6 @@ One file per skill group.
 
 1. Copy `projects/daily-revenue-pipeline.md` and name the copy after the project, e.g. `price-tracker.md`.
 2. Replace every value in the front matter; keep each key, use `[]` for an empty list.
-3. Replace the bullets under the second `---` with your own, one `- ` line each.
+3. Replace the `bullets:` list with your own, one `- "..."` line each; the body under the second `---` stays empty.
 4. Screenshots: put them in `src/assets/projects/<file name>/` and list each one with its `alt` text.
 5. Run `npm run build`; if it fails, the message names the file and field to fix.
