@@ -3,6 +3,7 @@
     "collect": {
       "url": [
         "http://localhost:4321/",
+        "http://localhost:4321/projects/customer-route-analytics-power-bi/",
         "http://localhost:4321/projects/daily-revenue-pipeline/",
         "http://localhost:4321/projects/operational-log-parser/",
         "http://localhost:4321/projects/revenue-audit-engine/"
