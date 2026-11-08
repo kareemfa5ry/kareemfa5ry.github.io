@@ -33,7 +33,9 @@
     <span class="cloud"></span>
     <span class="cloud two"></span>
   </div>
-  <span class="label-text">Dark mode</span>
+  <span class="label-text">
+    Dark mode<span class="state" aria-hidden="true"></span>
+  </span>
 </label>
 
 <script>
@@ -83,6 +85,11 @@
     color: var(--ink);
     font-size: 0.875rem;
     white-space: nowrap;
+  }
+  /* The state word follows the same html[data-theme] / system rules as the track; aria-hidden, so the accessible
+     name stays "Dark mode" and screen readers get the state from the switch. */
+  .state::before {
+    content: var(--state, ": On");
   }
   .glyph {
     position: absolute;
@@ -139,20 +146,22 @@
     transition: background-position 0.6s;
   }
   /* Light theme (chosen, or the system setting with no choice): plane in the sky. */
-  :global(html[data-theme="light"]) .track {
+  :global(html[data-theme="light"]) .plane-switch {
     --p: 100%;
     --x: 25px;
     --s: -50px;
     --c: var(--sky-2);
+    --state: ": Off";
     --co: 0.8;
     --co-2: 0.6;
   }
   @media (prefers-color-scheme: light) {
-    :global(html:not([data-theme="dark"])) .track {
+    :global(html:not([data-theme="dark"])) .plane-switch {
       --p: 100%;
       --x: 25px;
       --s: -50px;
       --c: var(--sky-2);
+      --state: ": Off";
       --co: 0.8;
       --co-2: 0.6;
     }

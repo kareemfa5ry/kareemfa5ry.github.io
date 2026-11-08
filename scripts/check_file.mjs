@@ -25,6 +25,10 @@ function bin(name, args) {
     encoding: "utf8",
     shell: process.platform === "win32",
   });
+  if (run.error?.code === "ENOENT") {
+    console.error(`fable-code: ${name} not found: run npm install in ${process.cwd()}`);
+    process.exit(2);
+  }
   return { status: run.status, out: `${run.stdout ?? ""}${run.stderr ?? ""}` };
 }
 
