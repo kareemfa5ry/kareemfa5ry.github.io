@@ -1,6 +1,6 @@
 ---
 // One page per project: summary, metrics, bullets, stack, screenshots and the skill groups it proves.
-import { getCollection, getEntries, render } from "astro:content";
+import { getCollection, getEntries } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Stats from "../../components/Stats.astro";
 import BeforeAfterChart from "../../components/charts/BeforeAfterChart.astro";
@@ -8,6 +8,7 @@ import StackTags from "../../components/projects/StackTags.astro";
 import ScreenshotGallery from "../../components/projects/ScreenshotGallery.astro";
 import Demo from "../../components/projects/Demo.astro";
 import { hasDemo } from "../../components/projects/demos";
+import { bulletsFor, smartQuotes } from "../../site/bullets";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -15,8 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { title, org, period, summary, stack, metrics, screenshots, results } = project.data;
-const { Content } = await render(project);
+const { title, org, period, summary, stack, metrics, screenshots, bullets, results } = project.data;
 const skills = await getEntries(project.data.skills);
 const meta = period ? `${org}, ${period}` : org;
 ---
@@ -31,7 +31,11 @@ const meta = period ? `${org}, ${period}` : org;
   {metrics.length > 0 && <Stats stats={metrics} />}
   <BeforeAfterChart results={results} id="results" />
   {hasDemo(project.id) && <Demo slug={project.id} title={title} />}
-  <Content />
+  <ul>
+    {bulletsFor(bullets).map((text) => (
+      <li>{smartQuotes(text)}</li>
+    ))}
+  </ul>
   <StackTags stack={stack} />
   <ScreenshotGallery screenshots={screenshots} />
   {skills.length > 0 && (

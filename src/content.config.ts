@@ -24,6 +24,22 @@ const metric = z.strictObject({
   label: z.string().min(1).describe("What the number counts, e.g. 'operational log records parsed'."),
 });
 
+const bullet = z.union([
+  z.string().min(1),
+  z.strictObject({
+    text: z.string().min(1).describe("The bullet sentence."),
+    cv: z
+      .array(z.enum(["sda", "rpm"]))
+      .min(1)
+      .describe("CV PDFs that show this bullet; the site shows it always."),
+  }),
+]);
+
+const bullets = z
+  .array(bullet)
+  .min(1)
+  .describe("Bullet list shown on the page, llms.txt and resume.json. A plain string, or { text, cv: [sda|rpm] }.");
+
 const result = z.strictObject({
   label: z.string().min(1).describe("What changed, e.g. 'Unmatched baggage records'."),
   before: z.number().describe("The value before the work, as a number."),
@@ -66,6 +82,7 @@ const projects = defineCollection({
           }),
         )
         .describe("Images in display order; [] when there are none."),
+      bullets,
       results,
     }),
 });
@@ -88,6 +105,7 @@ const experience = defineCollection({
       .array(reference("projects"))
       .optional()
       .describe("Project ids done in this role: file names in src/content/projects/ without .md."),
+    bullets,
     results,
   }),
 });
