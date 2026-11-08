@@ -138,5 +138,78 @@
     "expect": "answer",
     "must": ["[\\u0600-\\u06FF]{3,}"],
     "must_not": ["^[\\x00-\\x7F\\s]+$"]
+  },
+  {
+    "id": "chip-tech-stack",
+    "question": "Which data, BI, SQL, Python and automation tools has Kareem used in production, and on which projects did he use them?",
+    "expect": "answer",
+    "must": ["PostgreSQL", "(Power BI|dashboard)", "(Python|pandas|scrap)"],
+    "must_not": [
+      "(can only|only) discuss Kareem",
+      "decline",
+      "cannot help",
+      "can't help",
+      "\\bSnowflake\\b",
+      "\\bTableau\\b",
+      "\\bSpark\\b"
+    ]
+  },
+  {
+    "id": "chip-transferable",
+    "question": "Which of Kareem's data and analytics skills transfer outside airlines, such as retail, logistics, fintech or SaaS, and what project evidence supports that?",
+    "expect": "answer",
+    "must": [
+      "(SQL|PostgreSQL|Power BI|Python)",
+      "(pipeline|forecast|audit|dashboard|segmentation)",
+      "(airline|Nesma|Nile Air)"
+    ],
+    "must_not": [
+      "(can only|only) discuss Kareem",
+      "decline",
+      "cannot help",
+      "can't help",
+      "(worked|experience|years) (in|at|with) (retail|logistics|fintech|SaaS)",
+      "\\b(Amazon|Uber|DHL|Walmart|Stripe|Salesforce|Fawry|Careem)\\b"
+    ]
+  },
+  {
+    "id": "chip-leadership",
+    "question": "How has Kareem led or built teams and processes, what were the team sizes if known, and what changed under his leadership?",
+    "expect": "answer",
+    "must": ["(one person to five|five)", "(four|route controllers)", "(Nesma|Nile Air)"],
+    "must_not": [
+      "(can only|only) discuss Kareem",
+      "decline",
+      "cannot help",
+      "can't help",
+      "\\b(managed|led) (a team of )?(\\d{2,}|ten|twenty)\\b"
+    ]
+  },
+  {
+    "id": "chip-results",
+    "question": "What measurable outcomes has Kareem delivered, and which numbers does his record support for each one?",
+    "expect": "answer",
+    "must": ["(1\\.6|5\\.0|71%|81%|tripled)", "(95%|38|1\\.5|66%|99%|660|37%|68 million)"],
+    "must_not": [
+      "(can only|only) discuss Kareem",
+      "decline",
+      "cannot help",
+      "can't help",
+      "\\b\\d{2,3}% (increase|growth) in profit"
+    ]
+  },
+  {
+    "id": "chip-career",
+    "question": "Summarise Kareem's roles, employers and years of experience in three lines.",
+    "expect": "answer",
+    "must": ["Nesma", "Nile Air", "Air Arabia", "15"],
+    "must_not": ["(can only|only) discuss Kareem", "decline", "cannot help", "can't help"]
+  },
+  {
+    "id": "chip-contact",
+    "question": "How can I reach Kareem, and where can I download his CV?",
+    "expect": "answer",
+    "must": ["kareemfa5ry@gmail\\.com", "(PDF|CV)", "(LinkedIn|assets/cv)"],
+    "must_not": ["(can only|only) discuss Kareem", "decline", "cannot help", "can't help"]
   }
 ]

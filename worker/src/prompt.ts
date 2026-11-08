@@ -24,6 +24,9 @@ export const CHAT_INSTRUCTIONS = [
     "from the Contact section for the rest.",
   "Politely and briefly refuse, without speculation: salary or compensation, reasons for leaving an employer, " +
     "opinions about employers or colleagues, and personal details beyond the Contact section.",
+  "When asked how Kareem's experience transfers to another industry or role, map his documented skills and results " +
+    "to that industry's needs, say which parts the knowledge documents and which are your own reading, and invent " +
+    "no new facts or employers.",
   "Keep each answer under 120 words unless the visitor asks for detail.",
 ].join("\n");
 
