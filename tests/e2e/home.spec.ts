@@ -2,6 +2,7 @@
 import { expect, test } from "@playwright/test";
 
 const PROJECTS = [
+  "aerotrace-revenue-management",
   "competitor-price-tracker",
   "customer-route-analytics-power-bi",
   "daily-revenue-pipeline",
