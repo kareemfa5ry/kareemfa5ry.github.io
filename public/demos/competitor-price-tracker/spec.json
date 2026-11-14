@@ -3,11 +3,64 @@
   "title": "Competitor price tracker",
   "tagline": "A scheduled scraper that collects competitors' fares 90 days ahead and emails the cleaned data every day.",
   "stack": ["Python", "Web scraping", "Scheduled tasks", "Power Query"],
-  "links": { "live": "https://kareemfa5ry.github.io/projects/competitor-price-tracker/" },
+  "links": {
+    "live": "https://kareemfa5ry.github.io/projects/competitor-price-tracker/"
+  },
   "aspect": "16:9",
   "seed": 41,
-  "poster_ms": 9800,
+  "poster_ms": 3000,
   "shots": [
+    {
+      "type": "screenshot",
+      "duration_ms": 7000,
+      "caption": "Every departure date against every competing airline, lowest fare in green and highest in red.",
+      "params": {
+        "image": "01-fare-matrix-by-airline.png",
+        "alt": "Fare matrix for the JED/CAI sector: one row per departure date in June and July 2024, one column per airline, the lowest fare of each date in green and the highest in red.",
+        "move": {
+          "from": {
+            "x": -10,
+            "y": 6,
+            "scale": 1.25
+          },
+          "to": {
+            "x": 0,
+            "y": 0,
+            "scale": 1.03
+          }
+        },
+        "callouts": [
+          {
+            "x": 54.5,
+            "y": 2.5,
+            "w": 40.5,
+            "h": 88,
+            "label": "One column per airline"
+          },
+          {
+            "x": 54.7,
+            "y": 17.2,
+            "w": 8.7,
+            "h": 3,
+            "label": "Lowest fare of the day"
+          },
+          {
+            "x": 81.5,
+            "y": 29,
+            "w": 6.7,
+            "h": 3,
+            "label": "Highest fare"
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "w": 19,
+            "h": 22,
+            "label": "Pick a sector"
+          }
+        ]
+      }
+    },
     {
       "type": "title",
       "duration_ms": 4000,
@@ -19,10 +72,126 @@
       "caption": "A scheduled scraper collects fares, cleans them, and emails the data to the team every day.",
       "params": {
         "stages": [
-          { "label": "Scheduled scraper", "detail": "one-way and 14-day return fares" },
-          { "label": "Cleaned data", "detail": "up to 8 competing airlines per route" },
-          { "label": "Daily email", "detail": "commercial, revenue, chairman" },
-          { "label": "Pricing dashboards", "detail": "fed by the same data" }
+          {
+            "label": "Scheduled scraper",
+            "detail": "one-way and 14-day return fares"
+          },
+          {
+            "label": "Cleaned data",
+            "detail": "up to 8 competing airlines per route"
+          },
+          {
+            "label": "Daily email",
+            "detail": "commercial, revenue, chairman"
+          },
+          {
+            "label": "Pricing dashboards",
+            "detail": "fed by the same data"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 5500,
+      "caption": "Version 1 captured a fare calendar for each route every day for the report.",
+      "params": {
+        "image": "02-fare-calendar-cai-dmm.jpg",
+        "alt": "Fare calendar for CAI/DMM one way, read on 27 Jul 2023 in EGP: the lowest fare for every day of August and September, cheaper days in green.",
+        "move": {
+          "from": {
+            "x": 4,
+            "y": 6,
+            "scale": 1.2
+          },
+          "to": {
+            "x": 0,
+            "y": 0,
+            "scale": 1.04
+          }
+        },
+        "callouts": [
+          {
+            "x": 1,
+            "y": 2,
+            "w": 40,
+            "h": 18,
+            "label": "Route, reading date, currency"
+          },
+          {
+            "x": 11,
+            "y": 38,
+            "w": 37,
+            "h": 46,
+            "label": "Cheaper days in green"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 5500,
+      "caption": "Daily fare charts marked the lowest fare and the peak in the weeks ahead.",
+      "params": {
+        "image": "04-fare-chart-jed-cai-annotated.png",
+        "alt": "Daily fare chart for JED-CAI one way from late March to May 2023, marking 391 SAR as the lowest fare on 9 April and 1,866 SAR as the peak on 20 April.",
+        "move": {
+          "from": {
+            "x": 0,
+            "y": 4,
+            "scale": 1.15
+          },
+          "to": {
+            "x": 0,
+            "y": 0,
+            "scale": 1.03
+          }
+        },
+        "callouts": [
+          {
+            "x": 41.3,
+            "y": 34,
+            "w": 13.2,
+            "h": 9.2,
+            "label": "Lowest fare"
+          },
+          {
+            "x": 74.5,
+            "y": 34,
+            "w": 13.2,
+            "h": 9.2,
+            "label": "Peak fare"
+          }
+        ]
+      }
+    },
+    {
+      "type": "screenshot",
+      "duration_ms": 4500,
+      "caption": "Version 2 ran on the airline's servers and emailed a notice after every run.",
+      "params": {
+        "image": "06-daily-completion-email.jpg",
+        "alt": "Completion email 'Data Scraping and Cleaning Completed': the script finished and the cleaned files were created on 2024-08-06.",
+        "move": {
+          "from": {
+            "x": 3,
+            "y": 0,
+            "scale": 1.15
+          },
+          "to": {
+            "x": 0,
+            "y": 0,
+            "scale": 1.02
+          }
+        },
+        "callouts": [
+          {
+            "x": 6,
+            "y": 44,
+            "w": 93,
+            "h": 17,
+            "label": "Files created on 2024-08-06"
+          }
         ]
       }
     },
@@ -32,8 +201,15 @@
       "caption": "It started as a script that captured fare calendar screenshots for the daily report.",
       "params": {
         "items": [
-          { "value": 90, "label": "of future fares collected", "suffix": " days" },
-          { "value": 8, "label": "competing airlines per route, at most" }
+          {
+            "value": 90,
+            "label": "of future fares collected",
+            "suffix": " days"
+          },
+          {
+            "value": 8,
+            "label": "competing airlines per route, at most"
+          }
         ]
       }
     },
@@ -41,7 +217,9 @@
       "type": "outro",
       "duration_ms": 3500,
       "caption": "Read the full project on the site.",
-      "params": { "heading": "See the full project" }
+      "params": {
+        "heading": "See the full project"
+      }
     }
   ]
 }
