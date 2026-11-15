@@ -38,3 +38,7 @@ export const STARTER_CHIPS: readonly { label: string; prompt: string }[] = [
     prompt: "How can I reach Kareem, and where can I download his CV?",
   },
 ];
+
+/** The one question the "Ask about this project" button sends on a project page. */
+export const projectQuestion = (title: string) =>
+  `Tell me about Kareem's "${title}" project: what he built, the tools he used and the results.`;
