@@ -12,6 +12,7 @@ src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global 
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
+src/components/metrics/     MetricChips (value + label chips for a `metrics` list; project cards, later roles)
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags, PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
