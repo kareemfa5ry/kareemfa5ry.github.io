@@ -53,14 +53,12 @@ export const SHOWCASE_ASKS = SHOWCASE_ASK_LABELS.map((label) => {
 });
 
 /**
- * The sample exchange the chat showcase types out. Every fact comes from the repo: PROFILE_SUMMARY (profile.ts) and
- * src/content/projects/operational-log-parser.md (bullets 1 and 4). No number the hero already shows.
+ * The sample exchange the chat showcase types out; owner-approved wording. No number the hero already shows.
  */
 export const CHAT_SHOWCASE = {
   question: "Which of Kareem's skills transfer outside airlines?",
   answer:
-    "His work is the full path from raw system files to a business decision: SQL and Python data pipelines, Power BI " +
-    "dashboards, forecasts, customer segmentation and statistical tests. His operational log project shows the habits " +
-    "that go with it: he linked ticket events across separate systems and protected the results with locked tables, " +
-    "row fingerprints and automated tests.",
+    "The same work carries over to any business that sells limited stock or capacity at changing prices, such as " +
+    "retail, logistics or SaaS: forecasting demand, setting prices and checking that revenue is recorded correctly. " +
+    "He builds the tools himself, from SQL and Python data pipelines to Power BI dashboards and automated audit checks.",
 };
