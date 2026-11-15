@@ -2,7 +2,7 @@
 title: "Operational log parser and revenue checks"
 org: Nesma Airlines
 period: "2026"
-order: 2
+order: 5
 summary: >-
   A PostgreSQL parser that turns 68 million raw operational log records into linked ticket events, used to find unmatched baggage revenue and confirm no-shows.
 stack: [PostgreSQL, Triggers, Python, SHA-256, Automated tests]

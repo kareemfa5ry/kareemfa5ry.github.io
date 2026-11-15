@@ -2,7 +2,7 @@
 title: Daily revenue data pipeline and forecasting dashboard
 org: Nesma Airlines
 period: "2026"
-order: 1
+order: 4
 summary: >-
   A daily PostgreSQL pipeline that loads ticket and flight exports, forecasts every flight departing in the next
   14 days and flags the ones that need a pricing or inventory action.

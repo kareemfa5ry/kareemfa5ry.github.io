@@ -2,7 +2,7 @@
 title: "Competitor price tracker"
 org: Nesma Airlines
 period: "2023–2024"
-order: 5
+order: 2
 summary: >-
   A scheduled scraper that collects competitors' one-way and 14-day return fares 90 days ahead and emails the cleaned data to the commercial team every day.
 stack: [Python, Web scraping, Scheduled tasks, Power Query]

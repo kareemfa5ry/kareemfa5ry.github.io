@@ -1,10 +1,11 @@
-// Home page: title, nav links and sections, the hero stats, the five project links, no console errors.
+// Home page: title, nav links and sections, the hero stats, the project links in order, no console errors.
 import { expect, test } from "@playwright/test";
 
+// Display order: projects with screenshots first, so recruiters see the visuals before the text-only ones.
 const PROJECTS = [
-  "aerotrace-revenue-management",
-  "competitor-price-tracker",
   "customer-route-analytics-power-bi",
+  "competitor-price-tracker",
+  "aerotrace-revenue-management",
   "daily-revenue-pipeline",
   "operational-log-parser",
   "revenue-audit-engine",
@@ -75,8 +76,13 @@ test("hero ask button toggles the chat and its label", async ({ page }) => {
   await expect(button).toHaveText("Ask about Kareem", { useInnerText: true });
 });
 
-test("home page links the five project pages", async ({ page }) => {
+test("home page links every project page, screenshot projects first", async ({ page }) => {
   await page.goto("/");
+  await expect(page.locator("#projects [data-project]")).toHaveCount(PROJECTS.length);
+  const order = await page
+    .locator("#projects [data-project]")
+    .evaluateAll((items) => items.map((item) => item.getAttribute("data-project")));
+  expect(order).toEqual(PROJECTS);
   for (const slug of PROJECTS) {
     await expect(page.locator(`#projects a[href="/projects/${slug}/"]`)).toHaveCount(1);
   }
