@@ -12,6 +12,8 @@
   --rule: light-dark(#d5deea, #14365f);
   --accent: light-dark(#003566, #ffc300);
   --accent-soft: light-dark(#fff3c2, #003566);
+  /* Hero globe dots: decorative only (aria-hidden), so no text contrast needed; kept faint behind the text. */
+  --globe-dot: light-dark(#b7c6da, #2f6aa8);
 }
 :root[data-theme="light"] {
   color-scheme: light;

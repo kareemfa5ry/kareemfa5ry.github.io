@@ -1,0 +1,72 @@
+---
+// Decorative spinning dotted globe behind the right side of the hero. The one empty div is a clipping layer: its
+// right edge is the body's content edge (the page edge, or the chat dock's edge), so nothing can add horizontal
+// scroll; the script measures that edge once and on every resize. Three.js (./globe_scene) loads as its own chunk
+// from an idle callback, only at 48rem and up, so phones never download it. Hidden in print.
+---
+
+<div data-hero-globe aria-hidden="true"></div>
+
+<script>
+  const layer = document.querySelector<HTMLElement>("[data-hero-globe]");
+  const wide = window.matchMedia("(min-width: 48rem)");
+
+  // Distance from the hero's right edge to the body's content edge (minus the docked chat's padding).
+  function setBleed(el: HTMLElement) {
+    const header = el.parentElement;
+    if (!header) return;
+    const body = document.body;
+    const edge = body.getBoundingClientRect().right - parseFloat(getComputedStyle(body).paddingInlineEnd);
+    el.style.setProperty("--globe-bleed", `${Math.max(0, edge - header.getBoundingClientRect().right)}px`);
+  }
+
+  if (layer && wide.matches) {
+    new ResizeObserver(() => setBleed(layer)).observe(document.body);
+    const mount = () => import("./globe_scene").then(({ mountGlobe }) => mountGlobe(layer));
+    // ponytail: Safari has no requestIdleCallback; a short timeout does the same job.
+    if ("requestIdleCallback" in window) requestIdleCallback(mount);
+    else setTimeout(mount, 200);
+  }
+</script>
+
+<style>
+  /* Colour probes read by the scene (nothing is painted: no border or outline style). */
+  [data-hero-globe] {
+    color: var(--accent);
+    border-color: var(--globe-dot);
+    outline-color: var(--bg);
+    display: none;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    right: calc(-1 * var(--globe-bleed, 0px));
+    width: min(720px, 60vw);
+    aspect-ratio: 1;
+    transform: translateY(-50%);
+    overflow: clip;
+    pointer-events: none;
+  }
+  /* The globe sits right of centre inside the clip, so the window edge cuts it off. */
+  [data-hero-globe] :global(canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: translateX(30%);
+  }
+  @media (min-width: 48rem) {
+    [data-hero-globe] {
+      display: block;
+      opacity: 0.5;
+    }
+  }
+  @media (min-width: 64rem) {
+    [data-hero-globe] {
+      opacity: 1;
+    }
+  }
+  @media print {
+    [data-hero-globe] {
+      display: none;
+    }
+  }
+</style>
