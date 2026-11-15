@@ -7,7 +7,11 @@ summary: >-
   flight, how its bookings, revenue and booking-class mix compare with a benchmark.
 stack: [React, TypeScript, GraphQL, Node.js, PostgreSQL, Redis, MapLibre GL, Docker]
 skills: [revenue-management, bi-and-reporting]
-metrics: []
+metrics:
+  - value: "14 days"
+    label: of departures scored for risk
+  - value: "9"
+    label: monthly KPIs compared with the same day last year
 screenshots:
   - src: ../../assets/projects/aerotrace-revenue-management/01-dashboard-kpis-and-sales-mix.png
     alt: "AeroTrace dashboard for November 2026, with dummy numbers and placeholder names: nine KPI cards (KPI-1 to KPI-9) each compared with the same day last year, for example KPI-1 at 172, down 41% from 293; a sales panel for yesterday (KPI-10 to KPI-13) with revenue contribution bars by currency (Currency 1 at 54%), source, sale type, sector (Sector 1 at 50%), booking class and trip type; and a sales map."
