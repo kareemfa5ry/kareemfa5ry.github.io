@@ -25,6 +25,13 @@ export const STATS: readonly Stat[] = [
 /** The first three STATS, the outcome numbers the hero shows. */
 export const HERO_STATS = STATS.slice(0, 3);
 
+/** Short labels of the facts in AVAILABILITY, shown as the hero badges. */
+export const AVAILABILITY_BADGES: readonly string[] = [
+  "Open to work",
+  "Onsite, hybrid or remote",
+  "Open to relocation",
+];
+
 export const AVAILABILITY: readonly string[] = [
   "Open to full-time, part-time, contract and consulting roles.",
   "Roles: revenue or analytics management, senior analyst, AI enablement, consultant.",
