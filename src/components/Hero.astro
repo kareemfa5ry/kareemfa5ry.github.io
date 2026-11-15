@@ -5,7 +5,6 @@ import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contac
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
-import { CHAT_ENABLED, HERO_ASKS } from "../site/chat";
 import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS, HERO_STATS } from "../site/profile";
 
 interface Props {
@@ -50,15 +49,6 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   <div class="side">
     <slot />
   </div>
-  {CHAT_ENABLED && (
-    <div class="ask">
-      {HERO_ASKS.map(({ label, prompt }) => (
-        <button type="button" class="chip" data-chat-open data-chat-prompt={prompt} style="display:none">
-          {label}?
-        </button>
-      ))}
-    </div>
-  )}
   <div class="contact">
     <span>{LOCATION}</span>
     <a href={MAILTO}>{EMAIL}</a>
@@ -159,18 +149,6 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
     color: var(--muted);
     margin: 20px 0 0;
   }
-  .ask {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin: var(--space-3) 0 0;
-  }
-  .ask .chip {
-    font: inherit;
-    font-size: 13px;
-    border: 0;
-    cursor: pointer;
-  }
   .cta {
     display: flex;
     flex-wrap: wrap;
@@ -197,8 +175,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
     }
   }
   @media print {
-    .cta,
-    .ask {
+    .cta {
       display: none;
     }
   }

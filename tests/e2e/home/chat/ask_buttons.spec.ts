@@ -1,4 +1,4 @@
-// Ready-question buttons: "Ask about this project" and two hero questions open the chat and send in one click.
+// Ready-question buttons: "Ask about this project" and the two showcase questions open the chat and send in one click.
 import { expect, test } from "@playwright/test";
 import { stub } from "../../chat_stub";
 
@@ -15,10 +15,10 @@ test("Ask about this project opens the dialog and the first user line is the pro
   await expect(button).toHaveAttribute("aria-expanded", "true");
 });
 
-test("a hero question sends its starter prompt once, even clicked again while open", async ({ page }) => {
+test("a showcase question sends its starter prompt once, even clicked again while open", async ({ page }) => {
   await stub(page, false);
   await page.goto("/", { waitUntil: "networkidle" });
-  const chips = page.locator("header .ask [data-chat-prompt]");
+  const chips = page.locator(".showcase [data-chat-prompt]");
   await expect(chips).toHaveCount(2);
   const prompt = await chips.first().getAttribute("data-chat-prompt");
   await chips.first().click();

@@ -43,10 +43,24 @@ export const STARTER_CHIPS: readonly { label: string; prompt: string }[] = [
 export const projectQuestion = (title: string) =>
   `Tell me about Kareem's "${title}" project: what he built, the tools he used and the results.`;
 
-/** The hero's two question chips, picked from STARTER_CHIPS by label; a renamed label fails the build. */
-export const HERO_ASK_LABELS = ["Results", "Transferable skills"] as const;
-export const HERO_ASKS = HERO_ASK_LABELS.map((label) => {
+/** The chat showcase's question chips, picked from STARTER_CHIPS by label; a renamed label fails the build.
+ *  "Transferable skills" is left out: the showcase's sample question already asks it. */
+export const SHOWCASE_ASK_LABELS = ["Results", "Leadership"] as const;
+export const SHOWCASE_ASKS = SHOWCASE_ASK_LABELS.map((label) => {
   const chip = STARTER_CHIPS.find((c) => c.label === label);
-  if (!chip) throw new Error(`HERO_ASK_LABELS: no starter chip labelled "${label}"`);
+  if (!chip) throw new Error(`SHOWCASE_ASK_LABELS: no starter chip labelled "${label}"`);
   return chip;
 });
+
+/**
+ * The sample exchange the chat showcase types out. Every fact comes from the repo: PROFILE_SUMMARY (profile.ts) and
+ * src/content/projects/operational-log-parser.md (bullets 1 and 4). No number the hero already shows.
+ */
+export const CHAT_SHOWCASE = {
+  question: "Which of Kareem's skills transfer outside airlines?",
+  answer:
+    "His work is the full path from raw system files to a business decision: SQL and Python data pipelines, Power BI " +
+    "dashboards, forecasts, customer segmentation and statistical tests. His operational log project shows the habits " +
+    "that go with it: he linked ticket events across separate systems and protected the results with locked tables, " +
+    "row fingerprints and automated tests.",
+};

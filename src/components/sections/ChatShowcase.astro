@@ -1,0 +1,123 @@
+---
+// A band under the hero: one sample question to the AI assistant, its answer typed out once on scroll, the ready
+// question chips and "Ask your own". The full text is always in the HTML; the script only types a visual copy.
+import { CHAT_SHOWCASE, SHOWCASE_ASKS } from "../../site/chat";
+
+const { question, answer } = CHAT_SHOWCASE;
+---
+
+<section class="showcase" aria-labelledby="showcase-title">
+  <div class="card box">
+    <h2 id="showcase-title">Ask an AI about Kareem</h2>
+    <p class="q">{question}</p>
+    <div class="a" data-typewriter>
+      <p class="typed" aria-hidden="true"></p>
+      <p class="full">{answer}</p>
+    </div>
+    <div class="actions">
+      {SHOWCASE_ASKS.map(({ label, prompt }) => (
+        <button type="button" class="chip" data-chat-open data-chat-prompt={prompt} style="display:none">
+          {label}?
+        </button>
+      ))}
+      <button type="button" class="btn secondary" data-chat-open aria-expanded="false">
+        <span class="when-closed">Ask your own</span>
+        <span class="when-open">Minimize the chat</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Type the answer once when the band scrolls into view. Reduced motion (and no script) leave the full text showing.
+  const box = document.querySelector<HTMLElement>("[data-typewriter]");
+  const typed = box?.querySelector<HTMLElement>(".typed");
+  const text = box?.querySelector<HTMLElement>(".full")?.textContent ?? "";
+  if (box && typed && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    box.dataset.typing = "";
+    new IntersectionObserver((entries, observer) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      let n = 0;
+      const timer = setInterval(() => {
+        typed.textContent = text.slice(0, ++n);
+        if (n < text.length) return;
+        clearInterval(timer);
+        delete box.dataset.typing;
+      }, 18);
+    }).observe(box);
+  }
+</script>
+
+<style>
+  .box {
+    padding: var(--space-5);
+  }
+  h2 {
+    font-size: 20px;
+    margin: 0 0 var(--space-4);
+  }
+  .q {
+    margin: 0 0 var(--space-3);
+    font-weight: 600;
+  }
+  /* Both copies share one grid cell, so the full text reserves the answer's final height: no layout shift. */
+  .a {
+    display: grid;
+    margin: 0 0 var(--space-4);
+    color: var(--muted);
+  }
+  .a p {
+    grid-area: 1 / 1;
+    margin: 0;
+  }
+  .typed {
+    display: none;
+  }
+  .a[data-typing] .typed {
+    display: block;
+  }
+  .a[data-typing] .full {
+    opacity: 0;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .actions .chip {
+    font: inherit;
+    font-size: 13px;
+    border: 0;
+    cursor: pointer;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .a[data-typing] .typed::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      background: currentColor;
+      animation: blink 1s steps(1) infinite;
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  @media print {
+    .a[data-typing] .typed {
+      display: none;
+    }
+    .a[data-typing] .full {
+      opacity: 1;
+    }
+    .actions {
+      display: none;
+    }
+  }
+</style>

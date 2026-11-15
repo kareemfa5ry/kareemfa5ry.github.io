@@ -8,9 +8,11 @@ import ProjectEntry from "../components/ProjectEntry.astro";
 import FeaturedProject from "../components/projects/FeaturedProject.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
 import Downloads from "../components/Downloads.astro";
+import ChatShowcase from "../components/sections/ChatShowcase.astro";
 import Contact from "../components/sections/Contact.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
 import { getCollection } from "astro:content";
+import { CHAT_ENABLED } from "../site/chat";
 import { FULL_NAME } from "../site/contact";
 import { EDUCATION, LANGUAGES } from "../site/education";
 import { personJsonLd } from "../site/person_jsonld";
@@ -50,6 +52,7 @@ const filterProjects = projects.map(({ id, data }) => ({
   <Hero tagline={TAGLINE}>
     <BeforeAfterChart id="hero" title="Before and after" results={heroResults} />
   </Hero>
+  {CHAT_ENABLED && <ChatShowcase />}
 
   <section id="profile">
     <h2>Profile</h2>
