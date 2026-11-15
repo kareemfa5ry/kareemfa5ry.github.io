@@ -1,6 +1,7 @@
 /**
  * Owns the hero globe's WebGL scene: a sphere of land dots (Fibonacci spiral filtered by a land mask), an
- * occluding sphere, the route arcs, the render loop, resize, theme colours, pausing and reduced motion.
+ * occluding sphere, the route arcs, the render loop, resize, theme colours, pausing, and a still globe under
+ * reduced motion or software (CPU) WebGL.
  * The technique of leonsoftware.com's hero globe, rebuilt on current three.js.
  */
 import {
@@ -14,6 +15,7 @@ import {
   PerspectiveCamera,
   Scene,
   SphereGeometry,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import { createRoutes, latLonToVector } from "./globe_routes";
@@ -30,21 +32,24 @@ const CAMERA_DISTANCE = 25;
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 
 /** Land dots only: sample the equirectangular mask at each Fibonacci point. */
-function landDots(mask: ImageData): Object3D[] {
-  const dots: Object3D[] = [];
+function landDots(mask: ImageData): Vector3[] {
+  const dots: Vector3[] = [];
   for (let i = 0; i < POINTS; i++) {
     const lat = (Math.asin(1 - (2 * (i + 0.5)) / POINTS) * 180) / Math.PI;
     const lon = (((((i * GOLDEN * 180) / Math.PI + 180) % 360) + 360) % 360) - 180;
     const x = Math.min(mask.width - 1, Math.floor(((lon + 180) / 360) * mask.width));
     const y = Math.min(mask.height - 1, Math.floor(((90 - lat) / 180) * mask.height));
-    if (mask.data[(y * mask.width + x) * 4] < 128) continue;
-    const dot = new Object3D();
-    dot.position.copy(latLonToVector(lat, lon, RADIUS));
-    dot.lookAt(dot.position.clone().multiplyScalar(2));
-    dot.updateMatrix();
-    dots.push(dot);
+    if (mask.data[(y * mask.width + x) * 4] >= 128) dots.push(latLonToVector(lat, lon, RADIUS));
   }
   return dots;
+}
+
+/** True when WebGL runs on the CPU (SwiftShader, llvmpipe): the globe then stays still, as under reduced motion. */
+function isSoftwareGl(renderer: WebGLRenderer): boolean {
+  const gl = renderer.getContext();
+  const info = gl.getExtension("WEBGL_debug_renderer_info");
+  const name = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  return /swiftshader|llvmpipe|software/i.test(String(name));
 }
 
 function loadMask(): Promise<ImageData> {
@@ -67,7 +72,15 @@ function loadMask(): Promise<ImageData> {
 function buildDots(mask: ImageData, material: MeshBasicMaterial): InstancedMesh {
   const dots = landDots(mask);
   const mesh = new InstancedMesh(new CircleGeometry(DOT_SIZE, 6), material, dots.length);
-  dots.forEach((dot, i) => mesh.setMatrixAt(i, dot.matrix));
+  // One reused helper turns each dot to face outward (a dot at p looks at 2p), instead of ~20,000 objects.
+  const helper = new Object3D();
+  const outward = new Vector3();
+  dots.forEach((dot, i) => {
+    helper.position.copy(dot);
+    helper.lookAt(outward.copy(dot).multiplyScalar(2));
+    helper.updateMatrix();
+    mesh.setMatrixAt(i, helper.matrix);
+  });
   return mesh;
 }
 
@@ -91,6 +104,8 @@ export function mountGlobe(container: HTMLElement): void {
   const routes = createRoutes(globe, RADIUS);
 
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const software = isSoftwareGl(renderer);
+  const still = () => software || reduced.matches;
   let visible = true;
   let last = performance.now();
   const render = () => renderer.render(scene, camera);
@@ -102,10 +117,10 @@ export function mountGlobe(container: HTMLElement): void {
     render();
   };
   const sync = () => {
-    const animate = visible && !document.hidden && !reduced.matches;
+    const animate = visible && !document.hidden && !still();
     last = performance.now();
     renderer.setAnimationLoop(animate ? frame : null);
-    if (reduced.matches) routes.showAll();
+    if (still()) routes.showAll();
     render();
   };
   const colours = () => {

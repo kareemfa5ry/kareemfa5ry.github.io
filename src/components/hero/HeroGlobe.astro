@@ -24,8 +24,12 @@
     new ResizeObserver(() => setBleed(layer)).observe(document.body);
     const mount = () => import("./globe_scene").then(({ mountGlobe }) => mountGlobe(layer));
     // ponytail: Safari has no requestIdleCallback; a short timeout does the same job.
-    if ("requestIdleCallback" in window) requestIdleCallback(mount);
-    else setTimeout(mount, 200);
+    const idle = (run: () => void) =>
+      "requestIdleCallback" in window ? requestIdleCallback(run) : setTimeout(run, 200);
+    // Decoration goes last: after load, then a second idle period, so the client:idle islands hydrate first.
+    const start = () => idle(() => idle(mount));
+    if (document.readyState === "complete") start();
+    else addEventListener("load", start, { once: true });
   }
 </script>
 
