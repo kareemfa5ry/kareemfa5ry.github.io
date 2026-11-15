@@ -1,5 +1,6 @@
 ---
-// A project with screenshots, as a full-width row: first screenshot, summary, numbers, demo poster, pipeline strip.
+// A project with screenshots, as a full-width row: demo poster (or the first screenshot when it has no demo),
+// summary, numbers, stack, pipeline strip. One picture per card, so the poster never repeats the screenshot.
 // data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
 import { Image } from "astro:assets";
 import MetricChips from "../metrics/MetricChips.astro";
@@ -7,7 +8,7 @@ import DemoPoster from "./DemoPoster.astro";
 import PipelineStrip from "./PipelineStrip.astro";
 import ProjectHead from "./ProjectHead.astro";
 import StackTags from "./StackTags.astro";
-import { pipelines } from "./demos";
+import { hasDemo, pipelines } from "./demos";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -23,11 +24,14 @@ const [pipeline] = pipelines(entry.id);
 
 <div class="card featured reveal" data-project={entry.id}>
   <ProjectHead slug={entry.id} title={title} meta={meta} />
-  <Image src={shot.src} alt={shot.alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" loading="lazy" />
+  {hasDemo(entry.id) ? (
+    <DemoPoster slug={entry.id} title={title} />
+  ) : (
+    <Image src={shot.src} alt={shot.alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" loading="lazy" />
+  )}
   <p class="summary">{summary}</p>
   <MetricChips metrics={metrics} max={2} />
   <StackTags stack={stack} />
-  <DemoPoster slug={entry.id} title={title} />
   {pipeline && <PipelineStrip pipeline={pipeline} level={4} />}
 </div>
 

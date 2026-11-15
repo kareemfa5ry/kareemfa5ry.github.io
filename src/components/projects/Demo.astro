@@ -1,12 +1,15 @@
 ---
 // Animated walkthrough of a project: the generated demo page in an iframe, 16:9 reserved up front.
+import { demoFrame } from "./demos";
+
 interface Props {
   slug: string;
   title: string;
 }
 
 const { slug, title } = Astro.props;
-const src = `/demos/${slug}/`;
+const frame = demoFrame(slug, title);
+const src = frame.src;
 ---
 
 <section id="demo">
@@ -22,13 +25,7 @@ const src = `/demos/${slug}/`;
       loading="lazy"
       decoding="async"
     />
-    <iframe
-      src={src}
-      title={`Animated walkthrough: ${title}`}
-      loading="lazy"
-      allow=""
-      referrerpolicy="same-origin"
-    ></iframe>
+    <iframe {...frame}></iframe>
   </div>
   <p>
     <a href={src}>Open full screen</a>
