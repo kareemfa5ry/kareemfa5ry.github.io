@@ -1,0 +1,44 @@
+---
+// Headline numbers as small value + label chips; takes the `metrics` shape of the content collections.
+interface Props {
+  metrics: { value: string; label: string }[];
+  max?: number;
+}
+
+const { metrics, max = metrics.length } = Astro.props;
+---
+
+{metrics.length > 0 && (
+  <ul class="metric-chips">
+    {metrics.slice(0, max).map((m) => (
+      <li>
+        <strong>{m.value}</strong>
+        <span>{m.label}</span>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .metric-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .metric-chips li {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+    padding: 2px 10px;
+    font-size: 13px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+  }
+  .metric-chips strong {
+    color: var(--accent);
+  }
+</style>
