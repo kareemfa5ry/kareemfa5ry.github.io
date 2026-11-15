@@ -10,3 +10,8 @@ test("the first three projects each show a screenshot with alt text", async ({ p
     await expect(shot).toHaveAttribute("loading", "lazy");
   }
 });
+
+test("the projects section has no heading level 2 besides its own", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#projects h2")).toHaveCount(1);
+});
