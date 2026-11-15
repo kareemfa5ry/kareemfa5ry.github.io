@@ -15,6 +15,11 @@ results:
     before: 71
     after: 81
     unit: "%"
+metrics:
+  - value: "USD 1.5M"
+    label: refund backlog cleared
+  - value: "+37%"
+    label: average fare in one year
 bullets:
   - "Restarted commercial operations in two to three months, from first assessment to the first branded departure. Rebuilt reporting by hand with six sales agents and corrected all fares before sales reopened."
   - "While systems were offline, confirmed bookings and prices by phone with the six sales agents until systems returned three months later."
