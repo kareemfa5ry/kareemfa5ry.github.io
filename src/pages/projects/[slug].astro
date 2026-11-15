@@ -9,6 +9,7 @@ import ScreenshotGallery from "../../components/projects/ScreenshotGallery.astro
 import Demo from "../../components/projects/Demo.astro";
 import PipelineStrip from "../../components/projects/PipelineStrip.astro";
 import { hasDemo, pipelines } from "../../components/projects/demos";
+import { CHAT_ENABLED, projectQuestion } from "../../site/chat";
 import GlossaryText from "../../components/glossary/GlossaryText.astro";
 import ProjectPager from "../../components/projects/pager/ProjectPager.astro";
 import { byOrder } from "../../site/collections/by_order";
@@ -34,6 +35,17 @@ const meta = period ? `${org}, ${period}` : org;
   <h1 style={`view-transition-name: project-${project.id}`}>{title}</h1>
   <p class="meta">{meta}</p>
   <p>{summary}</p>
+  {CHAT_ENABLED && (
+    <button
+      type="button"
+      class="btn secondary"
+      data-chat-open
+      data-chat-prompt={projectQuestion(title)}
+      style="display:none"
+    >
+      Ask about this project
+    </button>
+  )}
   {metrics.length > 0 && <Stats stats={metrics} />}
   <BeforeAfterChart results={results} id="results" />
   {pipelines(project.id).map((pipeline) => (

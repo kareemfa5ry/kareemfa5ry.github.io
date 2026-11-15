@@ -2,7 +2,7 @@
 // state (open, docked); the conversation is ChatPanel, rendered unchanged inside the card.
 import { useEffect, useRef, useState } from "react";
 import { EMAIL, MAILTO } from "../site/contact";
-import ChatPanel from "./ChatPanel";
+import ChatPanel, { type Ask } from "./ChatPanel";
 import styles from "./ChatWidget.module.css";
 
 const DOCKED_KEY = "chat-docked";
@@ -45,6 +45,7 @@ function AgentIcon() {
 
 export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; siteKey: string }) {
   const [open, setOpen] = useState(false);
+  const [ask, setAsk] = useState<Ask | null>(null);
   const [docked, setDocked] = useState(false);
   const launcher = useRef<HTMLButtonElement>(null);
   const card = useRef<HTMLDivElement>(null);
@@ -59,6 +60,7 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
     else if (opened.current) (trigger.current ?? launcher.current)?.focus();
     trigger.current = null;
     opened.current = open;
+    if (!open) setAsk(null); // the conversation goes with the card; a spent question must not come back
     if (!open) setDocked(readDocked()); // a hero-opened dock lasts one opening; the saved choice returns
     // Hero buttons show the label that matches this state (CSS keys off aria-expanded).
     document.querySelectorAll("[data-chat-open]").forEach((el) => el.setAttribute("aria-expanded", String(open)));
@@ -77,14 +79,21 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
     };
   }, [open, docked]);
 
+  // Ready-question buttons are server-rendered hidden (no JS, nothing to click); show them once this island is live.
+  useEffect(() => {
+    document.querySelectorAll<HTMLElement>("[data-chat-prompt]").forEach((el) => (el.style.display = ""));
+  }, []);
+
   // Static buttons elsewhere on the page (the hero's "Ask about Kareem") toggle the widget with data-chat-open.
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       trigger.current = (e.target as Element).closest<HTMLElement>("[data-chat-open]");
       if (!trigger.current) return;
+      const text = trigger.current.dataset.chatPrompt;
       // Floating, the card would cover the hero button; wide screens dock it so the button stays in reach.
       if (window.matchMedia("(min-width: 48rem)").matches) setDocked(true);
-      setOpen((o) => !o);
+      if (text) setAsk({ id: Date.now(), text }); // a question button always opens; it never minimizes
+      setOpen((o) => !!text || !o);
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
@@ -131,7 +140,7 @@ export default function ChatWidget({ workerUrl, siteKey }: { workerUrl: string; 
             <p className={styles.note}>
               Answers come from the content of this site; for anything else, email <a href={MAILTO}>{EMAIL}</a>.
             </p>
-            <ChatPanel workerUrl={workerUrl} siteKey={siteKey} />
+            <ChatPanel workerUrl={workerUrl} siteKey={siteKey} ask={ask} />
           </div>
         </div>
       )}
