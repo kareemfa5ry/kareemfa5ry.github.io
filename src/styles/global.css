@@ -18,8 +18,24 @@
 * {
   box-sizing: border-box;
 }
-html {
-  scroll-behavior: smooth;
+@media screen and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  /* Content rises into view as it enters the viewport. Translate only, no opacity: text at opacity 0 below the
+     fold could be scored as low contrast by Lighthouse. No support, reduced motion and print show it in place. */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes reveal {
+  from {
+    translate: 0 16px;
+  }
 }
 body {
   margin: 0;

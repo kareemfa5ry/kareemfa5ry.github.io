@@ -16,7 +16,7 @@ const { title, org, period, stack, summary, metrics } = entry.data;
 const meta = period ? `${org}, ${period}` : org;
 ---
 
-<div class="card project" data-project={entry.id}>
+<div class="card project reveal" data-project={entry.id}>
   <div class="item-head">
     <h3>
       <a href={`/projects/${entry.id}/`}>{title}</a>
