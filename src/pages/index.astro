@@ -6,6 +6,7 @@ import ExperienceEntry from "../components/ExperienceEntry.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
 import Downloads from "../components/Downloads.astro";
+import Contact from "../components/sections/Contact.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
 import { getCollection } from "astro:content";
 import { FULL_NAME } from "../site/contact";
@@ -82,6 +83,7 @@ const filterProjects = projects.map(({ id, data }) => ({
   </section>
 
   <Downloads />
+  <Contact />
 </Base>
 
 <style>
