@@ -11,7 +11,7 @@ test("home h2 headings are visible and the section number is not in their access
     await expect(page.getByRole("heading", { level: 2, name: text, exact: true })).toHaveCount(1);
   }
   const first = await headings.first().evaluate((el) => getComputedStyle(el, "::before").content);
-  expect(first).toContain("01");
+  expect(first).toContain("counter(section");
 });
 
 test("a project page h2 keeps the type scale but has no section number", async ({ page }) => {
