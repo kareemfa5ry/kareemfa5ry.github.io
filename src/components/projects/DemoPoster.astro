@@ -67,7 +67,7 @@ const alt = `Animated walkthrough of ${title}`;
     const player = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
     poster.replaceWith(player);
     player.querySelector<HTMLButtonElement>(".close")!.addEventListener("click", close);
-    player.querySelector("iframe")!.focus();
+    player.querySelector<HTMLButtonElement>(".close")!.focus(); // Esc then reaches this page, not the iframe
     open = { poster, player };
   });
 

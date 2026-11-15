@@ -29,7 +29,11 @@ test("the projects section has no heading level 2 besides its own", async ({ pag
 
 test("clicking a poster plays the demo in place and Esc restores the poster", async ({ page }) => {
   await page.goto("/");
-  const card = page.locator("#projects [data-project]:has(.poster)").first();
+  const slug = await page
+    .locator("#projects .poster")
+    .first()
+    .evaluate((el) => el.closest("[data-project]")!.getAttribute("data-project")!);
+  const card = page.locator(`#projects [data-project="${slug}"]`);
   await expect(card.locator("iframe")).toHaveCount(0);
   await card.locator(".poster").click();
   await expect(card.locator('iframe[src^="/demos/"]')).toHaveCount(1);
