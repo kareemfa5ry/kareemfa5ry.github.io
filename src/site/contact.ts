@@ -2,7 +2,7 @@
 export const FULL_NAME = "Kareem Fakhry";
 export const EMAIL = "kareemfa5ry@gmail.com";
 export const MAILTO = `mailto:${EMAIL}`;
-export const LINKEDIN_LABEL = "linkedin.com/in/kareem-fakhry";
-export const LINKEDIN_URL = `https://${LINKEDIN_LABEL}`;
+export const LINKEDIN_LABEL = "linkedin.com/in/kareem-fakhry-3899217b";
+export const LINKEDIN_URL = `https://www.${LINKEDIN_LABEL}/`;
 export const LOCATION = "Cairo, Egypt";
 export const LEGAL_NAME = "Kareem Fakhry Gaheed Abd-Allah";
