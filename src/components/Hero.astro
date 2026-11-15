@@ -1,10 +1,12 @@
 ---
-// Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability.
+// Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability,
+// over a decorative spinning globe (HeroGlobe) behind its right side; the header isolates it so the text stays on top.
 import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
 import { CHAT_ENABLED, HERO_ASKS } from "../site/chat";
+import HeroGlobe from "./hero/HeroGlobe.astro";
 import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS, HERO_STATS } from "../site/profile";
 
 interface Props {
@@ -17,6 +19,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
 ---
 
 <header>
+  <HeroGlobe />
   <h1>{FULL_NAME}</h1>
   <p class="tagline">{tagline}</p>
   <ul class="badges">
@@ -73,6 +76,8 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
 
 <style>
   header {
+    position: relative;
+    isolation: isolate;
     padding: 64px 0 40px;
   }
   h1 {
