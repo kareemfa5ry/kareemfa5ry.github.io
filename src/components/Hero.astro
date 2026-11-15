@@ -31,7 +31,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   <ul class="proof">
     {HERO_STATS.map((stat, i) => (
       <li class="card" style={`--i:${i}`}>
-        <b>{stat.value}</b> {stat.label}
+        <b data-count-up>{stat.value}</b> {stat.label}
       </li>
     ))}
   </ul>
