@@ -22,6 +22,11 @@
   html {
     scroll-behavior: smooth;
   }
+  /* Project pages open as a morph from their card: the title link and the page h1 share a view-transition-name.
+     No support or reduced motion: a normal page load. */
+  @view-transition {
+    navigation: auto;
+  }
   /* Content rises into view as it enters the viewport. Translate only, no opacity: text at opacity 0 below the
      fold could be scored as low contrast by Lighthouse. No support, reduced motion and print show it in place. */
   @supports (animation-timeline: view()) {

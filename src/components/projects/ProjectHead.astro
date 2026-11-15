@@ -12,7 +12,9 @@ const { slug, title, meta } = Astro.props;
 
 <div class="item-head">
   <h3>
-    <a href={`/projects/${slug}/`}>{title}</a>
+    <a href={`/projects/${slug}/`} style={`view-transition-name: project-${slug}`}>
+      {title}
+    </a>
   </h3>
   <span class="meta">{meta}</span>
 </div>
