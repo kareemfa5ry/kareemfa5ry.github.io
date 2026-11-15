@@ -15,7 +15,7 @@ test("the band sits right under the hero, the hero has no chip row, and the full
   await expect(band.getByRole("button", { name: "Ask your own" })).toBeVisible();
   await expect(page.locator("header [data-chat-prompt]")).toHaveCount(0);
   await expect(page.locator("header .ask")).toHaveCount(0);
-  await expect(page.locator("header + section")).toHaveClass(/showcase/);
+  await expect(page.locator("main > section").first()).toHaveClass(/showcase/);
 });
 
 test.describe("reduced motion", () => {

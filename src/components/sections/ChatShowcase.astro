@@ -8,7 +8,7 @@ const { question, answer } = CHAT_SHOWCASE;
 
 <section class="showcase" aria-labelledby="showcase-title">
   <div class="card box">
-    <h2 id="showcase-title">Ask an AI about Kareem</h2>
+    <h3 id="showcase-title">Ask an AI about Kareem</h3>
     <p class="q">{question}</p>
     <div class="a" data-typewriter>
       <p class="typed" aria-hidden="true"></p>
@@ -53,7 +53,8 @@ const { question, answer } = CHAT_SHOWCASE;
   .box {
     padding: var(--space-5);
   }
-  h2 {
+  /* An h3, not an h2: the band is not a numbered section, and every home h2 must be one. */
+  h3 {
     font-size: 20px;
     margin: 0 0 var(--space-4);
   }
