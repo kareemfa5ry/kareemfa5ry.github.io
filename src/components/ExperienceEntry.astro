@@ -12,19 +12,98 @@ interface Props {
 const { entry } = Astro.props;
 const { title, org, location, start, end, note, bullets, results } = entry.data;
 const heading = title ? `${title} · ${org}` : org;
-const meta = `${location} · ${monthLabel(start)} – ${end ? monthLabel(end) : "Present"}`;
 ---
 
-<div class="item">
-  <div class="item-head">
-    <h3>{heading}</h3>
-    <span class="meta">{meta}</span>
+<li class="item role" aria-current={end ? undefined : "date"}>
+  <p class="when meta">
+    <time datetime={start}>{monthLabel(start)}</time> –{" "}
+    {end ? <time datetime={end}>{monthLabel(end)}</time> : "Present"}
+  </p>
+  <div class="body">
+    <div class="item-head">
+      <h3>{heading}</h3>
+      <span class="meta">{location}</span>
+    </div>
+    {note && <p class="note">{note}</p>}
+    <ul>
+      {bulletsFor(bullets).map((text) => (
+        <li>{smartQuotes(text)}</li>
+      ))}
+    </ul>
+    <BeforeAfterChart headingLevel="h4" results={results} id={`exp-${entry.id}`} />
   </div>
-  {note && <p class="note">{note}</p>}
-  <ul>
-    {bulletsFor(bullets).map((text) => (
-      <li>{smartQuotes(text)}</li>
-    ))}
-  </ul>
-  <BeforeAfterChart headingLevel="h4" results={results} id={`exp-${entry.id}`} />
-</div>
+</li>
+
+<style>
+  /* Timeline rail: deliberately not to scale, so employment gaps are not drawn. */
+  :global(.timeline) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .role {
+    position: relative;
+    padding-left: var(--space-5);
+  }
+  .role::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 0.5em;
+    bottom: calc(-1 * var(--space-5) - 0.5em);
+    width: 2px;
+    background: var(--rule);
+  }
+  .role:last-child::before {
+    display: none;
+  }
+  .role::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    box-sizing: border-box;
+  }
+  .role[aria-current]::after {
+    background: var(--accent);
+  }
+  .when {
+    margin: 0 0 var(--space-1);
+  }
+  @media (min-width: 800px) {
+    .role {
+      display: grid;
+      grid-template-columns: 9rem 1fr;
+      column-gap: var(--space-5);
+      padding-left: 0;
+    }
+    .when {
+      text-align: right;
+      margin: 0;
+    }
+    .role::before {
+      left: calc(9rem + var(--space-5) / 2 - 1px);
+    }
+    .role::after {
+      left: calc(9rem + var(--space-5) / 2 - 6px);
+    }
+  }
+  @media print {
+    .role {
+      display: block;
+      padding-left: 0;
+    }
+    .role::before,
+    .role::after {
+      display: none;
+    }
+    .when {
+      text-align: left;
+    }
+  }
+</style>
