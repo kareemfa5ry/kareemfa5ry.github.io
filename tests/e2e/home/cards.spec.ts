@@ -47,3 +47,19 @@ test("the projects section has no heading level 2 besides its own", async ({ pag
   await page.goto("/");
   await expect(page.locator("#projects h2")).toHaveCount(1);
 });
+
+test("clicking a poster plays the demo in place and Esc restores the poster", async ({ page }) => {
+  await page.goto("/");
+  const slug = await page
+    .locator("#projects .poster")
+    .first()
+    .evaluate((el) => el.closest("[data-project]")!.getAttribute("data-project")!);
+  const card = page.locator(`#projects [data-project="${slug}"]`);
+  await expect(card.locator("iframe")).toHaveCount(0);
+  await card.locator(".poster").click();
+  await expect(card.locator('iframe[src^="/demos/"]')).toHaveCount(1);
+  await expect(page).toHaveURL(/\/$/);
+  await page.keyboard.press("Escape");
+  await expect(card.locator("iframe")).toHaveCount(0);
+  await expect(card.locator(".poster")).toBeFocused();
+});
