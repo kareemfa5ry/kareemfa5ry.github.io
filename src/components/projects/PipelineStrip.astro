@@ -4,17 +4,20 @@ import type { Pipeline } from "./demos";
 
 interface Props {
   pipeline: Pipeline;
+  level?: 2 | 3 | 4;
 }
 
-const { heading, caption, stages } = Astro.props.pipeline;
+const { pipeline, level = 2 } = Astro.props;
+const { heading, caption, stages } = pipeline;
+const Heading = `h${level}` as const;
 ---
 
 <section class="pipeline">
-  <h2>{heading}</h2>
+  <Heading>{heading}</Heading>
   <p class="caption">{caption}</p>
   <ol aria-label={`${heading}, ${stages.length} steps`}>
     {stages.map(({ label, detail }) => (
-      <li class="card">
+      <li class="card reveal">
         <strong>{label}</strong>
         {detail && <span>{detail}</span>}
       </li>

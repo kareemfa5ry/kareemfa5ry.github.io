@@ -1,0 +1,72 @@
+---
+// The demo poster of a project (light and dark still) with the "Watch the demo" badge, linking to its #demo.
+// Renders nothing when the project has no demo. Sits above a stretched title link (z-index) so it stays clickable.
+import { demoDuration, hasDemo } from "./demos";
+
+interface Props {
+  slug: string;
+  title: string;
+}
+
+const { slug, title } = Astro.props;
+const alt = `Animated walkthrough of ${title}`;
+---
+
+{hasDemo(slug) && (
+  <a class="poster" href={`/projects/${slug}/#demo`}>
+    <img
+      class="only-light"
+      src={`/demos/${slug}/poster.jpg`}
+      width="1280"
+      height="720"
+      loading="lazy"
+      decoding="async"
+      alt={alt}
+    />
+    <img
+      class="only-dark"
+      src={`/demos/${slug}/poster-dark.jpg`}
+      width="1280"
+      height="720"
+      loading="lazy"
+      decoding="async"
+      alt={alt}
+    />
+    <span class="badge">Watch the demo · {demoDuration(slug)} s</span>
+  </a>
+)}
+
+<style>
+  .poster {
+    position: relative;
+    z-index: 1;
+    display: block;
+  }
+  .badge {
+    position: absolute;
+    right: 12px;
+    top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    font-size: 13px;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+  }
+  .badge::before {
+    content: "";
+    border-style: solid;
+    border-width: 5px 0 5px 8px;
+    border-color: transparent transparent transparent var(--accent);
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px 0;
+  }
+</style>

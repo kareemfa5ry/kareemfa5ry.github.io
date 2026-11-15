@@ -1,0 +1,28 @@
+---
+// A project's title link and meta line. The link is stretched over the nearest positioned ancestor, so the
+// whole card or row opens the project page while this stays its only link to it.
+interface Props {
+  slug: string;
+  title: string;
+  meta: string;
+}
+
+const { slug, title, meta } = Astro.props;
+---
+
+<div class="item-head">
+  <h3>
+    <a href={`/projects/${slug}/`} style={`view-transition-name: project-${slug}`}>
+      {title}
+    </a>
+  </h3>
+  <span class="meta">{meta}</span>
+</div>
+
+<style>
+  h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+</style>
