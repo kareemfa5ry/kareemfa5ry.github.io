@@ -14,6 +14,7 @@ src/components/             one component per concern: Nav, Hero, Stats, Experie
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
 src/components/metrics/     MetricChips (value + label chips for a `metrics` list; project cards, later roles)
 src/components/projects/    project-page parts: ScreenshotGallery, StackTags, PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
+src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
@@ -22,7 +23,7 @@ src/site/contact.ts         name, email, LinkedIn and location used by several c
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/education.ts       education and training lines plus the languages line (home page, llms.txt, CV .tex)
 src/site/collections/     by_order.ts: byOrder, sorts content entries by their `order`
-src/site/knowledge/       domain.ts (industry facts) and glossary.ts (terms) for llms.txt
+src/site/knowledge/       domain.ts (industry facts), glossary.ts (terms) for llms.txt and the tap-to-explain terms, glossary_split.ts (splits a sentence around terms)
 src/site/cv_files.ts        the two CVs: titles, paths, headlines, ordered project and skill ids (Downloads, llms.txt, .tex)
 src/site/month.ts           monthLabel: "2026-02" -> "Feb 2026" (experience dates, CV .tex)
 src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page head
