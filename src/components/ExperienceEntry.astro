@@ -1,7 +1,8 @@
 ---
 // One job from the experience collection: heading, place and dates, optional context note, bullet list.
 import BeforeAfterChart from "./charts/BeforeAfterChart.astro";
-import { bulletsFor, smartQuotes } from "../site/bullets";
+import GlossaryText from "./glossary/GlossaryText.astro";
+import { bulletsFor } from "../site/bullets";
 import { monthLabel } from "../site/month";
 import type { CollectionEntry } from "astro:content";
 
@@ -26,8 +27,10 @@ const heading = title ? `${title} · ${org}` : org;
     </div>
     {note && <p class="note">{note}</p>}
     <ul>
-      {bulletsFor(bullets).map((text) => (
-        <li>{smartQuotes(text)}</li>
+      {bulletsFor(bullets).map((text, i) => (
+        <li>
+          <GlossaryText text={text} id={`exp-${entry.id}-b${i}`} />
+        </li>
       ))}
     </ul>
     <BeforeAfterChart headingLevel="h4" results={results} id={`exp-${entry.id}`} />
