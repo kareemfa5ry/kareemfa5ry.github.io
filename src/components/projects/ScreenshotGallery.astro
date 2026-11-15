@@ -1,6 +1,7 @@
 ---
 // Screenshots of a project, each with alt text and an optional caption. Renders nothing when there are none.
-import { Image } from "astro:assets";
+// Each thumbnail links to the full-size file (works without JS); a script opens it in a native <dialog>.
+import { Image, getImage } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -8,19 +9,50 @@ interface Props {
 }
 
 const { screenshots } = Astro.props;
+// The full-size file each thumbnail links to; the lightbox loads it only on click.
+const full = await Promise.all(screenshots.map(({ src }) => getImage({ src, width: 1920 })));
 ---
 
 {screenshots.length > 0 && (
   <section class="gallery">
     <h2>Screenshots</h2>
-    {screenshots.map(({ src, alt, caption }) => (
+    {screenshots.map(({ src, alt, caption }, i) => (
       <figure>
-        <Image src={src} alt={alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" />
+        <a href={full[i].src} data-alt={alt} data-caption={caption ?? ""}>
+          <Image src={src} alt={alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" />
+        </a>
         {caption && <figcaption>{caption}</figcaption>}
       </figure>
     ))}
+    <dialog class="lightbox" aria-label="Screenshot">
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+      <img alt="" />
+      <p></p>
+    </dialog>
   </section>
 )}
+
+<script>
+  const box = document.querySelector<HTMLDialogElement>(".lightbox");
+  if (box) {
+    const img = box.querySelector("img")!;
+    const text = box.querySelector("p")!;
+    document.querySelectorAll<HTMLAnchorElement>(".gallery figure a").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        img.src = link.href;
+        img.alt = link.dataset.alt ?? "";
+        text.textContent = link.dataset.caption ?? "";
+        box.showModal();
+      });
+    });
+    // Only the backdrop is the dialog itself: its content fills the box.
+    box.addEventListener("click", (event) => event.target === box && box.close());
+  }
+</script>
 
 <style>
   figure {
@@ -31,6 +63,36 @@ const { screenshots } = Astro.props;
     height: auto;
     border: 1px solid var(--rule);
     border-radius: 10px;
+  }
+  .lightbox {
+    max-width: min(96vw, 1920px);
+    max-height: 96vh;
+    padding: 12px;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+  .lightbox::backdrop {
+    background: rgb(0 0 0 / 70%);
+  }
+  .lightbox img {
+    display: block;
+    max-height: 80vh;
+    margin: 8px auto 0;
+  }
+  .lightbox p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .lightbox button {
+    padding: 6px 12px;
+    color: var(--ink);
+    cursor: pointer;
+    background: var(--accent-soft);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
   }
   figcaption {
     margin-top: 6px;
