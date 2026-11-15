@@ -51,9 +51,11 @@ const filterProjects = projects.map(({ id, data }) => ({
 
   <section id="experience">
     <h2>Experience</h2>
-    {experience.map((entry) => (
-      <ExperienceEntry entry={entry} />
-    ))}
+    <ol class="timeline">
+      {experience.map((entry) => (
+        <ExperienceEntry entry={entry} />
+      ))}
+    </ol>
   </section>
 
   <section id="projects">
