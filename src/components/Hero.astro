@@ -1,9 +1,12 @@
 ---
-// Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability.
+// Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability,
+// over a decorative spinning globe (HeroGlobe) behind its right side; the header isolates it so the text stays on top.
 import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
+import { CHAT_ENABLED, HERO_ASKS } from "../site/chat";
+import HeroGlobe from "./hero/HeroGlobe.astro";
 import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS, HERO_STATS } from "../site/profile";
 
 interface Props {
@@ -16,6 +19,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
 ---
 
 <header>
+  <HeroGlobe />
   <h1>{FULL_NAME}</h1>
   <p class="tagline">{tagline}</p>
   <ul class="badges">
@@ -45,6 +49,15 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
       <span class="when-open">Minimize the chat</span>
     </button>
   </div>
+  {CHAT_ENABLED && (
+    <div class="ask">
+      {HERO_ASKS.map(({ label, prompt }) => (
+        <button type="button" class="chip" data-chat-open data-chat-prompt={prompt} style="display:none">
+          {label}?
+        </button>
+      ))}
+    </div>
+  )}
   <div class="contact">
     <span>{LOCATION}</span>
     <a href={MAILTO}>{EMAIL}</a>
@@ -57,6 +70,8 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
 
 <style>
   header {
+    position: relative;
+    isolation: isolate;
     padding: 64px 0 40px;
   }
   h1 {
@@ -130,6 +145,18 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
     color: var(--muted);
     margin: 20px 0 0;
   }
+  .ask {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+  }
+  .ask .chip {
+    font: inherit;
+    font-size: 13px;
+    border: 0;
+    cursor: pointer;
+  }
   .cta {
     display: flex;
     flex-wrap: wrap;
@@ -156,7 +183,8 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
     }
   }
   @media print {
-    .cta {
+    .cta,
+    .ask {
       display: none;
     }
   }

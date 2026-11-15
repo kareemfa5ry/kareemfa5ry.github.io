@@ -1,6 +1,6 @@
 // "Ask about Kareem" chat. The section copy is server-rendered in index.astro; this island owns only the
 // conversation: transcript, input and the stream from the Worker (see useChatStream.ts).
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { STARTER_CHIPS } from "../site/chat";
 import { linkify } from "./chat/linkify";
 import { useStickToBottom } from "./chat/useStickToBottom";
@@ -26,7 +26,19 @@ function Linked({ text }: { text: string }) {
   );
 }
 
-export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; siteKey: string }) {
+/** A ready question from a clicked [data-chat-prompt] button; `id` makes the same question sendable twice. */
+export interface Ask {
+  id: number;
+  text: string;
+}
+
+interface Props {
+  workerUrl: string;
+  siteKey: string;
+  ask: Ask | null; // a question a page button asked for; sent once, as if typed
+}
+
+export default function ChatPanel({ workerUrl, siteKey, ask }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const { lines, busy, send, prepare } = useChatStream(workerUrl, siteKey, box);
   const [draft, setDraft] = useState("");
@@ -37,6 +49,14 @@ export default function ChatPanel({ workerUrl, siteKey }: { workerUrl: string; s
   // Chips show until each is used, or until the visitor's own first question was free text.
   const chips = typedFirst ? [] : STARTER_CHIPS.filter((c) => !used.includes(c.label));
   const question = draft.trim();
+
+  const sentAsk = useRef(-1);
+  useEffect(() => {
+    if (!ask || ask.id === sentAsk.current) return;
+    sentAsk.current = ask.id;
+    setTypedFirst(true);
+    void send(ask.text);
+  }, [ask, send]);
 
   const submit = () => {
     if (busy || question === "") return;
