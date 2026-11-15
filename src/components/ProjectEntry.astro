@@ -3,7 +3,8 @@
 // (the bullets live on the project page).
 // data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
 import StackTags from "./projects/StackTags.astro";
-import { demoDuration, hasDemo } from "./projects/demos";
+import ProjectHead from "./projects/ProjectHead.astro";
+import DemoPoster from "./projects/DemoPoster.astro";
 import MetricChips from "./metrics/MetricChips.astro";
 import type { CollectionEntry } from "astro:content";
 
@@ -17,35 +18,8 @@ const meta = period ? `${org}, ${period}` : org;
 ---
 
 <div class="card project reveal" data-project={entry.id}>
-  <div class="item-head">
-    <h3>
-      <a href={`/projects/${entry.id}/`}>{title}</a>
-    </h3>
-    <span class="meta">{meta}</span>
-  </div>
-  {hasDemo(entry.id) && (
-    <a class="poster" href={`/projects/${entry.id}/#demo`}>
-      <img
-        class="only-light"
-        src={`/demos/${entry.id}/poster.jpg`}
-        width="1280"
-        height="720"
-        loading="lazy"
-        decoding="async"
-        alt={`Animated walkthrough of ${title}`}
-      />
-      <img
-        class="only-dark"
-        src={`/demos/${entry.id}/poster-dark.jpg`}
-        width="1280"
-        height="720"
-        loading="lazy"
-        decoding="async"
-        alt={`Animated walkthrough of ${title}`}
-      />
-      <span class="badge">Watch the demo · {demoDuration(entry.id)} s</span>
-    </a>
-  )}
+  <ProjectHead slug={entry.id} title={title} meta={meta} />
+  <DemoPoster slug={entry.id} title={title} />
   <p class="summary">{summary}</p>
   <MetricChips metrics={metrics} max={2} />
   <StackTags stack={stack} />
@@ -59,44 +33,7 @@ const meta = period ? `${org}, ${period}` : org;
   .project[hidden] {
     display: none;
   }
-  .project h3 a::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-  }
   .summary {
     margin: var(--space-2) 0 0;
-  }
-  .poster {
-    position: relative;
-    z-index: 1;
-    display: block;
-  }
-  .badge {
-    position: absolute;
-    right: 12px;
-    top: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 12px;
-    font-size: 13px;
-    color: var(--ink);
-    background: color-mix(in srgb, var(--surface) 88%, transparent);
-    border: 1px solid var(--rule);
-    border-radius: 999px;
-  }
-  .badge::before {
-    content: "";
-    border-style: solid;
-    border-width: 5px 0 5px 8px;
-    border-color: transparent transparent transparent var(--accent);
-  }
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 8px 0;
   }
 </style>
