@@ -56,15 +56,6 @@ const filterProjects = projects.map(({ id, data }) => ({
     <p>{PROFILE_SUMMARY}</p>
   </section>
 
-  <section id="experience">
-    <h2>Experience</h2>
-    <ol class="timeline">
-      {experience.map((entry) => (
-        <ExperienceEntry entry={entry} />
-      ))}
-    </ol>
-  </section>
-
   <section id="projects">
     <h2>Projects</h2>
     <ProjectFilter client:idle groups={filterGroups} projects={filterProjects} />
@@ -82,6 +73,15 @@ const filterProjects = projects.map(({ id, data }) => ({
           <ProjectEntry entry={entry} />
         ))}
     </div>
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+    <ol class="timeline">
+      {experience.map((entry) => (
+        <ExperienceEntry entry={entry} />
+      ))}
+    </ol>
   </section>
 
   <section id="skills">
