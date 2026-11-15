@@ -9,7 +9,8 @@ import ScreenshotGallery from "../../components/projects/ScreenshotGallery.astro
 import Demo from "../../components/projects/Demo.astro";
 import PipelineStrip from "../../components/projects/PipelineStrip.astro";
 import { hasDemo, pipelines } from "../../components/projects/demos";
-import { bulletsFor, smartQuotes } from "../../site/bullets";
+import GlossaryText from "../../components/glossary/GlossaryText.astro";
+import { bulletsFor } from "../../site/bullets";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -36,8 +37,10 @@ const meta = period ? `${org}, ${period}` : org;
   ))}
   {hasDemo(project.id) && <Demo slug={project.id} title={title} />}
   <ul>
-    {bulletsFor(bullets).map((text) => (
-      <li>{smartQuotes(text)}</li>
+    {bulletsFor(bullets).map((text, i) => (
+      <li>
+        <GlossaryText text={text} id={`bullet-${i}`} />
+      </li>
     ))}
   </ul>
   <StackTags stack={stack} />
