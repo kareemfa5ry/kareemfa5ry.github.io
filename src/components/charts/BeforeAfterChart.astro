@@ -6,16 +6,17 @@ interface Props {
   results: readonly Result[];
   id: string;
   headingLevel?: "h2" | "h3" | "h4";
+  title?: string;
 }
 
-const { results, id, headingLevel: Heading = "h2" } = Astro.props;
+const { results, id, headingLevel: Heading = "h2", title = "Results" } = Astro.props;
 const { width, height } = AXIS;
 const mid = height / 2;
 ---
 
 {results.length > 0 && (
   <section class="results">
-    <Heading>Results</Heading>
+    <Heading>{title}</Heading>
     <p class="key">
       <span class="dot before"></span> before <span class="dot after"></span> after
     </p>

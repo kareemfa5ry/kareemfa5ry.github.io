@@ -2,6 +2,7 @@
 // The CV page: composes the sections from the content collections and src/site/profile.ts.
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
+import BeforeAfterChart from "../components/charts/BeforeAfterChart.astro";
 import ExperienceEntry from "../components/ExperienceEntry.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
 import FeaturedProject from "../components/projects/FeaturedProject.astro";
@@ -28,6 +29,9 @@ const PAGE = {
 const experience = byOrder(await getCollection("experience"));
 const projects = byOrder(await getCollection("projects"));
 const skills = byOrder(await getCollection("skills"));
+// The hero chart: every percentage result in the content (seat utilisation, unmatched baggage). The revenue row has a
+// currency unit and is already the hero's 3x tile, so it is left out by its unit.
+const heroResults = [...experience, ...projects].flatMap(({ data }) => data.results).filter(({ unit }) => unit === "%");
 const filterGroups = skills.map(({ id, data }) => ({ id, label: data.label }));
 const filterProjects = projects.map(({ id, data }) => ({
   slug: id,
@@ -43,7 +47,9 @@ const filterProjects = projects.map(({ id, data }) => ({
   ogDescription={PAGE.ogDescription}
   jsonLd={personJsonLd(skills.map(({ data }) => data.label))}
 >
-  <Hero tagline={TAGLINE} />
+  <Hero tagline={TAGLINE}>
+    <BeforeAfterChart id="hero" headingLevel="h3" title="Before and after" results={heroResults} />
+  </Hero>
 
   <section id="profile">
     <h2>Profile</h2>

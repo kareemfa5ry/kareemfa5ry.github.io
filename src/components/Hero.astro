@@ -1,6 +1,7 @@
 ---
 // Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability,
 // over a decorative spinning globe (HeroGlobe) behind its right side; the header isolates it so the text stays on top.
+// The default slot (the results chart) is a full-width strip under the buttons, on every screen size.
 import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
@@ -49,6 +50,9 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
       <span class="when-open">Minimize the chat</span>
     </button>
   </div>
+  <div class="side">
+    <slot />
+  </div>
   {CHAT_ENABLED && (
     <div class="ask">
       {HERO_ASKS.map(({ label, prompt }) => (
@@ -79,6 +83,10 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
     position: relative;
     isolation: isolate;
     padding: 64px 0 40px;
+  }
+  /* The results chart: a full-width strip in normal flow under the buttons, above the globe (z-index -1). */
+  .side {
+    margin-top: var(--space-4);
   }
   h1 {
     font-size: clamp(30px, 6vw, 44px);
