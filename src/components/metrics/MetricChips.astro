@@ -12,12 +12,18 @@ const { metrics, max = metrics.length } = Astro.props;
   <ul class="metric-chips">
     {metrics.slice(0, max).map((m) => (
       <li class="chip">
-        <strong>{m.value}</strong>
+        <strong data-count-up>{m.value}</strong>
         <span>{m.label}</span>
       </li>
     ))}
   </ul>
 )}
+
+<script>
+  import { initCountUp } from "./count_up";
+
+  initCountUp();
+</script>
 
 <style>
   .metric-chips {

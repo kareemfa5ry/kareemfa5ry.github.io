@@ -1,7 +1,7 @@
 ---
 // The demo poster of a project (light and dark still) with the "Watch the demo" badge, linking to its #demo.
 // Renders nothing when the project has no demo. Sits above a stretched title link (z-index) so it stays clickable.
-import { demoDuration, hasDemo } from "./demos";
+import { demoDuration, demoFrame, hasDemo } from "./demos";
 
 interface Props {
   slug: string;
@@ -13,34 +13,101 @@ const alt = `Animated walkthrough of ${title}`;
 ---
 
 {hasDemo(slug) && (
-  <a class="poster" href={`/projects/${slug}/#demo`}>
-    <img
-      class="only-light"
-      src={`/demos/${slug}/poster.jpg`}
-      width="1280"
-      height="720"
-      loading="lazy"
-      decoding="async"
-      alt={alt}
-    />
-    <img
-      class="only-dark"
-      src={`/demos/${slug}/poster-dark.jpg`}
-      width="1280"
-      height="720"
-      loading="lazy"
-      decoding="async"
-      alt={alt}
-    />
-    <span class="badge">Watch the demo · {demoDuration(slug)} s</span>
-  </a>
+  <div class="demo-poster">
+    <a class="poster" href={`/projects/${slug}/#demo`}>
+      <img
+        class="only-light"
+        src={`/demos/${slug}/poster.jpg`}
+        width="1280"
+        height="720"
+        loading="lazy"
+        decoding="async"
+        alt={alt}
+      />
+      <img
+        class="only-dark"
+        src={`/demos/${slug}/poster-dark.jpg`}
+        width="1280"
+        height="720"
+        loading="lazy"
+        decoding="async"
+        alt={alt}
+      />
+      <span class="badge">Watch the demo · {demoDuration(slug)} s</span>
+    </a>
+    <template>
+      <div class="player">
+        <iframe {...demoFrame(slug, title)}></iframe>
+        <button type="button" class="close">
+          Close demo
+        </button>
+      </div>
+    </template>
+  </div>
 )}
 
+<script>
+  // Click a poster (no modifier keys) to play its demo in place; without JS the link goes to /projects/<id>/#demo.
+  let open: { poster: HTMLAnchorElement; player: Element } | undefined;
+
+  function close() {
+    if (!open) return;
+    open.player.replaceWith(open.poster);
+    open.poster.focus();
+    open = undefined;
+  }
+
+  document.addEventListener("click", (event) => {
+    const poster = (event.target as Element).closest<HTMLAnchorElement>(".demo-poster .poster");
+    const plain = !event.button && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+    if (!poster || !plain) return;
+    event.preventDefault();
+    close();
+    const template = poster.parentElement!.querySelector("template")!;
+    const player = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+    poster.replaceWith(player);
+    player.querySelector<HTMLButtonElement>(".close")!.addEventListener("click", close);
+    player.querySelector<HTMLButtonElement>(".close")!.focus(); // Esc then reaches this page, not the iframe
+    open = { poster, player };
+  });
+
+  document.addEventListener("keydown", (event) => event.key === "Escape" && close());
+</script>
+
 <style>
-  .poster {
+  .demo-poster {
     position: relative;
     z-index: 1;
+  }
+  .poster {
     display: block;
+  }
+  .player {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin: 8px 0;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .player iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .close {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    padding: 4px 12px;
+    font: inherit;
+    font-size: 13px;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    cursor: pointer;
   }
   .badge {
     position: absolute;

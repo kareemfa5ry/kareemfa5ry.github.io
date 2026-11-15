@@ -1,11 +1,13 @@
 ---
-// Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability.
-// The default slot (the results chart) sits under the buttons, and in a second column from 60rem.
+// Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability,
+// over a decorative spinning globe (HeroGlobe) behind its right side; the header isolates it so the text stays on top.
+// The default slot (the results chart) is a full-width strip under the buttons, on every screen size.
 import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
 import { CHAT_ENABLED, HERO_ASKS } from "../site/chat";
+import HeroGlobe from "./hero/HeroGlobe.astro";
 import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS, HERO_STATS } from "../site/profile";
 
 interface Props {
@@ -18,6 +20,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
 ---
 
 <header>
+  <HeroGlobe />
   <h1>{FULL_NAME}</h1>
   <p class="tagline">{tagline}</p>
   <ul class="badges">
@@ -32,7 +35,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   <ul class="proof">
     {HERO_STATS.map((stat, i) => (
       <li class="card" style={`--i:${i}`}>
-        <b>{stat.value}</b> {stat.label}
+        <b data-count-up>{stat.value}</b> {stat.label}
       </li>
     ))}
   </ul>
@@ -69,24 +72,21 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   <p class="availability">{AVAILABILITY_DETAILS.join(" ")}</p>
 </header>
 
+<script>
+  import { initCountUp } from "./metrics/count_up";
+
+  initCountUp();
+</script>
+
 <style>
   header {
+    position: relative;
+    isolation: isolate;
     padding: 64px 0 40px;
   }
-  @media (min-width: 60rem) {
-    header {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      column-gap: var(--space-6);
-      align-items: start;
-    }
-    header > :global(*) {
-      grid-column: 1;
-    }
-    header > .side {
-      grid-column: 2;
-      grid-row: 1 / span 12;
-    }
+  /* The results chart: a full-width strip in normal flow under the buttons, above the globe (z-index -1). */
+  .side {
+    margin-top: var(--space-4);
   }
   h1 {
     font-size: clamp(30px, 6vw, 44px);

@@ -48,7 +48,7 @@ const filterProjects = projects.map(({ id, data }) => ({
   jsonLd={personJsonLd(skills.map(({ data }) => data.label))}
 >
   <Hero tagline={TAGLINE}>
-    <BeforeAfterChart id="hero" title="Before and after" results={heroResults} />
+    <BeforeAfterChart id="hero" headingLevel="h3" title="Before and after" results={heroResults} />
   </Hero>
 
   <section id="profile">
