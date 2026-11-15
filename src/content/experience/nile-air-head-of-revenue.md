@@ -6,6 +6,11 @@ start: "2017-01"
 end: "2021-06"
 note: "Started as acting Revenue Manager and was confirmed after three months. Led four route controllers and yield executives."
 order: 3
+metrics:
+  - value: "5"
+    label: partner airlines connected (interline and codeshare)
+  - value: "4"
+    label: route controllers and yield executives led
 bullets:
   - "Set pricing strategy, including rates, packages and discounts, and repriced the full route network after the Egyptian currency devaluation."
   - "Brought fare filing in-house by securing a two-week ATPCO training programme, removing a paid outside dependency. ATPCO is the industry database where airlines file their fares."
