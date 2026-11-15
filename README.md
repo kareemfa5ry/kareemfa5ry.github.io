@@ -13,7 +13,7 @@ src/components/             one component per concern: Nav, Hero, Stats, Experie
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/components/sections/    Contact (closing section: email, LinkedIn, availability, "Ask the assistant");
                             ChatShowcase (band under the hero: sample answer typed on scroll, the question chips)
-src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list; the hero and project pages) and its scale.ts
+src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list; a role in the timeline and project pages) and its scale.ts
 src/components/metrics/     MetricChips (value + label chips for a `metrics` list), count_up.ts (numbers count up on scroll)
 src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, pager/ProjectPager (previous and next project), PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)

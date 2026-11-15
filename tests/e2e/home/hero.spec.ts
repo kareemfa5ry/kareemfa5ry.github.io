@@ -1,4 +1,4 @@
-// Home hero: three availability badges, the employers line and the before and after chart.
+// Home hero: three availability badges, the employers line and no results chart.
 import { expect, test } from "@playwright/test";
 
 test("hero shows three badges and names the employers", async ({ page }) => {
@@ -11,14 +11,11 @@ test("hero shows three badges and names the employers", async ({ page }) => {
   }
 });
 
-test("hero charts the two percentage results, not the revenue its tiles show, and the roles repeat none", async ({
-  page,
-}) => {
+test("the before and after chart sits in the Nesma role, not in the hero", async ({ page }) => {
   await page.goto("/");
-  const results = page.locator("header").first().locator(".results");
-  await expect(results.locator(".row")).toHaveCount(2);
-  await expect(results).toContainText("71% → 81%");
-  await expect(results).toContainText("66%");
-  await expect(results).not.toContainText("USD M");
-  await expect(page.locator("#experience .results")).toHaveCount(0);
+  await expect(page.locator("header").first().locator(".results")).toHaveCount(0);
+  const results = page.locator("#experience .results");
+  await expect(results).toHaveCount(1);
+  await expect(results).toContainText("1.6");
+  await expect(results).toContainText("5.0");
 });
