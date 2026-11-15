@@ -2,7 +2,7 @@
 // Closing section: how to reach Kareem. The CV downloads live in Downloads.astro, not repeated here.
 import { CHAT_ENABLED } from "../../site/chat";
 import { EMAIL, LINKEDIN_LABEL, LINKEDIN_URL, LOCATION, MAILTO } from "../../site/contact";
-import { AVAILABILITY, AVAILABILITY_BADGES } from "../../site/profile";
+import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS } from "../../site/profile";
 ---
 
 <section id="contact">
@@ -14,7 +14,7 @@ import { AVAILABILITY, AVAILABILITY_BADGES } from "../../site/profile";
       ))}
     </ul>
     <ul class="lines">
-      {AVAILABILITY.map((line) => (
+      {AVAILABILITY_DETAILS.map((line) => (
         <li>{line}</li>
       ))}
     </ul>
