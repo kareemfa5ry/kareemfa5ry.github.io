@@ -1,0 +1,80 @@
+---
+// "How it works": the stages of one pipeline shot as an ordered list, arrows between them drawn in CSS.
+import type { Pipeline } from "./demos";
+
+interface Props {
+  pipeline: Pipeline;
+}
+
+const { heading, caption, stages } = Astro.props.pipeline;
+---
+
+<section class="pipeline">
+  <h2>{heading}</h2>
+  <p class="caption">{caption}</p>
+  <ol aria-label={`${heading}, ${stages.length} steps`}>
+    {stages.map(({ label, detail }) => (
+      <li class="card">
+        <strong>{label}</strong>
+        {detail && <span>{detail}</span>}
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .caption {
+    color: var(--muted);
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  li {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+  }
+  li span {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  /* The arrow: a decorative glyph in the gap after every stage but the last. */
+  li:not(:last-child)::after {
+    content: "↓";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    width: 28px;
+    line-height: var(--space-5);
+    text-align: center;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  @media (min-width: 48rem) {
+    ol {
+      flex-direction: row;
+      gap: var(--space-6);
+    }
+    li:not(:last-child)::after {
+      content: "→";
+      left: 100%;
+      top: 50%;
+      width: 36px;
+      transform: translateY(-50%);
+    }
+  }
+  @media print {
+    li {
+      break-inside: avoid;
+    }
+  }
+</style>
