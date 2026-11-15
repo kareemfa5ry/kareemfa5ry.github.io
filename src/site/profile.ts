@@ -25,15 +25,21 @@ export const STATS: readonly Stat[] = [
 /** The first three STATS, the outcome numbers the hero shows. */
 export const HERO_STATS = STATS.slice(0, 3);
 
-/** Short labels of the facts in AVAILABILITY, shown as the hero badges. */
+/** Short labels of facts the hero shows as badges. Pages show these plus AVAILABILITY_DETAILS. */
 export const AVAILABILITY_BADGES: readonly string[] = [
   "Open to work",
   "Onsite, hybrid or remote",
   "Open to relocation",
 ];
 
-export const AVAILABILITY: readonly string[] = [
+/** The availability sentences the badges do not already say; pages show these beside the badges. */
+export const AVAILABILITY_DETAILS: readonly string[] = [
   "Open to full-time, part-time, contract and consulting roles.",
   "Roles: revenue or analytics management, senior analyst, AI enablement, consultant.",
+];
+
+/** The full availability list for machine-readable outputs (llms.txt, the chatbot). */
+export const AVAILABILITY: readonly string[] = [
+  ...AVAILABILITY_DETAILS,
   "Onsite, hybrid or remote. Based in Cairo, Egypt and open to relocation.",
 ];

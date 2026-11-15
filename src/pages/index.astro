@@ -12,6 +12,7 @@ import { FULL_NAME } from "../site/contact";
 import { EDUCATION, LANGUAGES } from "../site/education";
 import { personJsonLd } from "../site/person_jsonld";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
+import { byOrder } from "../site/collections/by_order";
 
 const PAGE = {
   title: `${FULL_NAME} — Revenue & Data Analytics`,
@@ -22,8 +23,6 @@ const PAGE = {
     "15 years in airline revenue, pricing and operations. SQL, Python, Power BI, forecasting and revenue assurance.",
 };
 
-const byOrder = <T extends { data: { order: number } }>(entries: T[]) =>
-  [...entries].sort((a, b) => a.data.order - b.data.order);
 const experience = byOrder(await getCollection("experience"));
 const projects = byOrder(await getCollection("projects"));
 const skills = byOrder(await getCollection("skills"));

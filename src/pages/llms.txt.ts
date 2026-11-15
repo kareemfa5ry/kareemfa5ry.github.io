@@ -5,15 +5,13 @@ import type { APIContext } from "astro";
 import { type CollectionEntry, getCollection } from "astro:content";
 import { changeText, type Result } from "../components/charts/scale";
 import { type BulletItem, bulletsFor } from "../site/bullets";
+import { byOrder } from "../site/collections/by_order";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { EDUCATION, LANGUAGES } from "../site/education";
 import { DOMAIN } from "../site/knowledge/domain";
 import { GLOSSARY } from "../site/knowledge/glossary";
 import { AVAILABILITY, PROFILE_SUMMARY, TAGLINE } from "../site/profile";
-
-const byOrder = <T extends { data: { order: number } }>(entries: T[]) =>
-  [...entries].sort((a, b) => a.data.order - b.data.order);
 
 const bulletLines = (bullets: BulletItem[]) => bulletsFor(bullets).map((bullet) => `- ${bullet}`);
 const resultLines = (results: Result[]) => results.map((r) => `- Result: ${r.label}: ${changeText(r)}`);
