@@ -11,7 +11,7 @@ const { metrics, max = metrics.length } = Astro.props;
 {metrics.length > 0 && (
   <ul class="metric-chips">
     {metrics.slice(0, max).map((m) => (
-      <li>
+      <li class="chip">
         <strong>{m.value}</strong>
         <span>{m.label}</span>
       </li>
@@ -33,10 +33,9 @@ const { metrics, max = metrics.length } = Astro.props;
     align-items: baseline;
     gap: 6px;
     margin: 0;
-    padding: 2px 10px;
-    font-size: 13px;
+    color: inherit;
+    background: transparent;
     border: 1px solid var(--rule);
-    border-radius: 999px;
   }
   .metric-chips strong {
     color: var(--accent);
