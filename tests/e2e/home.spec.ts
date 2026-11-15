@@ -15,11 +15,20 @@ test("home page has its title, nav links and no stat tiles below the hero", asyn
   await page.goto("/");
   await expect(page).toHaveTitle(/Kareem Fakhry/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Kareem Fakhry");
-  for (const id of ["experience", "projects", "skills", "download"]) {
+  for (const id of ["projects", "experience", "skills", "download"]) {
     await expect(page.locator(`nav a[href="#${id}"]`)).toBeVisible();
     await expect(page.locator(`#${id}`)).toHaveCount(1);
   }
   await expect(page.locator(".stats")).toHaveCount(0);
+});
+
+test("projects come before experience, in the page and in the nav", async ({ page }) => {
+  await page.goto("/");
+  const sections = await page.locator("main > section").evaluateAll((els) => els.map((el) => el.id));
+  expect(sections.indexOf("projects")).toBeGreaterThan(-1);
+  expect(sections.indexOf("projects")).toBeLessThan(sections.indexOf("experience"));
+  const links = await page.locator('nav a[href^="#"]').evaluateAll((els) => els.map((el) => el.getAttribute("href")));
+  expect(links.indexOf("#projects")).toBeLessThan(links.indexOf("#experience"));
 });
 
 test("home project posters follow the active theme", async ({ page }) => {
