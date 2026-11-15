@@ -1,6 +1,7 @@
 ---
-// Skill groups from the skills collection, two columns from 640px up, each with the projects that prove it.
+// Skill groups from the skills collection, two columns from 640px up: a card of chips plus the projects that prove it.
 import type { CollectionEntry } from "astro:content";
+import StackTags from "./projects/StackTags.astro";
 
 interface Props {
   groups: CollectionEntry<"skills">[];
@@ -16,9 +17,9 @@ const provenBy = (groupId: string) => projects.filter((p) => p.data.skills.some(
   {groups.map(({ id, data }) => {
     const proofs = provenBy(id);
     return (
-      <div id={id}>
+      <div id={id} class="card">
         <b>{data.label}</b>
-        <p>{data.items.join(", ")}</p>
+        <StackTags stack={data.items} />
         {proofs.length > 0 && (
           <p class="proven">
             Proven by:{" "}
@@ -46,12 +47,15 @@ const provenBy = (groupId: string) => projects.filter((p) => p.data.skills.some(
       grid-template-columns: 1fr 1fr;
     }
   }
+  .skills .card {
+    padding: var(--space-4);
+  }
   .skills div b {
     display: block;
     font-size: 15px;
   }
   .skills div p {
-    margin: 2px 0 0;
+    margin: var(--space-3) 0 0;
     color: var(--muted);
     font-size: 15px;
   }
