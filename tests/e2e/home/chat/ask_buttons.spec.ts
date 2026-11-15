@@ -1,6 +1,6 @@
 // Ready-question buttons: "Ask about this project" and two hero questions open the chat and send in one click.
 import { expect, test } from "@playwright/test";
-import { stub } from "../chat_stub";
+import { stub } from "../../chat_stub";
 
 test("Ask about this project opens the dialog and the first user line is the project question", async ({ page }) => {
   await stub(page, false);
