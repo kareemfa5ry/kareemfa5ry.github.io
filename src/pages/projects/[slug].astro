@@ -10,6 +10,8 @@ import Demo from "../../components/projects/Demo.astro";
 import PipelineStrip from "../../components/projects/PipelineStrip.astro";
 import { hasDemo, pipelines } from "../../components/projects/demos";
 import GlossaryText from "../../components/glossary/GlossaryText.astro";
+import ProjectPager from "../../components/projects/pager/ProjectPager.astro";
+import { byOrder } from "../../site/collections/by_order";
 import { bulletsFor } from "../../site/bullets";
 
 export async function getStaticPaths() {
@@ -20,6 +22,8 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { title, org, period, summary, stack, metrics, screenshots, bullets, results } = project.data;
 const skills = await getEntries(project.data.skills);
+const ordered = byOrder(await getCollection("projects"));
+const at = ordered.findIndex((p) => p.id === project.id);
 const meta = period ? `${org}, ${period}` : org;
 ---
 
@@ -27,7 +31,7 @@ const meta = period ? `${org}, ${period}` : org;
   <p>
     <a href="/#projects">← All projects</a>
   </p>
-  <h1>{title}</h1>
+  <h1 style={`view-transition-name: project-${project.id}`}>{title}</h1>
   <p class="meta">{meta}</p>
   <p>{summary}</p>
   {metrics.length > 0 && <Stats stats={metrics} />}
@@ -57,4 +61,5 @@ const meta = period ? `${org}, ${period}` : org;
       </ul>
     </section>
   )}
+  <ProjectPager prev={ordered[at - 1]} next={ordered[at + 1]} />
 </Base>
