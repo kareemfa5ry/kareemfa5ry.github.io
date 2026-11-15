@@ -39,3 +39,14 @@ export function pipelines(slug: string): Pipeline[] {
     .filter((shot) => shot.type === "pipeline")
     .map(({ caption, params }) => ({ heading: params.heading ?? "How it works", caption, stages: params.stages }));
 }
+
+// The demo iframe attributes, one home for the project page and the in-place player on the home page.
+export function demoFrame(slug: string, title: string) {
+  return {
+    src: `/demos/${slug}/`,
+    title: `Animated walkthrough: ${title}`,
+    loading: "lazy" as const,
+    allow: "",
+    referrerpolicy: "same-origin" as const,
+  };
+}
