@@ -7,7 +7,8 @@ import BeforeAfterChart from "../../components/charts/BeforeAfterChart.astro";
 import StackTags from "../../components/projects/StackTags.astro";
 import ScreenshotGallery from "../../components/projects/ScreenshotGallery.astro";
 import Demo from "../../components/projects/Demo.astro";
-import { hasDemo } from "../../components/projects/demos";
+import PipelineStrip from "../../components/projects/PipelineStrip.astro";
+import { hasDemo, pipelines } from "../../components/projects/demos";
 import { bulletsFor, smartQuotes } from "../../site/bullets";
 
 export async function getStaticPaths() {
@@ -30,6 +31,9 @@ const meta = period ? `${org}, ${period}` : org;
   <p>{summary}</p>
   {metrics.length > 0 && <Stats stats={metrics} />}
   <BeforeAfterChart results={results} id="results" />
+  {pipelines(project.id).map((pipeline) => (
+    <PipelineStrip pipeline={pipeline} />
+  ))}
   {hasDemo(project.id) && <Demo slug={project.id} title={title} />}
   <ul>
     {bulletsFor(bullets).map((text) => (
