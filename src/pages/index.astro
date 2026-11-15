@@ -4,6 +4,7 @@ import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
 import ExperienceEntry from "../components/ExperienceEntry.astro";
 import ProjectEntry from "../components/ProjectEntry.astro";
+import FeaturedProject from "../components/projects/FeaturedProject.astro";
 import SkillsGrid from "../components/SkillsGrid.astro";
 import Downloads from "../components/Downloads.astro";
 import ProjectFilter from "../islands/ProjectFilter.tsx";
@@ -61,10 +62,19 @@ const filterProjects = projects.map(({ id, data }) => ({
   <section id="projects">
     <h2>Projects</h2>
     <ProjectFilter client:idle groups={filterGroups} projects={filterProjects} />
+    <div class="project-rows">
+      {projects
+        .filter(({ data }) => data.screenshots.length > 0)
+        .map((entry) => (
+          <FeaturedProject entry={entry} />
+        ))}
+    </div>
     <div class="project-grid">
-      {projects.map((entry) => (
-        <ProjectEntry entry={entry} />
-      ))}
+      {projects
+        .filter(({ data }) => data.screenshots.length === 0)
+        .map((entry) => (
+          <ProjectEntry entry={entry} />
+        ))}
     </div>
   </section>
 
@@ -86,9 +96,11 @@ const filterProjects = projects.map(({ id, data }) => ({
 </Base>
 
 <style>
+  .project-rows,
   .project-grid {
     display: grid;
     gap: var(--space-4);
+    margin-bottom: var(--space-4);
   }
   @media (min-width: 48rem) {
     .project-grid {
