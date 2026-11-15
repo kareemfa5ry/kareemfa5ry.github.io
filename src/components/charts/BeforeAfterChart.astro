@@ -24,7 +24,7 @@ const mid = height / 2;
       const x1 = xFor(result.before, result);
       const x2 = xFor(result.after, result);
       return (
-        <div class="row">
+        <div class="row card">
           <div class="row-text">
             <span>{result.label}</span>
             <b>{changeText(result)}</b>
@@ -53,9 +53,6 @@ const mid = height / 2;
     letter-spacing: normal;
   }
   .row {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 10px;
     padding: 12px 16px;
     margin-bottom: 12px;
   }
@@ -70,6 +67,7 @@ const mid = height / 2;
   .row-text b {
     color: var(--accent);
     font-size: 18px;
+    font-variant-numeric: tabular-nums;
   }
   svg {
     display: block;
