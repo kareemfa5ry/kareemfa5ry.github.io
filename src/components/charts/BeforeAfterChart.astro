@@ -24,7 +24,7 @@ const mid = height / 2;
       const x1 = xFor(result.before, result);
       const x2 = xFor(result.after, result);
       return (
-        <div class="row card">
+        <div class="row card" style={`--dx:${x1 - x2};--ox:${x2 >= x1 ? "left" : "right"}`}>
           <div class="row-text">
             <span>{result.label}</span>
             <b>{changeText(result)}</b>
@@ -115,5 +115,43 @@ const mid = height / 2;
   }
   .dot.after {
     background: var(--accent);
+  }
+
+  /* Draw-in: the after dot slides from the before dot and the link grows as the row scrolls into view.
+     Compositor only (transform). The value text in .row-text never animates; print and no-support show the
+     final chart. OPEN: when plan item 0.2 lands, these two guards and the print reset should share its .reveal. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      circle.after,
+      .link {
+        animation: linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+      circle.after {
+        animation-name: slide;
+      }
+      .link {
+        animation-name: grow;
+        transform-box: fill-box;
+        transform-origin: var(--ox);
+      }
+      @media print {
+        circle.after,
+        .link {
+          animation: none;
+        }
+      }
+    }
+  }
+  @keyframes slide {
+    from {
+      transform: translateX(calc(var(--dx) * 1px));
+    }
+  }
+  @keyframes grow {
+    from {
+      transform: scaleX(0);
+    }
   }
 </style>
