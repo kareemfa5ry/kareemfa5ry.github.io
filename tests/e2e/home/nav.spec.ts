@@ -23,3 +23,12 @@ test("nav fits a 360px phone without sideways scroll", async ({ page }) => {
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
 });
+
+test('nav CV link reads "Download CV" on desktop and keeps that name on phones', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  const cv = page.locator('nav a[href="#download"]');
+  expect(await cv.innerText()).toBe("Download CV");
+  await page.setViewportSize({ width: 360, height: 740 });
+  await expect(page.getByRole("link", { name: "Download CV", exact: true })).toBeVisible();
+});

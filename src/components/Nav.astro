@@ -19,8 +19,10 @@ const LINKS = [
     <div class="links">
       {LINKS.map((link) => (
         <a href={link.href} class={link.button ? "btn primary" : undefined}>
-          {link.sr && <span class="sr">{link.sr}</span>}
-          {link.label}
+          <span>
+            {link.sr && <span class="sr">{link.sr}</span>}
+            {link.label}
+          </span>
         </a>
       ))}
     </div>
