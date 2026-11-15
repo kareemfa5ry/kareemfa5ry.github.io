@@ -111,18 +111,20 @@ section {
   border-top: 1px solid var(--rule);
   scroll-margin-top: 52px;
 }
-/* Section headings count up per page ("01", "02", ...); the number is decoration, silenced for screen readers. */
-main {
+/* Home-page section headings count up ("01", ...) under main.numbered; the number is silenced for screen readers. */
+main.numbered {
   counter-reset: section;
 }
 section > h2 {
-  counter-increment: section;
   font-size: 28px;
   line-height: 1.2;
   letter-spacing: -0.01em;
   margin: 0 0 var(--space-5);
 }
-section > h2::before {
+main.numbered > section > h2 {
+  counter-increment: section;
+}
+main.numbered > section > h2::before {
   content: counter(section, decimal-leading-zero) / "";
   display: block;
   margin-bottom: var(--space-1);

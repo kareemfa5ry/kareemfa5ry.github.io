@@ -12,9 +12,11 @@ interface Props {
   ogDescription: string;
   /** schema.org record to embed as JSON-LD; the home page passes one. */
   jsonLd?: object;
+  /** number the section headings 01, 02, ... (the home page does; see global.css). */
+  numbered?: boolean;
 }
 
-const { title, description, ogDescription, jsonLd } = Astro.props;
+const { title, description, ogDescription, jsonLd, numbered } = Astro.props;
 
 const OG_IMAGE = new URL("/og.png", Astro.site).href;
 const OG_IMAGE_ALT = "Kareem Fakhry, senior data analyst and revenue manager: headline figures from his CV";
@@ -46,7 +48,7 @@ const FAVICON =
   </head>
   <body>
     <Nav />
-    <main class="wrap" id="top">
+    <main class:list={["wrap", { numbered }]} id="top">
       <slot />
     </main>
     <Footer />

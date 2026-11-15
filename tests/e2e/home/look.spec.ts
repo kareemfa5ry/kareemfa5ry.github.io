@@ -13,3 +13,10 @@ test("home h2 headings are visible and the section number is not in their access
   const first = await headings.first().evaluate((el) => getComputedStyle(el, "::before").content);
   expect(first).toContain("01");
 });
+
+test("a project page h2 keeps the type scale but has no section number", async ({ page }) => {
+  await page.goto("/projects/customer-route-analytics-power-bi/");
+  const heading = page.locator("main section > h2").first();
+  await expect(heading).toBeVisible();
+  expect(await heading.evaluate((el) => getComputedStyle(el, "::before").content)).toBe("none");
+});
