@@ -5,7 +5,7 @@ import BeforeAfterChart from "./charts/BeforeAfterChart.astro";
 import GlossaryText from "./glossary/GlossaryText.astro";
 import { bulletsFor } from "../site/bullets";
 import { monthLabel } from "../site/month";
-import type { CollectionEntry } from "astro:content";
+import { getEntries, type CollectionEntry } from "astro:content";
 
 interface Props {
   entry: CollectionEntry<"experience">;
@@ -13,6 +13,8 @@ interface Props {
 
 const { entry } = Astro.props;
 const { title, org, location, start, end, note, metrics, bullets, results } = entry.data;
+// A reference to an unknown project id already fails the build (content.config.ts).
+const projects = await getEntries(entry.data.projects ?? []);
 const heading = title ? `${title} · ${org}` : org;
 ---
 
@@ -35,6 +37,16 @@ const heading = title ? `${title} · ${org}` : org;
         </li>
       ))}
     </ul>
+    {projects.length > 0 && (
+      <p class="role-projects meta">
+        Projects from this role:
+        {projects.map((p) => (
+          <a class="chip" href={`/projects/${p.id}/`}>
+            {p.data.title}
+          </a>
+        ))}
+      </p>
+    )}
     <BeforeAfterChart headingLevel="h4" results={results} id={`exp-${entry.id}`} />
   </div>
 </li>
@@ -76,6 +88,12 @@ const heading = title ? `${title} · ${org}` : org;
   }
   .role[aria-current]::after {
     background: var(--accent);
+  }
+  .role-projects {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
   }
   .when {
     margin: 0 0 var(--space-1);

@@ -5,7 +5,7 @@ location: Cairo
 start: "2026-02"
 end: null
 order: 1
-projects: [daily-revenue-pipeline]
+projects: [daily-revenue-pipeline, operational-log-parser, revenue-audit-engine]
 metrics:
   - value: "3"
     label: data tools built in 6 months
