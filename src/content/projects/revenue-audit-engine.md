@@ -1,7 +1,7 @@
 ---
 title: "Revenue audit engine"
 org: Nesma Airlines
-order: 3
+order: 6
 summary: >-
   An audit that checks every ticket against filed fare rules and contracted fees and flags 38 categories of partner breach, with Finance accepting about 95% of the cases submitted.
 stack: ["Excel & VBA", Power Query, pandas, Amadeus billing files]
