@@ -2,12 +2,11 @@
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 import { bulletsFor } from "../site/bullets";
+import { byOrder } from "../site/collections/by_order";
 import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
 export async function GET({ site }: APIContext) {
-  const byOrder = <T extends { data: { order: number } }>(entries: T[]) =>
-    [...entries].sort((a, b) => a.data.order - b.data.order);
   const projects = byOrder(await getCollection("projects"));
   const experience = byOrder(await getCollection("experience"));
   const skills = byOrder(await getCollection("skills"));
