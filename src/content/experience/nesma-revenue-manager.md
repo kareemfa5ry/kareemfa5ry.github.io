@@ -15,6 +15,7 @@ results:
     before: 71
     after: 81
     unit: "%"
+projects: [competitor-price-tracker, customer-route-analytics-power-bi]
 metrics:
   - value: "USD 1.5M"
     label: refund backlog cleared
