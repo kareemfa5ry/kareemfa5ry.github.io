@@ -41,7 +41,8 @@ test("hero has a CV button per role, three proof numbers and availability", asyn
     await expect(hero.getByRole("link", { name: role })).toHaveAttribute("href", /\.pdf$/);
   }
   await expect(hero.locator(".proof li")).toHaveCount(3);
-  await expect(hero).toContainText("open to relocation");
+  await expect(hero).toContainText("Open to relocation");
+  expect(((await hero.innerText()).match(/relocation/gi) ?? []).length).toBe(1);
   await expect(hero.getByRole("link", { name: "LinkedIn" })).toBeVisible();
 });
 

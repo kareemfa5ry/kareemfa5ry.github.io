@@ -5,7 +5,7 @@ import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
 import { CHAT_ENABLED, HERO_ASKS } from "../site/chat";
-import { AVAILABILITY, AVAILABILITY_BADGES, HERO_STATS } from "../site/profile";
+import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS, HERO_STATS } from "../site/profile";
 
 interface Props {
   tagline: string;
@@ -62,7 +62,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
       LinkedIn
     </a>
   </div>
-  <p class="availability">{AVAILABILITY.join(" ")}</p>
+  <p class="availability">{AVAILABILITY_DETAILS.join(" ")}</p>
 </header>
 
 <style>

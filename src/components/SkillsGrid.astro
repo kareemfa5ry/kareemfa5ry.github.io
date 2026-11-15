@@ -17,7 +17,7 @@ const provenBy = (groupId: string) => projects.filter((p) => p.data.skills.some(
   {groups.map(({ id, data }) => {
     const proofs = provenBy(id);
     return (
-      <div id={id} class="card">
+      <div id={id} class="card reveal">
         <b>{data.label}</b>
         <StackTags stack={data.items} />
         {proofs.length > 0 && (
