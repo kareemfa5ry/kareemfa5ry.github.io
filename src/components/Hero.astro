@@ -1,5 +1,6 @@
 ---
 // Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability.
+// The default slot (the results chart) sits under the buttons, and in a second column from 60rem.
 import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
@@ -46,6 +47,9 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
       <span class="when-open">Minimize the chat</span>
     </button>
   </div>
+  <div class="side">
+    <slot />
+  </div>
   {CHAT_ENABLED && (
     <div class="ask">
       {HERO_ASKS.map(({ label, prompt }) => (
@@ -68,6 +72,21 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
 <style>
   header {
     padding: 64px 0 40px;
+  }
+  @media (min-width: 60rem) {
+    header {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      column-gap: var(--space-6);
+      align-items: start;
+    }
+    header > :global(*) {
+      grid-column: 1;
+    }
+    header > .side {
+      grid-column: 2;
+      grid-row: 1 / span 12;
+    }
   }
   h1 {
     font-size: clamp(30px, 6vw, 44px);

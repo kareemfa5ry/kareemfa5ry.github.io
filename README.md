@@ -12,7 +12,7 @@ src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global 
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
 src/components/sections/    Contact (closing section: email, LinkedIn, availability, "Ask the assistant")
-src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list) and its scale.ts
+src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list; the hero and project pages) and its scale.ts
 src/components/metrics/     MetricChips (value + label chips for a `metrics` list; project cards, later roles)
 src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)
