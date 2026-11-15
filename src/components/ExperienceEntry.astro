@@ -16,7 +16,7 @@ const { title, org, location, start, end, note, metrics, bullets, results } = en
 const heading = title ? `${title} · ${org}` : org;
 ---
 
-<li class="item role" aria-current={end ? undefined : "date"}>
+<li class="item role reveal" aria-current={end ? undefined : "date"}>
   <p class="when meta">
     <time datetime={start}>{monthLabel(start)}</time> –{" "}
     {end ? <time datetime={end}>{monthLabel(end)}</time> : "Present"}
