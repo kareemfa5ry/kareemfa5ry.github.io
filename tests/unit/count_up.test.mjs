@@ -1,7 +1,7 @@
 // splitNumber (src/components/metrics/count_up.ts): prefix, number, decimals, separators and suffix of a value.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { splitNumber } from "../../src/components/metrics/count_up.ts";
+import { initCountUp, splitNumber } from "../../src/components/metrics/count_up.ts";
 
 const p = (prefix, number, decimals, separators, suffix) => ({ prefix, number, decimals, separators, suffix });
 
@@ -18,4 +18,19 @@ test("splits every value format on the site", () => {
 
 test("a value without a digit stays static", () => {
   assert.equal(splitNumber("n/a"), null);
+});
+
+test("calling initCountUp twice observes each element once", () => {
+  const els = [{}, {}];
+  const observed = [];
+  globalThis.matchMedia = () => ({ matches: false });
+  globalThis.IntersectionObserver = class {
+    observe(el) {
+      observed.push(el);
+    }
+  };
+  globalThis.document = { querySelectorAll: () => els };
+  initCountUp();
+  initCountUp();
+  assert.deepEqual(observed, els);
 });

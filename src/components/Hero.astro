@@ -65,6 +65,12 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   <p class="availability">{AVAILABILITY_DETAILS.join(" ")}</p>
 </header>
 
+<script>
+  import { initCountUp } from "./metrics/count_up";
+
+  initCountUp();
+</script>
+
 <style>
   header {
     padding: 64px 0 40px;

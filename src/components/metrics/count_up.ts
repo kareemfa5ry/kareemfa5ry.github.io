@@ -21,6 +21,7 @@ export function splitNumber(value: string): NumberParts | null {
 }
 
 const DURATION_MS = 800;
+const seen = new WeakSet<Element>(); // two callers (Hero, MetricChips) never observe an element twice
 
 function format(p: NumberParts, n: number): string {
   const body = n.toLocaleString("en-US", {
@@ -61,5 +62,9 @@ export function initCountUp(): void {
       start(entry.target as HTMLElement);
     }
   });
-  document.querySelectorAll("[data-count-up]").forEach((el) => observer.observe(el));
+  document.querySelectorAll("[data-count-up]").forEach((el) => {
+    if (seen.has(el)) return;
+    seen.add(el);
+    observer.observe(el);
+  });
 }
