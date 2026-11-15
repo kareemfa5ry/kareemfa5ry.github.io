@@ -3,6 +3,7 @@
 import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
+import { byOrder } from "../site/collections/by_order";
 import { AVAILABILITY, AVAILABILITY_BADGES, HERO_STATS } from "../site/profile";
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
 }
 
 const { tagline } = Astro.props;
-const entries = (await getCollection("experience")).sort((a, b) => a.data.order - b.data.order);
+const entries = byOrder(await getCollection("experience"));
 const employers = [...new Set(entries.map((entry) => entry.data.org))];
 ---
 

@@ -20,6 +20,7 @@ src/site/chat.ts            Worker URL, Turnstile site key and starter chips for
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/education.ts       education and training lines plus the languages line (home page, llms.txt, CV .tex)
+src/site/collections/     by_order.ts: byOrder, sorts content entries by their `order`
 src/site/knowledge/       domain.ts (industry facts) and glossary.ts (terms) for llms.txt
 src/site/cv_files.ts        the two CVs: titles, paths, headlines, ordered project and skill ids (Downloads, llms.txt, .tex)
 src/site/month.ts           monthLabel: "2026-02" -> "Feb 2026" (experience dates, CV .tex)
