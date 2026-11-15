@@ -1,9 +1,10 @@
 ---
-// One project from the projects collection: linked title, context, bullet list and technology tags.
+// One project card: poster, linked title, summary, up to two headline numbers and technology tags
+// (the bullets live on the project page).
 // data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
 import StackTags from "./projects/StackTags.astro";
 import { demoDuration, hasDemo } from "./projects/demos";
-import { bulletsFor, smartQuotes } from "../site/bullets";
+import MetricChips from "./metrics/MetricChips.astro";
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
@@ -11,11 +12,11 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, org, period, stack, bullets } = entry.data;
+const { title, org, period, stack, summary, metrics } = entry.data;
 const meta = period ? `${org}, ${period}` : org;
 ---
 
-<div class="item" data-project={entry.id}>
+<div class="card project" data-project={entry.id}>
   <div class="item-head">
     <h3>
       <a href={`/projects/${entry.id}/`}>{title}</a>
@@ -45,17 +46,30 @@ const meta = period ? `${org}, ${period}` : org;
       <span class="badge">Watch the demo · {demoDuration(entry.id)} s</span>
     </a>
   )}
-  <ul>
-    {bulletsFor(bullets).map((text) => (
-      <li>{smartQuotes(text)}</li>
-    ))}
-  </ul>
+  <p class="summary">{summary}</p>
+  <MetricChips metrics={metrics} max={2} />
   <StackTags stack={stack} />
 </div>
 
 <style>
+  .project {
+    position: relative;
+    padding: var(--space-4);
+  }
+  .project[hidden] {
+    display: none;
+  }
+  .project h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .summary {
+    margin: var(--space-2) 0 0;
+  }
   .poster {
     position: relative;
+    z-index: 1;
     display: block;
   }
   .badge {

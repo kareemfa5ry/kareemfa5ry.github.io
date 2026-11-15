@@ -1,0 +1,59 @@
+---
+// A sentence where each airline or data term is a button that opens a short definition (native Popover API:
+// no JavaScript; escape, click-away and focus return are built in). `id` must be unique on the page.
+import { smartQuotes } from "../../site/bullets";
+import { GLOSSARY } from "../../site/knowledge/glossary";
+import { splitTerms } from "../../site/knowledge/glossary_split";
+
+interface Props {
+  text: string;
+  id: string;
+}
+
+const { text, id } = Astro.props;
+const parts = splitTerms(text, GLOSSARY);
+---
+
+{parts.map((part, i) =>
+  "term" in part ? (
+    <>
+      <button type="button" class="term" popovertarget={`${id}-${i}`}>
+        {smartQuotes(part.term)}
+      </button>
+      <span popover id={`${id}-${i}`} class="card def">
+        <strong>{part.term}</strong>: {part.meaning}
+      </span>
+    </>
+  ) : (
+    smartQuotes(part.text)
+  ),
+)}
+
+<style>
+  .term {
+    all: unset;
+    cursor: help;
+    border-bottom: 1px dotted currentColor;
+  }
+  .term:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  /* Centred in the viewport by the browser's popover defaults; only size and colour are set here. */
+  .def {
+    max-width: min(24rem, 90vw);
+    padding: var(--space-4);
+    color: var(--ink);
+  }
+  /* Browsers without the Popover API: the definition stays hidden and the term reads as plain text. */
+  @supports not selector(:popover-open) {
+    .def {
+      display: none;
+    }
+  }
+  @media print {
+    .term {
+      border-bottom: 0;
+    }
+  }
+</style>
