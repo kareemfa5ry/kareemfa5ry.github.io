@@ -57,6 +57,7 @@ worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Wor
 .github/rulesets/           protect-main.json: branch ruleset to import once (see Publishing)
 eslint.config.js            lint rules, including the fable-code size and complexity caps
 .prettierrc.mjs             formatting (printWidth 120, Astro plugin)
+docs/globe-plan.md          the globe backdrop spec: owner decisions, PR-sized items, constraint check
 docs/redesign-plan.md       the phased plan for the site redesign: gap table vs a reference CV site, PR-sized items
 AGENTS.md, CLAUDE.md        rules for AI coding agents (Copilot, Claude Code, Codex)
 .claude/skills/resume-update/ how to update the CV: fact -> file -> outputs, run order
