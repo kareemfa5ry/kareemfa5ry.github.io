@@ -11,7 +11,8 @@ src/pages/projects/[slug].astro  one detail page per project: metrics, bullets, 
 src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global stylesheet, nav, footer
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
-src/components/sections/    Contact (closing section: email, LinkedIn, availability, "Ask the assistant")
+src/components/sections/    Contact (closing section: email, LinkedIn, availability, "Ask the assistant");
+                            ChatShowcase (band under the hero: sample answer typed on scroll, the question chips)
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list; the hero and project pages) and its scale.ts
 src/components/metrics/     MetricChips (value + label chips for a `metrics` list), count_up.ts (numbers count up on scroll)
 src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, pager/ProjectPager (previous and next project), PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
@@ -20,7 +21,7 @@ src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; 
 src/components/hero/        HeroGlobe: decorative Three.js route globe behind the hero, loaded only at 48rem and wider; globe_scene.ts (the scene), globe_routes.ts (Cairo to 8 hubs)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
-src/site/chat.ts            Worker URL, Turnstile site key and starter chips for the chat panel (empty = no chat widget)
+src/site/chat.ts            Worker URL, Turnstile site key and starter chips and the showcase's sample Q&A (empty = no chat widget)
 src/site/contact.ts         name, email, LinkedIn and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/education.ts       education and training lines plus the languages line (home page, llms.txt, CV .tex)

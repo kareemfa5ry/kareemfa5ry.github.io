@@ -43,10 +43,22 @@ export const STARTER_CHIPS: readonly { label: string; prompt: string }[] = [
 export const projectQuestion = (title: string) =>
   `Tell me about Kareem's "${title}" project: what he built, the tools he used and the results.`;
 
-/** The hero's two question chips, picked from STARTER_CHIPS by label; a renamed label fails the build. */
-export const HERO_ASK_LABELS = ["Results", "Transferable skills"] as const;
-export const HERO_ASKS = HERO_ASK_LABELS.map((label) => {
+/** The chat showcase's question chips, picked from STARTER_CHIPS by label; a renamed label fails the build.
+ *  "Transferable skills" is left out: the showcase's sample question already asks it. */
+export const SHOWCASE_ASK_LABELS = ["Results", "Leadership"] as const;
+export const SHOWCASE_ASKS = SHOWCASE_ASK_LABELS.map((label) => {
   const chip = STARTER_CHIPS.find((c) => c.label === label);
-  if (!chip) throw new Error(`HERO_ASK_LABELS: no starter chip labelled "${label}"`);
+  if (!chip) throw new Error(`SHOWCASE_ASK_LABELS: no starter chip labelled "${label}"`);
   return chip;
 });
+
+/**
+ * The sample exchange the chat showcase types out; owner-approved wording. No number the hero already shows.
+ */
+export const CHAT_SHOWCASE = {
+  question: "Which of Kareem's skills transfer outside airlines?",
+  answer:
+    "The same work carries over to any business that sells limited stock or capacity at changing prices, such as " +
+    "retail, logistics or SaaS: forecasting demand, setting prices and checking that revenue is recorded correctly. " +
+    "He builds the tools himself, from SQL and Python data pipelines to Power BI dashboards and automated audit checks.",
+};
