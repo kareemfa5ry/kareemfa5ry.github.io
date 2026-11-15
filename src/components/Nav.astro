@@ -7,7 +7,7 @@ const LINKS = [
   { href: "#experience", label: "Experience" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
-  { href: "#download", label: "Download CV" },
+  { href: "#download", label: "Download CV", button: true },
 ];
 ---
 
@@ -17,11 +17,34 @@ const LINKS = [
       {FULL_NAME}
     </a>
     {LINKS.map((link) => (
-      <a href={link.href}>{link.label}</a>
+      <a href={link.href} class={link.button ? "btn primary" : undefined}>
+        {link.label}
+      </a>
     ))}
     <ThemeToggle />
   </div>
 </nav>
+
+<script>
+  // Mark the link of the section crossing the middle of the viewport. Sections absent (project pages) are skipped.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('nav a[href^="#"]')];
+  const observer = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        links.forEach((a) =>
+          a.getAttribute("href") === `#${entry.target.id}`
+            ? a.setAttribute("aria-current", "location")
+            : a.removeAttribute("aria-current"),
+        );
+      }),
+    { rootMargin: "-45% 0px -50% 0px" },
+  );
+  links.forEach((a) => {
+    const section = document.getElementById(a.getAttribute("href")!.slice(1));
+    if (section?.tagName === "SECTION") observer.observe(section);
+  });
+</script>
 
 <style>
   nav {
@@ -46,13 +69,20 @@ const LINKS = [
     margin-right: auto;
     text-decoration: none;
   }
-  nav a:not(.brand) {
+  nav a:not(.brand, .btn) {
     color: var(--muted);
     font-size: 14px;
     text-decoration: none;
   }
-  nav a:not(.brand):hover {
+  nav a:not(.brand, .btn):hover,
+  nav a[aria-current="location"]:not(.btn) {
     color: var(--ink);
+  }
+  /* Underline as well as colour, so the state does not rely on colour alone. */
+  nav a[aria-current="location"]:not(.btn) {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
   }
   @media print {
     nav {
