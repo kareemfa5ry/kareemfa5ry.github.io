@@ -1,0 +1,53 @@
+---
+// A project with screenshots, as a full-width row: first screenshot, summary, numbers, demo poster, pipeline strip.
+// data-project carries the slug so src/islands/ProjectFilter.tsx can show and hide the entry.
+import { Image } from "astro:assets";
+import MetricChips from "../metrics/MetricChips.astro";
+import DemoPoster from "./DemoPoster.astro";
+import PipelineStrip from "./PipelineStrip.astro";
+import ProjectHead from "./ProjectHead.astro";
+import StackTags from "./StackTags.astro";
+import { pipelines } from "./demos";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entry: CollectionEntry<"projects">;
+}
+
+const { entry } = Astro.props;
+const { title, org, period, stack, summary, metrics, screenshots } = entry.data;
+const meta = period ? `${org}, ${period}` : org;
+const [shot] = screenshots;
+const [pipeline] = pipelines(entry.id);
+---
+
+<div class="card featured reveal" data-project={entry.id}>
+  <ProjectHead slug={entry.id} title={title} meta={meta} />
+  <Image src={shot.src} alt={shot.alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" loading="lazy" />
+  <p class="summary">{summary}</p>
+  <MetricChips metrics={metrics} max={2} />
+  <StackTags stack={stack} />
+  <DemoPoster slug={entry.id} title={title} />
+  {pipeline && <PipelineStrip pipeline={pipeline} level={4} />}
+</div>
+
+<style>
+  .featured {
+    position: relative;
+    padding: var(--space-4);
+  }
+  .featured[hidden] {
+    display: none;
+  }
+  .summary {
+    margin: var(--space-2) 0 0;
+  }
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: var(--space-2) 0;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+  }
+</style>
