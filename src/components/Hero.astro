@@ -1,7 +1,7 @@
 ---
 // Page header: name, tagline, three proof numbers, a CV button per role, the chat opener, contact and availability.
 // data-globe-stop="hero": the backdrop globe (hero/GlobeBackdrop) spins while this header is in view.
-import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contact";
+import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO, WHATSAPP_URL } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
@@ -51,6 +51,9 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
     <a href={MAILTO}>{EMAIL}</a>
     <a href={LINKEDIN_URL} target="_blank" rel="noopener">
       LinkedIn
+    </a>
+    <a href={WHATSAPP_URL} target="_blank" rel="noopener">
+      WhatsApp
     </a>
   </div>
   <p class="availability">{AVAILABILITY_DETAILS.join(" ")}</p>

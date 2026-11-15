@@ -11,7 +11,7 @@ src/pages/projects/[slug].astro  one detail page per project: metrics, bullets, 
 src/layouts/Base.astro      page shell: head, meta and OG tags, favicon, global stylesheet, nav, footer
 src/components/             one component per concern: Nav, Hero, Stats, ExperienceEntry, ProjectEntry,
                             SkillsGrid, Downloads, Footer (each owns its scoped <style>)
-src/components/sections/    Contact (closing section: email, LinkedIn, availability, "Ask the assistant");
+src/components/sections/    Contact (closing section: email, LinkedIn, WhatsApp, availability, "Ask the assistant");
                             ChatShowcase (band under the hero: sample answer typed on scroll, the question chips)
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list; a role in the timeline and project pages) and its scale.ts
 src/components/metrics/     MetricChips (value + label chips for a `metrics` list), count_up.ts (numbers count up on scroll)
@@ -22,7 +22,7 @@ src/components/hero/        GlobeBackdrop: decorative Three.js route globe, one 
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL, Turnstile site key and starter chips and the showcase's sample Q&A (empty = no chat widget)
-src/site/contact.ts         name, email, LinkedIn and location used by several components
+src/site/contact.ts         name, email, LinkedIn, WhatsApp and location used by several components
 src/site/profile.ts         tagline, profile paragraph and the four stat tiles
 src/site/education.ts       education and training lines plus the languages line (home page, llms.txt, CV .tex)
 src/site/collections/     by_order.ts: byOrder, sorts content entries by their `order`

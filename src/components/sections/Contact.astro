@@ -1,7 +1,15 @@
 ---
 // Closing section: how to reach Kareem. The CV downloads live in Downloads.astro, not repeated here.
 import { CHAT_ENABLED } from "../../site/chat";
-import { EMAIL, LINKEDIN_LABEL, LINKEDIN_URL, LOCATION, MAILTO } from "../../site/contact";
+import {
+  EMAIL,
+  LINKEDIN_LABEL,
+  LINKEDIN_URL,
+  LOCATION,
+  MAILTO,
+  WHATSAPP_URL,
+  WHATSAPP_USERNAME,
+} from "../../site/contact";
 import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS } from "../../site/profile";
 ---
 
@@ -25,6 +33,9 @@ import { AVAILABILITY_BADGES, AVAILABILITY_DETAILS } from "../../site/profile";
       </a>
       <a class="btn" href={LINKEDIN_URL} target="_blank" rel="noopener">
         {LINKEDIN_LABEL}
+      </a>
+      <a class="btn" href={WHATSAPP_URL} target="_blank" rel="noopener">
+        WhatsApp @{WHATSAPP_USERNAME}
       </a>
       {CHAT_ENABLED && (
         <button type="button" class="btn" data-chat-open aria-expanded="false">
