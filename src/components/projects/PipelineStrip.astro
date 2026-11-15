@@ -14,7 +14,7 @@ const { heading, caption, stages } = Astro.props.pipeline;
   <p class="caption">{caption}</p>
   <ol aria-label={`${heading}, ${stages.length} steps`}>
     {stages.map(({ label, detail }) => (
-      <li class="card">
+      <li class="card reveal">
         <strong>{label}</strong>
         {detail && <span>{detail}</span>}
       </li>
