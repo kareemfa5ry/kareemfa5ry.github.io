@@ -4,7 +4,7 @@ import { EMAIL, FULL_NAME, LINKEDIN_URL, LOCATION, MAILTO } from "../site/contac
 import { CV_FILES } from "../site/cv_files";
 import { getCollection } from "astro:content";
 import { byOrder } from "../site/collections/by_order";
-import { CHAT_ENABLED, STARTER_CHIPS } from "../site/chat";
+import { CHAT_ENABLED, HERO_ASKS } from "../site/chat";
 import { AVAILABILITY, AVAILABILITY_BADGES, HERO_STATS } from "../site/profile";
 
 interface Props {
@@ -48,7 +48,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   </div>
   {CHAT_ENABLED && (
     <div class="ask">
-      {STARTER_CHIPS.slice(0, 2).map(({ label, prompt }) => (
+      {HERO_ASKS.map(({ label, prompt }) => (
         <button type="button" class="chip" data-chat-open data-chat-prompt={prompt} style="display:none">
           {label}?
         </button>

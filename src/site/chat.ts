@@ -42,3 +42,11 @@ export const STARTER_CHIPS: readonly { label: string; prompt: string }[] = [
 /** The one question the "Ask about this project" button sends on a project page. */
 export const projectQuestion = (title: string) =>
   `Tell me about Kareem's "${title}" project: what he built, the tools he used and the results.`;
+
+/** The hero's two question chips, picked from STARTER_CHIPS by label; a renamed label fails the build. */
+export const HERO_ASK_LABELS = ["Results", "Transferable skills"] as const;
+export const HERO_ASKS = HERO_ASK_LABELS.map((label) => {
+  const chip = STARTER_CHIPS.find((c) => c.label === label);
+  if (!chip) throw new Error(`HERO_ASK_LABELS: no starter chip labelled "${label}"`);
+  return chip;
+});
