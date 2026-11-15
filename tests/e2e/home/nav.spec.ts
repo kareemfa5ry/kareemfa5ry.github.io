@@ -12,3 +12,14 @@ test("nav CV link is a button", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator('nav a[href="#download"]')).toHaveClass(/btn/);
 });
+
+test("nav fits a 360px phone without sideways scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto("/");
+  for (const item of await page.locator("nav a, nav .plane-switch").all()) {
+    const box = await item.boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x + box!.width).toBeLessThanOrEqual(360);
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+});
