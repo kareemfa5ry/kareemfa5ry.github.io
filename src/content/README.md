@@ -48,6 +48,7 @@ A screenshot entry: `src` is the path from the project file to the image
 | `note`     | text                           | no       | Context line shown above the bullets.                                                            |
 | `order`    | whole number from 1            | yes      | Position in the Experience section, 1 first.                                                     |
 | `projects` | list of project ids            | no       | Projects done in this role, e.g. `[daily-revenue-pipeline]`.                                     |
+| `metrics`  | list of `{value, label}`       | no       | Headline numbers shown as chips under the role title; same shape as project `metrics`.           |
 | `results`  | list of results                | no       | Before -> after numbers drawn as a chart; default `[]`.                                          |
 | `bullets`  | list of text or `{text, cv}`   | yes      | Bullets; no `cv` = everywhere; `cv: [sda]` = that PDF (and the site) only; `cv: []` = site only. |
 

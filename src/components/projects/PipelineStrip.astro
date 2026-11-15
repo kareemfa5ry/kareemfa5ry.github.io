@@ -17,7 +17,7 @@ const Heading = `h${level}` as const;
   <p class="caption">{caption}</p>
   <ol aria-label={`${heading}, ${stages.length} steps`}>
     {stages.map(({ label, detail }) => (
-      <li class="card">
+      <li class="card reveal">
         <strong>{label}</strong>
         {detail && <span>{detail}</span>}
       </li>

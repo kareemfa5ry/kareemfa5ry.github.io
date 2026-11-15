@@ -106,6 +106,7 @@ const experience = defineCollection({
       .array(reference("projects"))
       .optional()
       .describe("Project ids done in this role: file names in src/content/projects/ without .md."),
+    metrics: z.array(metric).optional().describe("Headline numbers for this role, shown as chips under the title."),
     bullets,
     results,
   }),

@@ -21,7 +21,7 @@ const [shot] = screenshots;
 const [pipeline] = pipelines(entry.id);
 ---
 
-<div class="card featured" data-project={entry.id}>
+<div class="card featured reveal" data-project={entry.id}>
   <ProjectHead slug={entry.id} title={title} meta={meta} />
   <Image src={shot.src} alt={shot.alt} widths={[480, 960]} sizes="(min-width: 960px) 960px, 100vw" loading="lazy" />
   <p class="summary">{summary}</p>

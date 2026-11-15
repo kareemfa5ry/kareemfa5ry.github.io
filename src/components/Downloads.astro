@@ -7,7 +7,7 @@ import { CV_FILES } from "../site/cv_files";
   <h2>Download CV</h2>
   <div class="downloads">
     {CV_FILES.map((cv) => (
-      <div class="dl card">
+      <div class="dl card reveal">
         <h3>{cv.title}</h3>
         <p>{cv.blurb}</p>
         <a class="btn primary" href={cv.href} download>
