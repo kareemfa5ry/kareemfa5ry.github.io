@@ -7,7 +7,7 @@ const LINKS = [
   { href: "#projects", label: "Projects" },
   { href: "#experience", label: "Experience" },
   { href: "#skills", label: "Skills" },
-  { href: "#download", label: "Download CV", button: true },
+  { href: "#download", label: "CV", sr: "Download ", button: true },
 ];
 ---
 
@@ -16,11 +16,14 @@ const LINKS = [
     <a class="brand" href="#top">
       {FULL_NAME}
     </a>
-    {LINKS.map((link) => (
-      <a href={link.href} class={link.button ? "btn primary" : undefined}>
-        {link.label}
-      </a>
-    ))}
+    <div class="links">
+      {LINKS.map((link) => (
+        <a href={link.href} class={link.button ? "btn primary" : undefined}>
+          {link.sr && <span class="sr">{link.sr}</span>}
+          {link.label}
+        </a>
+      ))}
+    </div>
     <ThemeToggle />
   </div>
 </nav>
@@ -83,6 +86,48 @@ const LINKS = [
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 6px;
+  }
+  /* Desktop: the links sit in the bar's own row and the full "Download CV" shows. */
+  nav .links {
+    display: contents;
+  }
+  /* Phones: brand and switch on the first row, links on a second; "Download " stays for screen readers only so
+     "CV" fits at 320px. Every target is at least 44px tall. */
+  @media (max-width: 639px) {
+    nav .wrap {
+      flex-wrap: wrap;
+      gap: 0 12px;
+      height: auto;
+      overflow: visible;
+    }
+    nav .brand {
+      flex: 1;
+      min-width: 0;
+    }
+    nav .links {
+      display: flex;
+      order: 1;
+      width: 100%;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    nav .brand,
+    nav .links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+    nav .wrap :global(.plane-switch) {
+      min-height: 44px;
+    }
+    nav .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
   }
   @media print {
     nav {
