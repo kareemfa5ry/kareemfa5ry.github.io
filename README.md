@@ -17,6 +17,7 @@ src/components/metrics/     MetricChips (value + label chips for a `metrics` lis
 src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, pager/ProjectPager (previous and next project), PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
+src/components/hero/        HeroGlobe: decorative Three.js route globe behind the hero, loaded only at 48rem and wider; globe_scene.ts (the scene), globe_routes.ts (Cairo to 8 hubs)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL, Turnstile site key and starter chips for the chat panel (empty = no chat widget)
@@ -31,6 +32,7 @@ src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page
 src/site/bullets.ts         the front matter bullets of an entry, shared by the pages, llms.txt and resume.json
 public/theme.css            the palette tokens and color-scheme; linked by the site and the demos
 public/theme.js             theme storage key, readTheme/applyTheme/toggleTheme, cross-document storage sync
+public/globe/              land.png: the land mask the hero globe samples its dots from
 src/pages/llms.txt.ts       /llms.txt endpoint: the CV as Markdown for AI assistants, generated from the content
 src/pages/resume.json.ts    /resume.json endpoint: JSON Resume v1, generated from the content
 src/content.config.ts       content collection schemas (projects, experience, skills); strict, every field described
@@ -44,6 +46,7 @@ playwright.config.ts        Playwright config: Chromium, serves dist/ with `npm 
 lighthouserc.json           Lighthouse CI budget: category minimums for / and a project page
 scripts/                    Node checks and the Claude Code hooks (see scripts/README.md)
 scripts/cv/                 generate.mjs and latex.mjs: content -> cv/*.tex (`npm run cv:generate`; `--check` runs in `npm run check`)
+scripts/globe/              make_land_mask.mjs: builds public/globe/land.png from Natural Earth land (run once, the PNG is committed)
 cv/                         preamble.tex (hand-written) and the two generated CV .tex files; built-from.json holds their hashes
 cv/phone.txt, cv/out/       ignored by version control: the phone number (one line) and pdflatex output
 worker/                     chat endpoint ("ask about Kareem"), a Cloudflare Worker: src/, test/, wrangler.jsonc
