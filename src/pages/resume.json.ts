@@ -3,7 +3,7 @@ import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 import { bulletsFor } from "../site/bullets";
 import { byOrder } from "../site/collections/by_order";
-import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
+import { EMAIL, FULL_NAME, LINKEDIN_URL, WHATSAPP_URL, WHATSAPP_USERNAME } from "../site/contact";
 import { PROFILE_SUMMARY, TAGLINE } from "../site/profile";
 
 export async function GET({ site }: APIContext) {
@@ -19,7 +19,10 @@ export async function GET({ site }: APIContext) {
       url: site?.href,
       summary: PROFILE_SUMMARY,
       location: { city: "Cairo", countryCode: "EG" },
-      profiles: [{ network: "LinkedIn", url: LINKEDIN_URL }],
+      profiles: [
+        { network: "LinkedIn", url: LINKEDIN_URL },
+        { network: "WhatsApp", username: WHATSAPP_USERNAME, url: WHATSAPP_URL },
+      ],
     },
     work: experience.map(({ data }) => ({
       name: data.org,

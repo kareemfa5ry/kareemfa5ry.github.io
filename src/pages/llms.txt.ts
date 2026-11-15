@@ -6,7 +6,7 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import { changeText, type Result } from "../components/charts/scale";
 import { type BulletItem, bulletsFor } from "../site/bullets";
 import { byOrder } from "../site/collections/by_order";
-import { EMAIL, FULL_NAME, LINKEDIN_URL } from "../site/contact";
+import { EMAIL, FULL_NAME, LINKEDIN_URL, WHATSAPP_URL, WHATSAPP_USERNAME } from "../site/contact";
 import { CV_FILES } from "../site/cv_files";
 import { EDUCATION, LANGUAGES } from "../site/education";
 import { DOMAIN } from "../site/knowledge/domain";
@@ -79,6 +79,7 @@ export async function GET({ site }: APIContext) {
     "## Contact",
     `- Email: ${EMAIL}`,
     `- [LinkedIn](${LINKEDIN_URL})`,
+    `- [WhatsApp](${WHATSAPP_URL}): username @${WHATSAPP_USERNAME}`,
     "",
   ];
   return new Response(lines.join("\n"), { headers: { "Content-Type": "text/plain; charset=utf-8" } });
