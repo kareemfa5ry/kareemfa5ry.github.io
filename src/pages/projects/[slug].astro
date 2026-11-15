@@ -1,5 +1,6 @@
 ---
 // One page per project: summary, metrics, bullets, stack, screenshots and the skill groups it proves.
+// The title is the page's hero for the backdrop globe (data-globe-stop): it spins while the title is in view.
 import { getCollection, getEntries } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import Stats from "../../components/Stats.astro";
@@ -32,7 +33,9 @@ const meta = period ? `${org}, ${period}` : org;
   <p>
     <a href="/#projects">← All projects</a>
   </p>
-  <h1 style={`view-transition-name: project-${project.id}`}>{title}</h1>
+  <h1 data-globe-stop="hero" style={`view-transition-name: project-${project.id}`}>
+    {title}
+  </h1>
   <p class="meta">{meta}</p>
   <p>{summary}</p>
   {CHAT_ENABLED && (
