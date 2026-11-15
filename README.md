@@ -18,7 +18,7 @@ src/components/metrics/     MetricChips (value + label chips for a `metrics` lis
 src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, pager/ProjectPager (previous and next project), PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
-src/components/hero/        HeroGlobe: decorative Three.js route globe behind the hero, loaded only at 48rem and wider; globe_scene.ts (the scene), globe_routes.ts (Cairo to 8 hubs)
+src/components/hero/        GlobeBackdrop: decorative Three.js route globe, one fixed centred layer behind every page (Base.astro), dim behind the text column, loaded only at 48rem and wider; globe_scene.ts (the scene), globe_routes.ts (Cairo to 8 hubs)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL, Turnstile site key and starter chips and the showcase's sample Q&A (empty = no chat widget)
@@ -33,7 +33,7 @@ src/site/person_jsonld.ts   schema.org Person record (JSON-LD) for the home page
 src/site/bullets.ts         the front matter bullets of an entry, shared by the pages, llms.txt and resume.json
 public/theme.css            the palette tokens and color-scheme; linked by the site and the demos
 public/theme.js             theme storage key, readTheme/applyTheme/toggleTheme, cross-document storage sync
-public/globe/              land.png: the land mask the hero globe samples its dots from
+public/globe/              land.png: the land mask the globe samples its dots from
 src/pages/llms.txt.ts       /llms.txt endpoint: the CV as Markdown for AI assistants, generated from the content
 src/pages/resume.json.ts    /resume.json endpoint: JSON Resume v1, generated from the content
 src/content.config.ts       content collection schemas (projects, experience, skills); strict, every field described

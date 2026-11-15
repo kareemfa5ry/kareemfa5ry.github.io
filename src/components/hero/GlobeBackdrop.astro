@@ -1,0 +1,79 @@
+---
+// Decorative dotted route globe: one fixed, centred layer behind every page (Base.astro renders it first in
+// <body>, so it paints over the page background and under all content). Dim on purpose: --globe-opacity in the
+// gutters, --globe-column behind the text column (a horizontal mask), so text keeps AA contrast
+// (tests/e2e/home/globe/contrast.spec.ts). The layer's right edge is the docked chat's edge, and it clips, so it
+// never adds sideways scroll. Three.js (./globe_scene) loads as its own chunk from an idle callback, only at 48rem
+// and up, so phones never download it. Hidden in print.
+---
+
+<div data-globe aria-hidden="true">
+  <div data-globe-box></div>
+</div>
+
+<script>
+  const box = document.querySelector<HTMLElement>("[data-globe-box]");
+  const wide = window.matchMedia("(min-width: 48rem)");
+
+  if (box && wide.matches) {
+    const mount = () =>
+      import("./globe_scene")
+        .then(({ mountGlobe }) => mountGlobe(box, document.querySelector("[data-globe-stop='hero']")))
+        .catch(() => undefined); // ponytail: decorative; no WebGL context or no chunk just means no globe
+    // ponytail: Safari has no requestIdleCallback; a short timeout does the same job.
+    const idle = (run: () => void) =>
+      "requestIdleCallback" in window ? requestIdleCallback(run) : setTimeout(run, 200);
+    // Decoration goes last: after load, then a second idle period, so the client:idle islands hydrate first.
+    const start = () => idle(() => idle(mount));
+    if (document.readyState === "complete") start();
+    else addEventListener("load", start, { once: true });
+  }
+</script>
+
+<style>
+  [data-globe] {
+    --globe-opacity: 0.25;
+    --globe-column: 0.15;
+    --globe-dim: rgb(0 0 0 / calc(var(--globe-column) / var(--globe-opacity)));
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: clip;
+    pointer-events: none;
+    /* One layer-sized cell; the box is centred in it even when wider than the layer (chat docked). */
+    grid-template: 100% / 100%;
+    place-items: unsafe center;
+    opacity: var(--globe-opacity);
+    /* 80px soft edges, outside the column, so text never sits over more than --globe-column. */
+    mask-image: linear-gradient(
+      to right,
+      #000 calc(50% - var(--maxw) / 2 - 80px),
+      var(--globe-dim) calc(50% - var(--maxw) / 2),
+      var(--globe-dim) calc(50% + var(--maxw) / 2),
+      #000 calc(50% + var(--maxw) / 2 + 80px)
+    );
+  }
+  /* Colour probes read by the scene (nothing is painted: no border or outline style). */
+  [data-globe-box] {
+    color: var(--accent);
+    border-color: var(--globe-dot);
+    outline-color: var(--bg);
+    width: min(125vmin, 1200px);
+    aspect-ratio: 1;
+  }
+  @media (min-width: 48rem) {
+    [data-globe] {
+      display: grid;
+    }
+    /* Same rule as the body's padding in global.css: the docked chat's width is not part of the page. */
+    :global(html[data-chat-dock="side"]) [data-globe] {
+      right: var(--chat-dock-width);
+    }
+  }
+  @media print {
+    [data-globe] {
+      display: none;
+    }
+  }
+</style>

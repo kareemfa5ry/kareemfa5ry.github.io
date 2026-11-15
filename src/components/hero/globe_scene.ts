@@ -1,7 +1,7 @@
 /**
- * Owns the hero globe's WebGL scene: a sphere of land dots (Fibonacci spiral filtered by a land mask), an
- * occluding sphere, the route arcs, the render loop, resize, theme colours, pausing, and a still globe under
- * reduced motion or software (CPU) WebGL.
+ * Owns the backdrop globe's WebGL scene: a sphere of land dots (Fibonacci spiral filtered by a land mask), an
+ * occluding sphere, the route arcs, the render loop, resize and pixel budget, theme colours, pausing, and a still
+ * globe under reduced motion or software (CPU) WebGL.
  * The technique of leonsoftware.com's hero globe, rebuilt on current three.js.
  */
 import {
@@ -30,6 +30,8 @@ const START_ROTATION = -2.7;
 /** Leon's camera direction, pulled back so the whole sphere (about 92% of the box) fits its square box. */
 const CAMERA_DISTANCE = 25;
 const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+/** The most device pixels drawn per frame, today's 720 px box at pixel ratio 2; a bigger box lowers the ratio. */
+const MAX_PIXELS = 2.1e6;
 
 /** Land dots only: sample the equirectangular mask at each Fibonacci point. */
 function landDots(mask: ImageData): Vector3[] {
@@ -84,10 +86,10 @@ function buildDots(mask: ImageData, material: MeshBasicMaterial): InstancedMesh 
   return mesh;
 }
 
-export function mountGlobe(container: HTMLElement): void {
+/** Mounts the scene in `container`; it spins while `spinWhile` (the hero) is in view and holds still below it. */
+export function mountGlobe(container: HTMLElement, spinWhile: Element | null): void {
   const renderer = new WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.domElement.style.cssText = "width:100%;height:100%;display:block";
   container.append(renderer.domElement);
 
@@ -107,6 +109,7 @@ export function mountGlobe(container: HTMLElement): void {
   const software = isSoftwareGl(renderer);
   const still = () => software || reduced.matches;
   let visible = true;
+  let spinning = true;
   let last = performance.now();
   const render = () => renderer.render(scene, camera);
   const frame = (now: number) => {
@@ -117,10 +120,10 @@ export function mountGlobe(container: HTMLElement): void {
     render();
   };
   const sync = () => {
-    const animate = visible && !document.hidden && !still();
+    const animate = visible && spinning && !document.hidden && !still();
     last = performance.now();
     renderer.setAnimationLoop(animate ? frame : null);
-    if (still()) routes.showAll();
+    if (!animate) routes.showAll();
     render();
   };
   const colours = () => {
@@ -133,6 +136,7 @@ export function mountGlobe(container: HTMLElement): void {
   const resize = () => {
     const { clientWidth: w, clientHeight: h } = container;
     if (!w || !h) return;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2, Math.sqrt(MAX_PIXELS / (w * h))));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -144,6 +148,11 @@ export function mountGlobe(container: HTMLElement): void {
     visible = entry.isIntersecting;
     sync();
   }).observe(container);
+  if (spinWhile)
+    new IntersectionObserver(([entry]) => {
+      spinning = entry.isIntersecting;
+      sync();
+    }).observe(spinWhile);
   document.addEventListener("visibilitychange", sync);
   reduced.addEventListener("change", sync);
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", colours);

@@ -1,8 +1,9 @@
 ---
-// Page shell: head (meta, OG tags, favicon, global stylesheet), nav, main slot, footer.
+// Page shell: head (meta, OG tags, favicon, global stylesheet), the globe backdrop, nav, main slot, footer.
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import GlobeBackdrop from "../components/hero/GlobeBackdrop.astro";
 import ChatWidget from "../islands/ChatWidget.tsx";
 import { CHAT, CHAT_ENABLED } from "../site/chat";
 
@@ -47,6 +48,7 @@ const FAVICON =
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
+    <GlobeBackdrop />
     <Nav />
     <main class:list={["wrap", { numbered }]} id="top">
       <slot />
