@@ -15,7 +15,7 @@ src/components/sections/    Contact (closing section: email, LinkedIn, availabil
                             ChatShowcase (band under the hero: sample answer typed on scroll, the question chips)
 src/components/charts/      BeforeAfterChart (server-rendered SVG dumbbell for a `results` list; the hero and project pages) and its scale.ts
 src/components/metrics/     MetricChips (value + label chips for a `metrics` list; project cards, later roles)
-src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
+src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, pager/ProjectPager (previous and next project), PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:

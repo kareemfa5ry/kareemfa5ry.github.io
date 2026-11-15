@@ -1,0 +1,39 @@
+---
+// Previous and next project in home display order; the first and last project show only one link.
+interface Neighbour {
+  id: string;
+  data: { title: string };
+}
+interface Props {
+  prev?: Neighbour;
+  next?: Neighbour;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<nav aria-label="More projects">
+  {prev && (
+    <a class="card btn" rel="prev" href={`/projects/${prev.id}/`}>
+      ← {prev.data.title}
+    </a>
+  )}
+  {next && (
+    <a class="card btn" rel="next" href={`/projects/${next.id}/`}>
+      {next.data.title} →
+    </a>
+  )}
+</nav>
+
+<style>
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    justify-content: space-between;
+    margin-block: var(--space-5);
+  }
+  a[rel="next"] {
+    margin-inline-start: auto;
+  }
+</style>
