@@ -56,7 +56,7 @@ export default function ProjectFilter({ groups, projects }: Props) {
           <button
             key={group.id}
             type="button"
-            className={styles.chip}
+            className={`${styles.chip} pop`}
             aria-pressed={active === group.id}
             onClick={() => setActive(active === group.id ? null : group.id)}
           >

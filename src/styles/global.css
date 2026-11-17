@@ -201,6 +201,17 @@ h3 {
     var(--shadow),
     0 8px 24px -6px var(--accent-glow);
 }
+/* Clickable and tech pills (.pop): accent border and glow on hover, a small lift without reduced motion. */
+.pop {
+  transition:
+    transform 0.2s var(--ease-pop),
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.pop:hover:not(:disabled) {
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px -2px var(--accent-glow);
+}
 .topbar {
   position: relative;
   overflow: hidden;
@@ -223,6 +234,9 @@ h3 {
   }
   .lift:hover {
     transform: translateY(-4px);
+  }
+  .pop:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.03);
   }
   .topbar::before {
     transition: transform 0.3s var(--ease-pop);

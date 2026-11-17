@@ -9,7 +9,7 @@ const { stack } = Astro.props;
 
 <div class="tags">
   {stack.map((tag) => (
-    <span class="chip">{tag}</span>
+    <span class="chip pop">{tag}</span>
   ))}
 </div>
 
@@ -20,21 +20,8 @@ const { stack } = Astro.props;
     gap: 6px;
     margin-top: 10px;
   }
-  /* Tech pills pop on hover. In project cards the stretched title link sits on top, so the card lifts instead. */
+  /* The border the .pop hover lights up. In project cards the stretched title link sits on top, so the card lifts. */
   .chip {
     border: 1px solid var(--rule);
-    transition:
-      transform 0.2s var(--ease-pop),
-      border-color 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-  .chip:hover {
-    border-color: var(--accent);
-    box-shadow: 0 4px 14px -2px var(--accent-glow);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .chip:hover {
-      transform: translateY(-2px) scale(1.03);
-    }
   }
 </style>

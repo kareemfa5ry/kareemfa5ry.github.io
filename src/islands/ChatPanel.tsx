@@ -84,7 +84,7 @@ export default function ChatPanel({ workerUrl, siteKey, ask }: Props) {
             <button
               key={label}
               type="button"
-              className={styles.chip}
+              className={`${styles.chip} pop`}
               disabled={busy}
               onClick={async () => {
                 setUsed((u) => [...u, label]);
