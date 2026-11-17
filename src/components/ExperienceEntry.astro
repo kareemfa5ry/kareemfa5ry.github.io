@@ -41,7 +41,7 @@ const heading = title ? `${title} · ${org}` : org;
       <p class="role-projects meta">
         Projects from this role:
         {projects.map((p) => (
-          <a class="chip" href={`/projects/${p.id}/`}>
+          <a class="chip pop" href={`/projects/${p.id}/`}>
             {p.data.title}
           </a>
         ))}

@@ -9,7 +9,7 @@ const { stack } = Astro.props;
 
 <div class="tags">
   {stack.map((tag) => (
-    <span class="chip">{tag}</span>
+    <span class="chip pop">{tag}</span>
   ))}
 </div>
 
@@ -19,5 +19,9 @@ const { stack } = Astro.props;
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 10px;
+  }
+  /* The border the .pop hover lights up. In project cards the stretched title link sits on top, so the card lifts. */
+  .chip {
+    border: 1px solid var(--rule);
   }
 </style>

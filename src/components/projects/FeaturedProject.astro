@@ -22,7 +22,7 @@ const [shot] = screenshots;
 const [pipeline] = pipelines(entry.id);
 ---
 
-<div class="card featured reveal" data-project={entry.id}>
+<div class="card lift topbar featured reveal" data-project={entry.id}>
   <ProjectHead slug={entry.id} title={title} meta={meta} />
   {hasDemo(entry.id) ? (
     <DemoPoster slug={entry.id} title={title} />
@@ -37,7 +37,6 @@ const [pipeline] = pipelines(entry.id);
 
 <style>
   .featured {
-    position: relative;
     padding: var(--space-4);
   }
   .featured[hidden] {

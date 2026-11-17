@@ -30,7 +30,7 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
   <p class="employers">Worked with {employers.join(", ")}</p>
   <ul class="proof">
     {HERO_STATS.map((stat, i) => (
-      <li class="card" style={`--i:${i}`}>
+      <li class="card lift" style={`--i:${i}`}>
         <b data-count-up>{stat.value}</b> {stat.label}
       </li>
     ))}
@@ -154,10 +154,11 @@ const employers = [...new Set(entries.map((entry) => entry.data.org))];
       animation: pulse 2s ease-in-out infinite;
     }
   }
+  /* `translate`, not `transform`: the .lift hover owns transform, and a filled animation would override it. */
   @keyframes tile-in {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      translate: 0 8px;
     }
   }
   @keyframes pulse {
