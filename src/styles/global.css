@@ -14,6 +14,13 @@
   --radius: 12px;
   --shadow:
     0 1px 2px light-dark(rgb(0 8 20 / 6%), rgb(0 0 0 / 40%)), 0 4px 14px light-dark(rgb(0 8 20 / 6%), rgb(0 0 0 / 30%));
+  /* Hover micro-interactions: one easing for every pop, and a glow mixed from the theme accent (no new colour). */
+  --ease-pop: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Weaker in light mode: a navy glow on white reads as a smudge; gold on navy reads as light. */
+  --accent-glow: light-dark(
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    color-mix(in srgb, var(--accent) 40%, transparent)
+  );
 }
 * {
   box-sizing: border-box;
@@ -106,12 +113,18 @@ h3 a:hover {
   font-weight: 600;
   border: 1px solid var(--accent);
   text-decoration: none;
+  transition:
+    transform 0.2s var(--ease-pop),
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 }
 .btn.primary {
   background: var(--accent);
   color: var(--bg);
 }
 .btn.secondary {
+  border-color: var(--rule);
   background: transparent;
   color: var(--accent);
   cursor: pointer;
@@ -125,6 +138,8 @@ h3 a:hover {
 .btn:hover {
   text-decoration: none;
   filter: brightness(1.08);
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px -3px var(--accent-glow);
 }
 
 section {
@@ -170,6 +185,48 @@ h3 {
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+}
+/* Hover lift for cards (.lift) and a top accent bar that sweeps in left to right (.topbar). Entry animations move
+   with `translate`, hover lifts with `transform`, so the two never fight. Reduced motion keeps the border and glow
+   and drops the movement. */
+.lift {
+  transition:
+    transform 0.2s var(--ease-pop),
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.lift:hover {
+  border-color: var(--accent);
+  box-shadow:
+    var(--shadow),
+    0 8px 24px -6px var(--accent-glow);
+}
+.topbar {
+  position: relative;
+  overflow: hidden;
+}
+.topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.topbar:hover::before {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+  }
+  .topbar::before {
+    transition: transform 0.3s var(--ease-pop);
+  }
 }
 /* Chip: small pill label. */
 .chip {
