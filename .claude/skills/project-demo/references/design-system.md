@@ -6,18 +6,18 @@ Every demo uses these and nothing else: no per-demo colours, fonts, sizes or eas
 
 ## Colour
 
-Copied from `src/styles/global.css` (lines 10-17); each is `light-dark(light, dark)`, so the theme comes from
+Copied from `public/theme.css` (the core tokens); each is `light-dark(light, dark)`, so the theme comes from
 `color-scheme`, pinned by `html[data-theme]` from `?theme=` or left to the system.
 
 | Token           | Light     | Dark      | Use                                                 |
 | --------------- | --------- | --------- | --------------------------------------------------- |
-| `--bg`          | `#f7f9fc` | `#000814` | page and stage background                           |
+| `--bg`          | `#eef3fa` | `#000814` | page and stage background                           |
 | `--surface`     | `#ffffff` | `#001d3d` | cards, tags, the control button                     |
 | `--ink`         | `#000814` | `#e8eef7` | headings, numbers, body text                        |
-| `--muted`       | `#4a5a70` | `#9fb1c9` | taglines, labels, captions                          |
-| `--rule`        | `#d5deea` | `#14365f` | borders, connectors at rest                         |
-| `--accent`      | `#003566` | `#ffc300` | the one highlight per shot: rules, progress, active |
-| `--accent-soft` | `#fff3c2` | `#003566` | fills behind an accent (active stage, chart area)   |
+| `--muted`       | `#3f4f66` | `#9fb1c9` | taglines, labels, captions                          |
+| `--rule`        | `#c2cfe0` | `#14365f` | borders, connectors at rest                         |
+| `--accent`      | `#003f88` | `#ffc300` | the one highlight per shot: rules, progress, active |
+| `--accent-soft` | `#dde8fa` | `#003566` | fills behind an accent (active stage, chart area)   |
 
 Text pairs pass WCAG AA on `--bg` and `--surface` (see global.css). Accent is never the only carrier of meaning:
 pair it with a label or position. The palette lives in `public/theme.css`, which the site and `player.html` both link; change it there only and

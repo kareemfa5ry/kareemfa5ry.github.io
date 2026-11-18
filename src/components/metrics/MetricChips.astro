@@ -40,10 +40,10 @@ const { metrics, max = metrics.length } = Astro.props;
     gap: 6px;
     margin: 0;
     color: inherit;
-    background: transparent;
-    border: 1px solid var(--rule);
+    background: var(--metric-bg);
+    border: 1px solid var(--metric-rule);
   }
   .metric-chips strong {
-    color: var(--accent);
+    color: var(--metric-ink);
   }
 </style>

@@ -2,18 +2,36 @@
    Theme palette: #000814 #001d3d #003566 (navy), #ffc300 #ffd60a (gold); the other values are tints added for
    text and borders. Each token is light-dark(light value, dark value). The page follows the system setting
    until the visitor picks a theme: theme.js sets html[data-theme], which pins color-scheme below.
-   Every text pair passes WCAG AA (4.5:1); the lowest is muted on bg in light, 6.7:1. */
+   Every text pair passes WCAG AA (4.5:1); the lowest in light is metric ink on its gold tint, 5.4:1.
+   Light mode: navy text and links on a pale blue page, white cards that fade into a faint tint (--surface to
+   --surface-tint), light blue pills, and brand gold for the main actions and the results. */
 :root {
   color-scheme: light dark;
-  --bg: light-dark(#f7f9fc, #000814);
+  --bg: light-dark(#eef3fa, #000814);
   --surface: light-dark(#ffffff, #001d3d);
+  --surface-tint: light-dark(#f6f9fe, #001d3d);
   --ink: light-dark(#000814, #e8eef7);
-  --muted: light-dark(#4a5a70, #9fb1c9);
-  --rule: light-dark(#d5deea, #14365f);
-  --accent: light-dark(#003566, #ffc300);
-  --accent-soft: light-dark(#fff3c2, #003566);
-  /* Hero globe dots: decorative only (aria-hidden), so no text contrast needed; kept faint behind the text. */
-  --globe-dot: light-dark(#b7c6da, #2f6aa8);
+  --muted: light-dark(#3f4f66, #9fb1c9);
+  --rule: light-dark(#c2cfe0, #14365f);
+  --card-rule: light-dark(#dbe4f0, #14365f);
+  --accent: light-dark(#003f88, #ffc300);
+  --accent-soft: light-dark(#dde8fa, #003566);
+  /* Main actions (.btn.primary): gold with navy text in both themes (12.5:1). Outlined buttons get a navy edge. */
+  --cta: #ffc300;
+  --cta-ink: #000814;
+  --btn-rule: light-dark(#003f88, #14365f);
+  /* Semantic chips: one hue per meaning, so a glance tells a tool from a result. Tags = tools and skills
+     (StackTags, the project filter): navy on light blue (8.2:1, also flipped when a filter chip is pressed).
+     Metric = measured results (MetricChips, Stats, hero proof): dark gold (5.4:1 on its tint). Dark keeps gold. */
+  --tag-bg: light-dark(#dde8fa, #003566);
+  --tag-ink: light-dark(#003f88, #ffc300);
+  --tag-rule: light-dark(#b9cdee, #14365f);
+  --metric-bg: light-dark(#fff4cc, transparent);
+  --metric-ink: light-dark(#8a5a00, #ffc300);
+  --metric-rule: light-dark(#f0d88a, #14365f);
+  /* Hero globe dots and route arcs: decorative only (aria-hidden), so no text contrast needed. */
+  --globe-dot: light-dark(#a9c3ea, #2f6aa8);
+  --globe-route: #ffc300;
 }
 :root[data-theme="light"] {
   color-scheme: light;
