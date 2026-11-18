@@ -12,8 +12,10 @@
   --space-5: 24px;
   --space-6: 36px;
   --radius: 12px;
+  /* Light: a soft, wide navy-tinted shadow so a white card floats off the tinted page. */
   --shadow:
-    0 1px 2px light-dark(rgb(0 8 20 / 6%), rgb(0 0 0 / 40%)), 0 4px 14px light-dark(rgb(0 8 20 / 6%), rgb(0 0 0 / 30%));
+    0 1px 2px light-dark(rgb(0 29 61 / 8%), rgb(0 0 0 / 40%)),
+    0 10px 28px -8px light-dark(rgb(0 29 61 / 18%), rgb(0 0 0 / 30%));
   /* Hover micro-interactions: one easing for every pop, and a glow mixed from the theme accent (no new colour). */
   --ease-pop: cubic-bezier(0.22, 1, 0.36, 1);
   /* Weaker in light mode: a navy glow on white reads as a smudge; gold on navy reads as light. */
@@ -120,11 +122,12 @@ h3 a:hover {
     filter 0.2s ease;
 }
 .btn.primary {
-  background: var(--accent);
-  color: var(--bg);
+  border-color: var(--cta);
+  background: var(--cta);
+  color: var(--cta-ink);
 }
 .btn.secondary {
-  border-color: var(--rule);
+  border-color: var(--btn-rule);
   background: transparent;
   color: var(--accent);
   cursor: pointer;
@@ -138,8 +141,14 @@ h3 a:hover {
 .btn:hover {
   text-decoration: none;
   filter: brightness(1.08);
-  border-color: var(--accent);
   box-shadow: 0 6px 20px -3px var(--accent-glow);
+}
+.btn.secondary:hover {
+  border-color: var(--accent);
+}
+/* Gold buttons glow gold in both themes: a navy glow under gold reads as a smudge. */
+.btn.primary:hover {
+  box-shadow: 0 6px 20px -3px color-mix(in srgb, var(--cta) 45%, transparent);
 }
 
 section {
@@ -181,8 +190,8 @@ h3 {
 
 /* Card surface: one look for tiles, download cards and chart rows. Add padding where it is used. */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--rule);
+  background: linear-gradient(to bottom, var(--surface), var(--surface-tint));
+  border: 1px solid var(--card-rule);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
