@@ -2,7 +2,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 // Page background per theme (global.css --bg), as getComputedStyle reports it.
-const LIGHT_BG = "rgb(247, 249, 252)";
+const LIGHT_BG = "rgb(238, 243, 250)";
 const DARK_BG = "rgb(0, 8, 20)";
 
 function pageBackground(page: Page): Promise<string> {
