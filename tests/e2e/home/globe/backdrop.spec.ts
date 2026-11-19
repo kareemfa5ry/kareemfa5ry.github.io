@@ -72,8 +72,6 @@ test("phone with Data Saver loads no globe canvas, no three chunk, no land mask"
   await page.waitForLoadState("load");
   await page.waitForTimeout(3000);
   await expect(page.locator(CANVAS)).toHaveCount(0);
-  expect(
-    paths.filter((p) => p.includes("three") || p.includes("globe_scene") || p.includes("/globe/land.png")),
-  ).toEqual([]);
+  expect(paths.filter((p) => p.includes("three") || p.includes("globe_") || p.includes("/globe/land.png"))).toEqual([]);
   expect(await noHorizontalScroll(page)).toBe(true);
 });

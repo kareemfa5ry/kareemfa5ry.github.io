@@ -3,9 +3,10 @@
 // <body>, so it paints over the page background and under all content). Dim on purpose: --globe-opacity in the
 // gutters, --globe-column behind the text column (a horizontal mask), so text keeps AA contrast
 // (tests/e2e/home/globe/contrast.spec.ts). The layer's right edge is the docked chat's edge, and it clips, so it
-// never adds sideways scroll. Three.js (./globe_scene, ~133 KB gzipped) loads as its own chunk from an idle callback
-// on every screen size (phones draw a lighter globe, see globe_scene), except with Data Saver on or on a 2G/3G link,
-// where the decoration is not worth the download. Hidden in print.
+// never adds sideways scroll. From an idle callback, ./globe_host starts a Web Worker that runs three.js
+// (./globe_scene, ~133 KB gzipped) on an OffscreenCanvas, so the globe never blocks the page. It loads on every screen
+// size (phones draw a lighter globe, see globe_scene), except with Data Saver on or on a 2G/3G link, where the
+// decoration is not worth the download. Hidden in print.
 ---
 
 <div data-globe aria-hidden="true">
@@ -21,7 +22,7 @@
 
   if (box && !lean) {
     const mount = () =>
-      import("./globe_scene")
+      import("./globe_host")
         .then(({ mountGlobe }) => mountGlobe(box, document.querySelector("[data-globe-stop='hero']")))
         .catch(() => undefined); // ponytail: decorative; no WebGL context or no chunk just means no globe
     // ponytail: Safari has no requestIdleCallback; a short timeout does the same job.

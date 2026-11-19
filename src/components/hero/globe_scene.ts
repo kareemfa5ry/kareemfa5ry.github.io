@@ -1,7 +1,8 @@
 /**
  * Owns the backdrop globe's WebGL scene: a sphere of land dots (Fibonacci spiral filtered by a land mask), an
- * occluding sphere, the route arcs, the render loop, resize and pixel budget, theme colours, pausing, and a still
- * globe under reduced motion or software (CPU) WebGL.
+ * occluding sphere, the route arcs, the render loop, the pixel budget, and a still globe on software (CPU) WebGL.
+ * Runs inside the globe worker on an OffscreenCanvas, so it touches no DOM: the page side (globe_host) sends the
+ * box size, the theme colours and whether to spin.
  * The technique of leonsoftware.com's hero globe, rebuilt on current three.js.
  */
 import {
@@ -41,6 +42,20 @@ const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 /** The most device pixels drawn per frame, today's 720 px box at pixel ratio 2; a bigger box lowers the ratio. */
 const MAX_PIXELS = 2.1e6;
 
+/** The colours the page reads from its CSS probes, as CSS colour strings. */
+export interface GlobeColours {
+  route: string;
+  dot: string;
+  bg: string;
+}
+
+export interface GlobeScene {
+  resize(width: number, height: number, devicePixelRatio: number): void;
+  setColours(colours: GlobeColours): void;
+  /** Spin (and animate the routes) or hold still; software WebGL always holds still. */
+  setAnimate(on: boolean): void;
+}
+
 /** Land dots only: sample the equirectangular mask at each Fibonacci point. */
 function landDots(mask: ImageData, points: number): Vector3[] {
   const dots: Vector3[] = [];
@@ -62,21 +77,13 @@ function isSoftwareGl(renderer: WebGLRenderer): boolean {
   return /swiftshader|llvmpipe|software/i.test(String(name));
 }
 
-function loadMask(): Promise<ImageData> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = image.width;
-      canvas.height = image.height;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      if (!context) return reject(new Error("no 2d context"));
-      context.drawImage(image, 0, 0);
-      resolve(context.getImageData(0, 0, canvas.width, canvas.height));
-    };
-    image.onerror = () => reject(new Error("globe land mask failed to load"));
-    image.src = `${import.meta.env.BASE_URL}globe/land.png`;
-  });
+/** The land mask's pixels, decoded off the main thread (no Image or document in a worker). */
+async function loadMask(url: string): Promise<ImageData> {
+  const bitmap = await createImageBitmap(await (await fetch(url)).blob());
+  const context = new OffscreenCanvas(bitmap.width, bitmap.height).getContext("2d", { willReadFrequently: true });
+  if (!context) throw new Error("no 2d context");
+  context.drawImage(bitmap, 0, 0);
+  return context.getImageData(0, 0, bitmap.width, bitmap.height);
 }
 
 function buildDots(mask: ImageData, material: MeshBasicMaterial, detail: Detail): InstancedMesh {
@@ -94,14 +101,11 @@ function buildDots(mask: ImageData, material: MeshBasicMaterial, detail: Detail)
   return mesh;
 }
 
-/** Mounts the scene in `container`; it spins while `spinWhile` (the hero) is in view and holds still below it. */
-export function mountGlobe(container: HTMLElement, spinWhile: Element | null): void {
-  const detail = window.matchMedia("(min-width: 48rem)").matches ? DESKTOP : PHONE;
-  const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+/** Starts the scene on `canvas`; `phone` picks the lighter detail. The dots appear once the mask has loaded. */
+export function startGlobe(canvas: OffscreenCanvas, phone: boolean, maskUrl: string): GlobeScene {
+  const detail = phone ? PHONE : DESKTOP;
+  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
-  renderer.domElement.style.cssText = "width:100%;height:100%;display:block";
-  container.append(renderer.domElement);
-
   const camera = new PerspectiveCamera(25, 1, 0.1, 100);
   camera.position.set(-14, 7.5, -11).setLength(CAMERA_DISTANCE);
   camera.lookAt(0, 0, 0);
@@ -114,11 +118,7 @@ export function mountGlobe(container: HTMLElement, spinWhile: Element | null): v
   globe.add(new Mesh(new SphereGeometry(RADIUS - 0.01, 48, 32), occluder));
   const routes = createRoutes(globe, RADIUS);
 
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   const software = isSoftwareGl(renderer);
-  const still = () => software || reduced.matches;
-  let visible = true;
-  let spinning = true;
   let last = performance.now();
   const render = () => renderer.render(scene, camera);
   const frame = (now: number) => {
@@ -128,53 +128,34 @@ export function mountGlobe(container: HTMLElement, spinWhile: Element | null): v
     routes.update(now);
     render();
   };
-  const sync = () => {
-    const animate = visible && spinning && !document.hidden && !still();
-    last = performance.now();
-    renderer.setAnimationLoop(animate ? frame : null);
-    if (!animate) routes.showAll();
-    render();
-  };
-  const colours = () => {
-    const style = getComputedStyle(container);
-    routes.setColor(new Color(style.color));
-    dotMaterial.color.set(style.borderTopColor);
-    occluder.color.set(style.outlineColor);
-    sync();
-  };
-  const resize = () => {
-    const { clientWidth: w, clientHeight: h } = container;
-    if (!w || !h) return;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, detail.maxRatio, Math.sqrt(MAX_PIXELS / (w * h))));
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    render();
-  };
 
-  new ResizeObserver(resize).observe(container);
-  new IntersectionObserver(([entry]) => {
-    visible = entry.isIntersecting;
-    sync();
-  }).observe(container);
-  if (spinWhile)
-    new IntersectionObserver(([entry]) => {
-      spinning = entry.isIntersecting;
-      sync();
-    }).observe(spinWhile);
-  document.addEventListener("visibilitychange", sync);
-  reduced.addEventListener("change", sync);
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", colours);
-  new MutationObserver(colours).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["data-theme"],
-  });
-
-  loadMask()
+  loadMask(maskUrl)
     .then((mask) => {
       globe.add(buildDots(mask, dotMaterial, detail));
-      colours();
-      resize();
+      render();
     })
     .catch(() => undefined); // ponytail: the globe is decorative; without its mask the page just has no globe
+
+  return {
+    resize(width, height, devicePixelRatio) {
+      renderer.setPixelRatio(Math.min(devicePixelRatio, detail.maxRatio, Math.sqrt(MAX_PIXELS / (width * height))));
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      render();
+    },
+    setColours({ route, dot, bg }) {
+      routes.setColor(new Color(route));
+      dotMaterial.color.set(dot);
+      occluder.color.set(bg);
+      render();
+    },
+    setAnimate(on) {
+      const animate = on && !software;
+      last = performance.now();
+      renderer.setAnimationLoop(animate ? frame : null);
+      if (!animate) routes.showAll();
+      render();
+    },
+  };
 }
