@@ -1,5 +1,5 @@
 // Globe backdrop: one fixed canvas centred on the page content (also with the chat docked), on the home page and
-// a project page, without sideways scroll; hidden in print; a phone loads none of it.
+// a project page, without sideways scroll; hidden in print; a phone shows it too, unless Data Saver is on.
 import { expect, test, type Page } from "@playwright/test";
 
 const CANVAS = "[data-globe] canvas";
@@ -53,16 +53,25 @@ test("print hides the globe", async ({ page }) => {
   await expect(page.locator("[data-globe]")).toBeHidden();
 });
 
-test("phone loads no globe canvas, no three chunk, no land mask", async ({ page }) => {
+test("phone shows the globe without sideways scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await expect(page.locator(CANVAS)).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator("canvas")).toHaveCount(1);
+  expect(await noHorizontalScroll(page)).toBe(true);
+});
+
+test("phone with Data Saver loads no globe canvas, no three chunk, no land mask", async ({ page }) => {
   const paths: string[] = [];
   page.on("request", (request) => paths.push(new URL(request.url()).pathname.toLowerCase()));
+  await page.addInitScript(() =>
+    Object.defineProperty(navigator, "connection", { value: { saveData: true, effectiveType: "4g" } }),
+  );
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.waitForLoadState("load");
   await page.waitForTimeout(3000);
   await expect(page.locator(CANVAS)).toHaveCount(0);
-  expect(
-    paths.filter((p) => p.includes("three") || p.includes("globe_scene") || p.includes("/globe/land.png")),
-  ).toEqual([]);
+  expect(paths.filter((p) => p.includes("three") || p.includes("globe_") || p.includes("/globe/land.png"))).toEqual([]);
   expect(await noHorizontalScroll(page)).toBe(true);
 });

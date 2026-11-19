@@ -261,6 +261,13 @@ h3 {
   color: var(--accent);
 }
 
+/* A link on its own line (not inside a sentence): a 44px-tall tap target on any screen, same look. */
+.tap {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 /* Entries: used by ExperienceEntry and ProjectEntry. */
 .item {
   margin-bottom: 28px;

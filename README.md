@@ -18,7 +18,7 @@ src/components/metrics/     MetricChips (value + label chips for a `metrics` lis
 src/components/projects/    project-page parts: ScreenshotGallery, FeaturedProject (full-width row), ProjectHead, DemoPoster, StackTags, pager/ProjectPager (previous and next project), PipelineStrip (how the work flows), Demo (iframe of a generated demo), demos.ts (hasDemo, pipelines)
 src/components/glossary/    GlossaryText (a sentence whose airline and data terms open a definition on tap, native popover)
 src/components/theme/       light/dark theme: ThemeToggle (nav airplane switch; calls toggleTheme from public/theme.js)
-src/components/hero/        GlobeBackdrop: decorative Three.js route globe, one fixed centred layer behind every page (Base.astro), dim behind the text column, loaded only at 48rem and wider; globe_scene.ts (the scene), globe_routes.ts (Cairo to 8 hubs)
+src/components/hero/        GlobeBackdrop: decorative Three.js route globe, one fixed centred layer behind every page (Base.astro), dim behind the text column, on every screen (lighter on phones, skipped with Data Saver or 2G/3G); globe_host.ts (page side: canvas, size, theme, when to spin), globe_worker.ts (runs the scene off the main thread on an OffscreenCanvas), globe_scene.ts (the scene), globe_routes.ts (Cairo to 8 hubs, plus 4 random routes)
 src/islands/                React islands (ProjectFilter: filter chips; ChatWidget: floating chat launcher + dock frame; ChatPanel + chat/: the chat); rule:
                             server-render the content, islands only toggle state; never render content only in React
 src/site/chat.ts            Worker URL, Turnstile site key and starter chips and the showcase's sample Q&A (empty = no chat widget)

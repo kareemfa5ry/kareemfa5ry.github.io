@@ -31,7 +31,9 @@ const meta = period ? `${org}, ${period}` : org;
 
 <Base title={`${title} — Kareem Fakhry`} description={summary} ogDescription={summary}>
   <p>
-    <a href="/#projects">← All projects</a>
+    <a class="tap" href="/#projects">
+      ← All projects
+    </a>
   </p>
   <h1 data-globe-stop="hero" style={`view-transition-name: project-${project.id}`}>
     {title}
