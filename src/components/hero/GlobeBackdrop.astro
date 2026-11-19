@@ -3,8 +3,9 @@
 // <body>, so it paints over the page background and under all content). Dim on purpose: --globe-opacity in the
 // gutters, --globe-column behind the text column (a horizontal mask), so text keeps AA contrast
 // (tests/e2e/home/globe/contrast.spec.ts). The layer's right edge is the docked chat's edge, and it clips, so it
-// never adds sideways scroll. Three.js (./globe_scene) loads as its own chunk from an idle callback, only at 48rem
-// and up, so phones never download it. Hidden in print.
+// never adds sideways scroll. Three.js (./globe_scene, ~133 KB gzipped) loads as its own chunk from an idle callback
+// on every screen size (phones draw a lighter globe, see globe_scene), except with Data Saver on or on a 2G/3G link,
+// where the decoration is not worth the download. Hidden in print.
 ---
 
 <div data-globe aria-hidden="true">
@@ -13,9 +14,12 @@
 
 <script>
   const box = document.querySelector<HTMLElement>("[data-globe-box]");
-  const wide = window.matchMedia("(min-width: 48rem)");
+  // Network Information API: Chromium only; elsewhere `connection` is undefined and the globe loads.
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } })
+    .connection;
+  const lean = connection?.saveData || /2g|3g/.test(connection?.effectiveType ?? "");
 
-  if (box && wide.matches) {
+  if (box && !lean) {
     const mount = () =>
       import("./globe_scene")
         .then(({ mountGlobe }) => mountGlobe(box, document.querySelector("[data-globe-stop='hero']")))
@@ -35,7 +39,7 @@
     --globe-opacity: 0.5;
     --globe-column: 0.25;
     --globe-dim: rgb(0 0 0 / calc(var(--globe-column) / var(--globe-opacity)));
-    display: none;
+    display: grid;
     position: fixed;
     inset: 0;
     z-index: -1;
@@ -62,10 +66,8 @@
     width: min(125vmin, 1200px);
     aspect-ratio: 1;
   }
+  /* Phones: the text column is the whole width, so the mask leaves the full globe at --globe-column. */
   @media (min-width: 48rem) {
-    [data-globe] {
-      display: grid;
-    }
     /* Same rule as the body's padding in global.css: the docked chat's width is not part of the page. */
     :global(html[data-chat-dock="side"]) [data-globe] {
       right: var(--chat-dock-width);

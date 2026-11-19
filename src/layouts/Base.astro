@@ -31,6 +31,9 @@ const FAVICON =
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Phone browser bar matches the page: --bg of public/theme.css per system theme (tests/e2e/mobile). -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eef3fa" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000814" />
     <link rel="stylesheet" href="/theme.css" />
     <script is:inline src="/theme.js"></script>
     <title>{title}</title>

@@ -21,8 +21,16 @@ import {
 import { createRoutes, latLonToVector } from "./globe_routes";
 
 const RADIUS = 5;
-const POINTS = 65000;
-const DOT_SIZE = 0.028;
+/** How fine the globe is drawn: dots on the sphere, their radius, and the highest device-pixel ratio. */
+interface Detail {
+  points: number;
+  dotSize: number;
+  maxRatio: number;
+}
+const DESKTOP: Detail = { points: 65000, dotSize: 0.028, maxRatio: 2 };
+/** Phones (under 48rem): under half the dots, each larger by sqrt(65000 / 30000) so the land reads the same,
+ *  and a 1.5 ratio cap: less start-up work, less GPU time and battery on a box under 500 px wide. */
+const PHONE: Detail = { points: 30000, dotSize: 0.041, maxRatio: 1.5 };
 const TURN_MS = 75000;
 /** 30 frames a second: the spin is slow, so this looks the same as 60 and costs half the GPU (or CPU) time. */
 const FRAME_MS = 1000 / 30;
@@ -34,10 +42,10 @@ const GOLDEN = Math.PI * (3 - Math.sqrt(5));
 const MAX_PIXELS = 2.1e6;
 
 /** Land dots only: sample the equirectangular mask at each Fibonacci point. */
-function landDots(mask: ImageData): Vector3[] {
+function landDots(mask: ImageData, points: number): Vector3[] {
   const dots: Vector3[] = [];
-  for (let i = 0; i < POINTS; i++) {
-    const lat = (Math.asin(1 - (2 * (i + 0.5)) / POINTS) * 180) / Math.PI;
+  for (let i = 0; i < points; i++) {
+    const lat = (Math.asin(1 - (2 * (i + 0.5)) / points) * 180) / Math.PI;
     const lon = (((((i * GOLDEN * 180) / Math.PI + 180) % 360) + 360) % 360) - 180;
     const x = Math.min(mask.width - 1, Math.floor(((lon + 180) / 360) * mask.width));
     const y = Math.min(mask.height - 1, Math.floor(((90 - lat) / 180) * mask.height));
@@ -71,9 +79,9 @@ function loadMask(): Promise<ImageData> {
   });
 }
 
-function buildDots(mask: ImageData, material: MeshBasicMaterial): InstancedMesh {
-  const dots = landDots(mask);
-  const mesh = new InstancedMesh(new CircleGeometry(DOT_SIZE, 6), material, dots.length);
+function buildDots(mask: ImageData, material: MeshBasicMaterial, detail: Detail): InstancedMesh {
+  const dots = landDots(mask, detail.points);
+  const mesh = new InstancedMesh(new CircleGeometry(detail.dotSize, 6), material, dots.length);
   // One reused helper turns each dot to face outward (a dot at p looks at 2p), instead of ~20,000 objects.
   const helper = new Object3D();
   const outward = new Vector3();
@@ -88,6 +96,7 @@ function buildDots(mask: ImageData, material: MeshBasicMaterial): InstancedMesh 
 
 /** Mounts the scene in `container`; it spins while `spinWhile` (the hero) is in view and holds still below it. */
 export function mountGlobe(container: HTMLElement, spinWhile: Element | null): void {
+  const detail = window.matchMedia("(min-width: 48rem)").matches ? DESKTOP : PHONE;
   const renderer = new WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
   renderer.domElement.style.cssText = "width:100%;height:100%;display:block";
@@ -136,7 +145,7 @@ export function mountGlobe(container: HTMLElement, spinWhile: Element | null): v
   const resize = () => {
     const { clientWidth: w, clientHeight: h } = container;
     if (!w || !h) return;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2, Math.sqrt(MAX_PIXELS / (w * h))));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, detail.maxRatio, Math.sqrt(MAX_PIXELS / (w * h))));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -163,7 +172,7 @@ export function mountGlobe(container: HTMLElement, spinWhile: Element | null): v
 
   loadMask()
     .then((mask) => {
-      globe.add(buildDots(mask, dotMaterial));
+      globe.add(buildDots(mask, dotMaterial, detail));
       colours();
       resize();
     })
