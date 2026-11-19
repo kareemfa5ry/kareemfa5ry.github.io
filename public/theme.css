@@ -29,9 +29,11 @@
   --metric-bg: light-dark(#fff4cc, transparent);
   --metric-ink: light-dark(#8a5a00, #ffc300);
   --metric-rule: light-dark(#f0d88a, #14365f);
-  /* Hero globe dots and route arcs: decorative only (aria-hidden), so no text contrast needed. */
-  --globe-dot: light-dark(#a9c3ea, #2f6aa8);
-  --globe-route: #ffc300;
+  /* Backdrop globe dots and route arcs (aria-hidden). Light: mid navy dots and dark gold arcs, so they show on the
+     pale page; dark: brighter blue dots. Each keeps --muted at 4.5:1 at the layer's text-column opacity
+     (GlobeBackdrop.astro, tests/e2e/home/globe/contrast.spec.ts); the tightest is dark gold, which allows 0.31. */
+  --globe-dot: light-dark(#3d6fb6, #5b9be0);
+  --globe-route: light-dark(#d99a00, #ffc300);
 }
 :root[data-theme="light"] {
   color-scheme: light;
